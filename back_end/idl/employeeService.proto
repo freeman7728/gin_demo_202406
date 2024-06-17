@@ -4,7 +4,7 @@ option go_package ="./;pb";
 
 message EmployeeModel{
   // @gotags: json:"id" form:"id"
-  string id=1;
+  int32 id=1;
   // @gotags: json:"name" form:"name"
   string name=2;
   // @gotags: json:"password" form:"password"
@@ -17,6 +17,10 @@ message EmployeeModel{
   string note=6;
   // @gotags: json:"level" form:"level"
   int32 level=7;
+  // @gotags: json:"deleted_at" form:"deleted_at"
+  string deleted_at=8;
+  // @gotags: json:"account" form:"account"
+  string account=9;
 }
 
 message EmployeeRequest{
