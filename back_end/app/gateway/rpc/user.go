@@ -28,6 +28,5 @@ func UserRegister(ctx context.Context, req *pb.UserRequest) (resp *pb.UserDetail
 	if err != nil {
 		return
 	}
-
 	return
 }

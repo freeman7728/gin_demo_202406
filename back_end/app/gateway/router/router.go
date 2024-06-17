@@ -10,7 +10,7 @@ func NewRouter() *gin.Engine {
 	//ginRouter.Use(middleware.Cors())
 	//store := cookie.NewStore([]byte("something-very-secret"))
 	//ginRouter.Use(sessions.Sessions("mysession", store))
-	v1 := ginRouter.Group("/api/v1")
+	v1 := ginRouter.Group("/test")
 	{
 		v1.GET("ping", func(context *gin.Context) {
 			context.JSON(200, "success")
@@ -18,6 +18,10 @@ func NewRouter() *gin.Engine {
 		// 用户服务
 		v1.POST("/user/register", http.UserRegisterHandler)
 		//v1.POST("/user/login", http.UserLoginHandler)
+	}
+	employeeRouter := ginRouter.Group("/employee")
+	{
+		employeeRouter.POST("/signup", http.EmployeeSignupHandler)
 	}
 	return ginRouter
 }

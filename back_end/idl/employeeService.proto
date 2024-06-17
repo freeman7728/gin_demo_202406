@@ -1,0 +1,41 @@
+syntax="proto3";
+package services;
+option go_package ="./;pb";
+
+message EmployeeModel{
+  // @gotags: json:"id" form:"id"
+  string id=1;
+  // @gotags: json:"name" form:"name"
+  string name=2;
+  // @gotags: json:"password" form:"password"
+  string password=3;
+  // @gotags: json:"tel" form:"tel"
+  string tel=4;
+  // @gotags: json:"salary" form:"salary"
+  double salary=5;
+  // @gotags: json:"note" form:"note"
+  string note=6;
+  // @gotags: json:"level" form:"level"
+  int32 level=7;
+}
+
+message EmployeeRequest{
+  // @gotags: name:"employee_list" json:"employee_list" form:"employee_list" uri:"employee_list"
+  repeated EmployeeModel employee_list=1;
+  // @gotags: name:"token" json:"token" form:"token" uri:"token"
+  string token=2;
+}
+
+message EmployeeResponse{
+  // @gotags: name:"success_list" json:"success_list" form:"success_list" uri:"success_list"
+  repeated EmployeeModel success_list=1;
+  // @gotags: name:"fail_list" json:"fail_list" form:"fail_list" uri:"fail_list"
+  repeated EmployeeModel fail_list=2;
+  // @gotags: name:"code" json:"code" form:"code" uri:"code"
+  uint32 code=3;
+}
+
+
+service EmployeeService{
+    rpc EmployeeSignup(EmployeeRequest) returns(EmployeeResponse);
+}

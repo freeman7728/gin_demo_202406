@@ -23,8 +23,9 @@ var (
 	EtcdHost string
 	EtcdPort string
 
-	UserServiceAddress string
-	TaskServiceAddress string
+	UserServiceAddress     string
+	TaskServiceAddress     string
+	EmployeeServiceAddress string
 
 	RedisHost     string
 	RedisPort     string
@@ -61,6 +62,7 @@ func LoadEtcd(file *ini.File) {
 func LoadServer(file *ini.File) {
 	UserServiceAddress = file.Section("server").Key("UserServiceAddress").String()
 	TaskServiceAddress = file.Section("server").Key("TaskServiceAddress").String()
+	EmployeeServiceAddress = file.Section("server").Key("EmployeeServiceAddress").String()
 }
 
 func LoadRedisData(file *ini.File) {
