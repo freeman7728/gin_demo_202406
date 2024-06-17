@@ -1,0 +1,98 @@
+/* 把不需要的样式进行重置 */
+
+body,
+p,
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+}
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+img {
+  border: none;
+  /* 文字对齐，去除图片下面的的间距 */
+  vertical-align: middle;
+}
+a {
+  /* 下划线 */
+  text-decoration: none;
+  color: #3c3c3c;
+}
+i {
+  list-style: normal;
+}
+input {
+  margin: 0;
+  padding: 0;
+}
+button {
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+
+body {
+  /* 行高：1.5 */
+  /* line-height: normal/数字/百分比/高度(px)/em */
+  /* 字体不同，默认行高不同，除了px外，其它初始化行高方式都是相对的，所以重置行高比较重要 */
+  /* 一般选择是数字，原因: 子元素会继承父元素的line-height, 而其他方式子元素会继承在父元素换算后的数值 */
+
+  /* \5b8b\4f53 : 万国码其中的一个字符集-宋体（可以去fehelper去看一下转换的） */
+  /* 也可以写
+  font-family:'宋体';
+  font-family:'\5b8b\4f53';
+  font-family:'SimSun';
+   */
+  font: 12px/1.5 tahoma, arial, "Hiragino Sans GB", "\5b8b\4f53", sans-serif;
+  color: #3c3c3c;
+  background-color: #f4f4f4;
+}
+/* 清除浮动 */
+.clearfix:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+/* 向左浮动 */
+.fl {
+  float: left;
+}
+/* 向右浮动 */
+.fr {
+  float: right;
+}
+.layer {
+  width: 1190px;
+  margin: 0 auto;
+}
+.c4 {
+  color: #f40;
+}
+.c5 {
+  color: #f50;
+}
+.mr5 {
+  margin-right: 5px;
+}
+.mr7 {
+  margin-right: 7px;
+}
+.mt10 {
+  margin-top: 10px;
+}
+.mr10 {
+  margin-right: 10px;
+}
+table {
+  /* 边框模式 */
+  border-collapse: collapse;
+}
+th,
+td {
+  padding: 0;
+}
