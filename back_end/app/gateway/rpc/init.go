@@ -9,6 +9,7 @@ import (
 var (
 	UserService     pb.UserService
 	EmployeeService pb.EmployeeService
+	AuthService     pb.AuthService
 )
 
 func InitRPC() {
@@ -20,10 +21,15 @@ func InitRPC() {
 	employeeMicroService := micro.NewService(
 		micro.Name("employeeService.client"),
 	)
+	authMicroService := micro.NewService(
+		micro.Name("authMicroService.client"),
+	)
 	// 用户服务调用实例
 	userService := pb.NewUserService("rpcUserService", userMicroService.Client())
 	employeeService := pb.NewEmployeeService("rpcEmployeeService", employeeMicroService.Client())
+	authService := pb.NewAuthService("rpcAuthService", authMicroService.Client())
 
 	UserService = userService
 	EmployeeService = employeeService
+	AuthService = authService
 }

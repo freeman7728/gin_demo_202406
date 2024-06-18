@@ -49,3 +49,25 @@ func (r *EmployeeSrv) EmployeeSignup(ctx context.Context, req *pb.EmployeeReques
 	}
 	return
 }
+func (r *EmployeeSrv) EmployeeLogin(ctx context.Context, in *pb.EmployeeLoginRequest, out *pb.EmployeeLoginResponse) (err error) {
+	out.Code = e.SUCCESS
+	daoIns := dao.NewEmployeeDao(ctx)
+	accountIns := &model.Login{
+		Account:  in.Account,
+		Password: in.Password,
+	}
+	outIns := &model.Login{}
+	err = daoIns.LoginEmployee(accountIns, outIns).Error
+
+	if err != nil {
+		out.Code = e.ERROR
+		return
+	}
+	if outIns.Id == 0 {
+		out.Code = e.WrongPassword
+		return
+	}
+	//out.Token = outIns.Token
+	out.Id = int32(outIns.Id)
+	return
+}

@@ -38,8 +38,22 @@ message EmployeeResponse{
   // @gotags: name:"code" json:"code" form:"code" uri:"code"
   uint32 code=3;
 }
-
+message EmployeeLoginRequest{
+  // @gotags: name:"account" json:"account" form:"account" uri:"account"
+  string account = 1;
+  // @gotags: name:"password" json:"password" form:"password" uri:"password"
+  string password = 2;
+}
+message EmployeeLoginResponse{
+  // @gotags: name:"id" json:"id" form:"id" uri:"id"
+  int32 id = 1;
+  // @gotags: name:"token" json:"token" form:"token" uri:"token"
+  string token = 2;
+  // @gotags: name:"code" json:"code" form:"code" uri:"code"
+  uint32 code = 3;
+}
 
 service EmployeeService{
     rpc EmployeeSignup(EmployeeRequest) returns(EmployeeResponse);
+    rpc EmployeeLogin(EmployeeLoginRequest) returns (EmployeeLoginResponse);
 }

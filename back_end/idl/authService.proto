@@ -1,0 +1,61 @@
+syntax="proto3";
+package services;
+option go_package ="./;pb";
+/*
+权限服务需要三个接口
+认证，发现，注册
+登录的时候，首先需要发现token
+如果token过期或者不存在，则注册token
+
+注册：入参：id，出参：token
+发现：入参：id，出参：token
+认证：入参：token，出参：level
+*/
+
+message TokenRegister {
+  // @gotags: json:"id" form:"id"
+  int32 id = 1;
+}
+message TokenDiscovery{
+  // @gotags: json:"id" form:"id"
+  int32 id = 1;
+}
+message TokenAuthorization{
+  // @gotags: json:"token" form:"token"
+  string token = 1;
+}
+message TokenRegisterReq{
+  // @gotags: json:"id" form:"id"
+  int32 id = 1;
+}
+message TokenRegisterRsp{
+  // @gotags: json:"token" form:"token"
+  string token = 1;
+  // @gotags: json:"code" form:"code"
+  int32 code = 2;
+}
+message TokenDiscoveryReq{
+  // @gotags: json:"id" form:"id"
+  int32 id = 1;
+}
+message TokenDiscoveryRsp{
+  // @gotags: json:"token" form:"token"
+  string token = 1;
+  // @gotags: json:"code" form:"code"
+  int32 code = 2;
+}
+message TokenAuthorizationReq{
+  // @gotags: json:"token" form:"token"
+  string token = 1;
+}
+message TokenAuthorizationRsp{
+  // @gotags: json:"level" form:"level"
+  int32 level = 1;
+  // @gotags: json:"code" form:"code"
+  int32 code = 2;
+}
+service AuthService{
+  rpc RegisterToken(TokenRegisterReq) returns (TokenRegisterRsp);
+  rpc DiscoverToken(TokenDiscoveryReq) returns (TokenDiscoveryRsp);
+  rpc AuthorizeToken(TokenAuthorizationReq) returns (TokenAuthorizationRsp);
+}

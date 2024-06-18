@@ -22,6 +22,7 @@ func NewRouter() *gin.Engine {
 	employeeRouter := ginRouter.Group("/employee")
 	{
 		employeeRouter.POST("/signup", http.EmployeeSignupHandler)
+		employeeRouter.POST("/login", http.EmployeeLoginHandler)
 	}
 	return ginRouter
 }

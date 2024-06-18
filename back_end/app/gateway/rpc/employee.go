@@ -12,3 +12,10 @@ func EmployeeSignup(ctx context.Context, req *pb.EmployeeRequest) (resp *pb.Empl
 	}
 	return
 }
+func EmployeeLogin(ctx context.Context, req *pb.EmployeeLoginRequest) (resp *pb.EmployeeLoginResponse, err error) {
+	resp, err = EmployeeService.EmployeeLogin(ctx, req)
+	if err != nil {
+		return
+	}
+	return
+}

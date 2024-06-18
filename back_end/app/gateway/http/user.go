@@ -23,7 +23,7 @@ func UserRegisterHandler(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, ctl.RespError(ctx, err, "UserRegister RPC 调用失败"))
 		return
 	}
-	ctx.JSON(http.StatusOK, ctl.RespSuccess(ctx, userResp))
+	ctx.JSON(http.StatusOK, ctl.RespSuccess(ctx, userResp, ""))
 }
 
 // UserLoginHandler 用户登录

@@ -15,7 +15,7 @@ type Response struct {
 }
 
 // RespSuccess 带data成功返回
-func RespSuccess(ctx *gin.Context, data interface{}, code ...int) *Response {
+func RespSuccess(ctx *gin.Context, data interface{}, msg string, code ...int) *Response {
 	status := e.SUCCESS
 	if code != nil {
 		status = code[0]
@@ -23,6 +23,24 @@ func RespSuccess(ctx *gin.Context, data interface{}, code ...int) *Response {
 
 	if data == nil {
 		data = "操作成功"
+	}
+
+	r := &Response{
+		Status: status,
+		Data:   data,
+	}
+	if msg == "" {
+		r.Msg = e.GetMsg(status)
+	} else {
+		r.Msg = msg
+	}
+
+	return r
+}
+func RespWrong(ctx *gin.Context, data string, code ...int) *Response {
+	status := e.SUCCESS
+	if code != nil {
+		status = code[0]
 	}
 
 	r := &Response{

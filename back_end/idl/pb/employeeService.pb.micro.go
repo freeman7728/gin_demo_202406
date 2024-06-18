@@ -37,6 +37,7 @@ func NewEmployeeServiceEndpoints() []*api.Endpoint {
 
 type EmployeeService interface {
 	EmployeeSignup(ctx context.Context, in *EmployeeRequest, opts ...client.CallOption) (*EmployeeResponse, error)
+	EmployeeLogin(ctx context.Context, in *EmployeeLoginRequest, opts ...client.CallOption) (*EmployeeLoginResponse, error)
 }
 
 type employeeService struct {
@@ -61,15 +62,27 @@ func (c *employeeService) EmployeeSignup(ctx context.Context, in *EmployeeReques
 	return out, nil
 }
 
+func (c *employeeService) EmployeeLogin(ctx context.Context, in *EmployeeLoginRequest, opts ...client.CallOption) (*EmployeeLoginResponse, error) {
+	req := c.c.NewRequest(c.name, "EmployeeService.EmployeeLogin", in)
+	out := new(EmployeeLoginResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for EmployeeService service
 
 type EmployeeServiceHandler interface {
 	EmployeeSignup(context.Context, *EmployeeRequest, *EmployeeResponse) error
+	EmployeeLogin(context.Context, *EmployeeLoginRequest, *EmployeeLoginResponse) error
 }
 
 func RegisterEmployeeServiceHandler(s server.Server, hdlr EmployeeServiceHandler, opts ...server.HandlerOption) error {
 	type employeeService interface {
 		EmployeeSignup(ctx context.Context, in *EmployeeRequest, out *EmployeeResponse) error
+		EmployeeLogin(ctx context.Context, in *EmployeeLoginRequest, out *EmployeeLoginResponse) error
 	}
 	type EmployeeService struct {
 		employeeService
@@ -84,4 +97,8 @@ type employeeServiceHandler struct {
 
 func (h *employeeServiceHandler) EmployeeSignup(ctx context.Context, in *EmployeeRequest, out *EmployeeResponse) error {
 	return h.EmployeeServiceHandler.EmployeeSignup(ctx, in, out)
+}
+
+func (h *employeeServiceHandler) EmployeeLogin(ctx context.Context, in *EmployeeLoginRequest, out *EmployeeLoginResponse) error {
+	return h.EmployeeServiceHandler.EmployeeLogin(ctx, in, out)
 }

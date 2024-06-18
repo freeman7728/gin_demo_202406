@@ -22,3 +22,8 @@ func (dao *EmployeeDao) CreateEmployee(in *model.Employee) (tx *gorm.DB) {
 	result := dao.Exec(sql, "123", in.Name, in.Password, in.Tel, in.Salary, in.Note, in.Level).Scan(nil)
 	return result
 }
+func (dao *EmployeeDao) LoginEmployee(in *model.Login, out *model.Login) (tx *gorm.DB) {
+	sql := `SELECT id FROM account WHERE account = ? AND password = ?`
+	result := dao.Raw(sql, in.Account, in.Password).Scan(out)
+	return result
+}
