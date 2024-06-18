@@ -10,3 +10,11 @@
   font-family: "alimamaS";
   src: url("AlimamaS-Bold.otf");
 }
+@font-face {
+  font-family: "kai";
+  src: url("kai.ttf");
+}
+@font-face {
+  font-family: "kai1";
+  src: url("kai1.TTF");
+}
