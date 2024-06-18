@@ -1,5 +1,5 @@
 <template>
-    <div id="app" class="container" ref="appContainer">
+    <div id="app" class="container" ref="appContainer" >
       <div class="container__form signin-admin" ref="container1">
         <el-form :model="adminForm" ref="adminForm_ref" class="form" @submit.native.prevent="submitForm('admin')">
           <h2 class="form-title">管理员登录</h2>
@@ -44,20 +44,19 @@
   
   <style>
   :root {
-  /* COLORS */
   --white: #e9e9e9;
   --gray: #333;
   --blue: #0367a6;
   --lightblue: #008997;
-  --input-bg: #f5f7fa; /* 输入框背景色 */
-  --input-border: #dcdfe6; /* 输入框边框色 */
-  --input-focus-border: #409eff; /* 输入框聚焦时边框色 */
+  --input-bg: #f5f7fa; 
+  --input-border: #dcdfe6; 
+  --input-focus-border: #409eff; 
 
-  /* RADII */
+
   --button-radius: 0.7rem;
-  --input-radius: 3px; /* 输入框圆角 */
+  --input-radius: 3px; 
 
-  /* SIZES */
+
   --max-width: 758px;
   --max-height: 420px;
 
@@ -68,7 +67,7 @@
 
 body {
   align-items: center;
-  background: url('@/assets/img/background.jpg') no-repeat center center fixed;
+  /* background: url('@/assets/img/background.jpg') no-repeat center center fixed; */
   background-size: cover;
   display: grid;
   height: 100vh;
