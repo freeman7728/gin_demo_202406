@@ -26,5 +26,12 @@ func NewRouter() *gin.Engine {
 		employeeRouter.POST("/update", http.EmployeeUpdateHandler)
 		employeeRouter.POST("/delete", http.EmployeeDeleteHandler)
 	}
+	producerRouter := ginRouter.Group("/producer")
+	{
+		producerRouter.POST("/insert", http.ProducerInsertHandler)
+		producerRouter.POST("/update", http.ProducerUpdateHandler)
+		producerRouter.POST("/delete", http.ProducerDeleteHandler)
+		producerRouter.POST("/select", http.ProducerSelectHandler)
+	}
 	return ginRouter
 }

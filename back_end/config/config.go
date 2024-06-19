@@ -27,6 +27,7 @@ var (
 	TaskServiceAddress     string
 	EmployeeServiceAddress string
 	AuthServiceAddress     string
+	ProducerServiceAddress string
 
 	RedisHost     string
 	RedisPort     string
@@ -65,6 +66,7 @@ func LoadServer(file *ini.File) {
 	TaskServiceAddress = file.Section("server").Key("TaskServiceAddress").String()
 	EmployeeServiceAddress = file.Section("server").Key("EmployeeServiceAddress").String()
 	AuthServiceAddress = file.Section("server").Key("AuthServiceAddress").String()
+	ProducerServiceAddress = file.Section("server").Key("ProducerServiceAddress").String()
 }
 
 func LoadRedisData(file *ini.File) {

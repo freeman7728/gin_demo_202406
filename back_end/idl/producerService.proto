@@ -1,0 +1,79 @@
+syntax="proto3";
+package services;
+option go_package ="./;pb";
+
+message ProducerModel{
+  // @gotags: json:"id" form:"id"
+  uint32 id = 1;
+  // @gotags: json:"name" form:"name"
+  string name = 2;
+  // @gotags: json:"short_name" form:"short_name"
+  string short_name = 3;
+  // @gotags: json:"address" form:"address"
+  string address = 4;
+  // @gotags: json:"tel" form:"tel"
+  string tel = 5;
+  // @gotags: json:"email" form:"email"
+  string email = 6;
+  // @gotags: json:"contact_name" form:"contact_name"
+  string contact_name = 7;
+  // @gotags: json:"contact_tel" form:"contact_tel"
+  string contact_tel = 8;
+  // @gotags: json:"note" form:"note"
+  string note = 9;
+}
+
+message InsertProducerRequest{
+  // @gotags: json:"producer_list" form:"producer_list"
+  repeated ProducerModel producer_list = 1;
+}
+
+message InsertProducerResponse{
+  // @gotags: json:"success_list" form:"success_list"
+  repeated ProducerModel success_list = 1;
+  // @gotags: json:"fail_list" form:"fail_list"
+  repeated ProducerModel fail_list = 2;
+  // @gotags: json:"code" form:"code"
+  int32 code = 3;
+}
+
+message UpdateProducerRequest{
+  // @gotags: json:"producer" form:"producer"
+  ProducerModel producer = 1;
+}
+
+message UpdateProducerResponse{
+  // @gotags: json:"success" form:"success"
+  bool success = 1;
+  // @gotags: json:"code" form:"code"
+  int32 code = 2;
+}
+
+message SelectProducerRequest{
+}
+
+message SelectProducerResponse{
+  // @gotags: json:"producer_list" form:"producer_list"
+  repeated ProducerModel producer_list = 1;
+  // @gotags: json:"code" form:"code"
+  int32 code = 2;
+}
+
+message DeleteProducerRequest{
+  // @gotags: json:"producer" form:"producer"
+  ProducerModel producer = 1;
+}
+
+message DeleteProducerResponse{
+  // @gotags: json:"success" form:"success"
+  bool success = 1;
+  // @gotags: json:"code" form:"code"
+  int32 code = 2;
+}
+
+service ProducerService {
+  rpc InsertProducer(InsertProducerRequest) returns (InsertProducerResponse);
+  rpc UpdateProducer(UpdateProducerRequest) returns (UpdateProducerResponse);
+  rpc SelectProducer(SelectProducerRequest) returns (SelectProducerResponse);
+  rpc DeleteProducer(DeleteProducerRequest) returns (DeleteProducerResponse);
+}
