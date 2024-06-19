@@ -8,7 +8,7 @@
         </div>
   
         <el-menu default-active="supplier" class="menu-items" :collapse="isCollapse">
-            <el-menu-item index="user" @click="switchToEmployeeInfo">
+          <el-menu-item index="user">
             <svg t="1718617877590" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6351" width="23" height="192">
               <path d="M438.272 603.648c-132.608 0-240.64-108.032-240.64-240.64s108.032-240.64 240.64-240.64 240.64 108.032 240.64 240.64-108.032 240.64-240.64 240.64z m0-419.84c-98.816 0-179.2 80.384-179.2 179.2s80.384 179.2 179.2 179.2 179.2-80.384 179.2-179.2-80.384-179.2-179.2-179.2z" p-id="6352"></path><path d="M832.512 955.904h-30.72c-257.536-1.536-361.984 0-363.008 0H44.032v-30.72c0-209.408 165.888-361.984 394.24-361.984s394.24 152.064 394.24 361.984v30.72z m-725.504-61.44h331.264c0.512 0 96.256-1.536 331.264 0-15.36-157.696-150.016-269.312-331.264-269.312-181.248-0.512-315.904 111.104-331.264 269.312zM715.776 538.112l-35.84-49.664C732.16 450.56 762.88 390.144 762.88 326.144c0-97.792-72.704-182.272-168.96-196.608l9.216-60.928c126.464 18.944 221.184 129.536 221.184 257.536 0 83.968-40.448 162.816-108.544 211.968z" p-id="6353"></path><path d="M964.096 882.176l-58.368-19.456c8.192-24.576 12.288-50.176 12.288-76.288 0-131.072-107.008-238.08-238.08-238.08V486.4c165.376 0 299.52 134.144 299.52 299.52 0.512 32.768-5.12 65.024-15.36 96.256z" p-id="6354"></path><path d="M964.096 881.664h-67.072l9.216-20.48h57.856zM603.136 129.536H593.92v-61.44l9.216 0.512z" p-id="6355">
               </path>
@@ -57,30 +57,27 @@
       </div>
 
       <div class="main-content">
-        <el-card class="info_card">
+        <div class="card-container">
+            <el-card class="info_card" v-for="n in 6" :key="n">
             <div class="info_title">员工信息</div>
             <div class="flex-container">
             <div class="svg-container">
-                <svg t="1718688291554" class="icon_info" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10110" width="440" height="390">
+                <svg t="1718688291554" class="icon_info" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10110" width="150" height="150">
                     <path d="M264.647884 230.201302c0 127.163947 103.580698 230.200662 231.352626 230.200663 127.771927 0 231.352626-103.036716 231.352626-230.200663a230.008668 230.008668 0 0 0-115.676313-199.353645 232.312595 232.312595 0 0 0-231.352626 0 230.008668 230.008668 0 0 0-115.644314 199.353645zM523.775625 504.624555l75.837582 130.747833c3.711882 7.359765 3.711882 14.719531 1.88794 22.079296l-79.581463 213.657189c-3.711882 11.039648-12.959587 16.575472-24.063233 16.575472a26.335161 26.335161 0 0 1-24.063233-16.575472l-79.581463-213.62519a30.655023 30.655023 0 0 1 1.85594-22.079297l75.869582-130.779831C207.305712 517.520144 0.016319 734.825217 0.016319 998.176823c0 14.719531 11.103646 25.791178 25.919174 25.791178h940.130034c14.815528 0 25.919174-11.039648 25.919173-25.791178 0-263.351606-207.289393-480.656679-468.209075-493.552268z" fill="#32C8DA" p-id="10111">
                     </path>
                 </svg>
             </div>
-        <div class="text-container">
-        <div class="info-item"><b>员工编号:</b> 123456</div>
-        <div class="info-item"><b>员工姓名:</b> 张三</div>
-        <div class="info-item"><b>员工密码:</b> ********</div>
-        <div class="info-item"><b>员工级别:</b> 高级工程师</div>
-        <div class="info-item"><b>员工电话:</b> 13812345678</div>
-        <div class="info-item"><b>员工工资:</b> 10000元/月</div>
-        <div class="info-item"><b>备注:</b> 无</div>
+                <div class="text-container">
+                <div class="info-item"><b>员工编号:</b> 123456</div>
+                <div class="info-item"><b>员工姓名:</b> 张三</div>
+                <div class="info-item"><b>员工密码:</b> ********</div>
+                <div class="info-item"><b>员工级别:</b> 高级工程师</div>
+                <div class="info-item"><b>员工电话:</b> 13812345678</div>
+                <div class="info-item"><b>员工工资:</b> 10000元/月</div>
+                <div class="info-item"><b>备注:</b> 无</div>
           </div>
          </div>
         </el-card>
-        <div class="button-container">
-            <el-button type="primary">修改账户信息</el-button>
-            <el-button type="warning">退出登录</el-button>
-            <el-button type="danger">注销账户</el-button>
         </div>
       </div>
     </div>
@@ -137,7 +134,7 @@
     font-weight: bold;
     font-size: 24px;
     color: #333;
-    padding-left: 2%;
+    padding-left: 12px;
 }
 
 .info-icon {
@@ -183,13 +180,13 @@
 .main-content {
     flex: 1;
     padding: 20px;
-    margin-left: 7%; 
+    margin-left: 20px; 
 }
-.info_card {
-    width: 1100px;
-    height: 560px;
-    margin-top: 70px;
-    border-radius: 10px;
+
+.info-card {
+  width: calc(33.33% - 20px); 
+  box-sizing: border-box; 
+  margin-bottom: 30px; 
 }
 .flex-container {
   display: flex;
@@ -197,7 +194,7 @@
   margin-top: 20px;
 }
 .info_title {
-    font-size: 30px;
+    font-size: 25px;
     margin-left: 10px;
     font-family: kai1;
 }
@@ -205,17 +202,18 @@
     display: flex;
 }
 .info-item {
-    font-size: 35px;
+    font-size: 15px;
     font-family: kai1;
 }
 .text-container {
-    margin-left: 120px;
+    margin-left: 25px;
 }
-.button-container {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; 
+  margin-left: 170px;
+  margin-top: 100px;
 }
 
   </style>
