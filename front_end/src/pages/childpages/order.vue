@@ -58,34 +58,23 @@
 
       <div class="main-content">
         <div class="button-group">
-            <el-button type="primary" @click="addCustomer">添加员工</el-button>
-            <el-button type="warning" @click="editCustomer">修改员工</el-button>
-            <el-button type="info" @click="searchCustomer">查找员工</el-button>
-            <el-button type="danger" @click="deleteCustomer">删除员工</el-button>
-            <el-button type="success" @click="exportCustomer">导出员工</el-button>
+      <el-button type="primary" @click="addorder">添加订单</el-button>
+      <el-button type="warning" @click="editorder">修改订单</el-button>
+      <el-button type="info" @click="searchorder">查找订单</el-button>
+      <el-button type="danger" @click="deleteorder">删除订单</el-button>
+      <el-button type="success" @click="exportorder">导出订单</el-button>
         </div>
-        <div class="card-container">
-            <el-card class="info_card" v-for="n in 6" :key="n">
-            <div class="info_title">员工信息</div>
-            <div class="flex-container">
-            <div class="svg-container">
-                <svg t="1718688291554" class="icon_info" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10110" width="150" height="150">
-                    <path d="M264.647884 230.201302c0 127.163947 103.580698 230.200662 231.352626 230.200663 127.771927 0 231.352626-103.036716 231.352626-230.200663a230.008668 230.008668 0 0 0-115.676313-199.353645 232.312595 232.312595 0 0 0-231.352626 0 230.008668 230.008668 0 0 0-115.644314 199.353645zM523.775625 504.624555l75.837582 130.747833c3.711882 7.359765 3.711882 14.719531 1.88794 22.079296l-79.581463 213.657189c-3.711882 11.039648-12.959587 16.575472-24.063233 16.575472a26.335161 26.335161 0 0 1-24.063233-16.575472l-79.581463-213.62519a30.655023 30.655023 0 0 1 1.85594-22.079297l75.869582-130.779831C207.305712 517.520144 0.016319 734.825217 0.016319 998.176823c0 14.719531 11.103646 25.791178 25.919174 25.791178h940.130034c14.815528 0 25.919174-11.039648 25.919173-25.791178 0-263.351606-207.289393-480.656679-468.209075-493.552268z" fill="#32C8DA" p-id="10111">
-                    </path>
-                </svg>
-            </div>
-                <div class="text-container">
-                <div class="info-item"><b>员工编号:</b> 123456</div>
-                <div class="info-item"><b>员工姓名:</b> 张三</div>
-                <div class="info-item"><b>员工密码:</b> ********</div>
-                <div class="info-item"><b>员工级别:</b> 高级工程师</div>
-                <div class="info-item"><b>员工电话:</b> 13812345678</div>
-                <div class="info-item"><b>员工工资:</b> 10000元/月</div>
-                <div class="info-item"><b>备注:</b> 无</div>
-          </div>
-         </div>
-        </el-card>
-        </div>
+    <div>
+    <el-table :data="tableData" style="width: 100%">
+      <el-table-column prop="orderDetailNumber" label="订单明细号" width="170"></el-table-column>
+      <el-table-column prop="purchaseListNumber" label="采购清单号" width="150"></el-table-column>
+      <el-table-column prop="productCode" label="商品编号" width="150"></el-table-column>
+      <el-table-column prop="purchaseQuantity" label="采购数量" width="150"></el-table-column>
+      <el-table-column prop="unitPrice" label="商品单价" width="150"></el-table-column>
+      <el-table-column prop="totalPrice" label="商品总价" width="150"></el-table-column>
+      <el-table-column prop="remarks" label="备注" width="220"></el-table-column>
+    </el-table>
+  </div>
       </div>
     </div>
   </template>
@@ -159,7 +148,7 @@
     font-weight: bold;
     font-size: 24px;
     color: #333;
-    padding-left: 12px;
+    padding-left: 2%;
 }
 
 .info-icon {
@@ -205,14 +194,13 @@
 .main-content {
     flex: 1;
     padding: 20px;
-    margin-left: 14%; 
-    margin-top: 6%;
+    margin-left: 7%; 
 }
-
-.info-card {
-  width: calc(33.33% - 20px); 
-  box-sizing: border-box; 
-  margin-bottom: 30px; 
+.info_card {
+    width: 1100px;
+    height: 560px;
+    margin-top: 70px;
+    border-radius: 10px;
 }
 .flex-container {
   display: flex;
@@ -220,7 +208,7 @@
   margin-top: 20px;
 }
 .info_title {
-    font-size: 25px;
+    font-size: 30px;
     margin-left: 10px;
     font-family: kai1;
 }
@@ -228,23 +216,33 @@
     display: flex;
 }
 .info-item {
-    font-size: 15px;
+    font-size: 35px;
     font-family: kai1;
 }
 .text-container {
-    margin-left: 25px;
+    margin-left: 120px;
 }
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px; 
-  margin-left: 0px;
-  margin-top: 20px;
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+.main-content {
+    flex: 1;
+    padding: 10px;
+    margin-left: 150px; 
+    margin-top: 80px;
+}
+.button-group {
+    margin-bottom: 10px;
 }
 .router-link-active{
  	background-color: #f0f2f5;
     color:rgb(39, 125, 255)
  }
+
+
   </style>
   
   

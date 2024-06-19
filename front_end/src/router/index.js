@@ -7,11 +7,15 @@ import user_info from "@/pages/childpages/user_info.vue";
 import employee_info from "@/pages/childpages/employee_info.vue";
 import provider from "@/pages/childpages/provider.vue";
 import goods from "@/pages/childpages/goods.vue";
+import list from "@/pages/childpages/list.vue";
+import order from "@/pages/childpages/order.vue";
 
 const routes = [
   { path: "/", redirect: "/login" },
   { path: "/childpages/user_info", name: "userInfo", component: user_info},
   { path: "/childpages/provider", name: "provider", component: provider},
+  { path: "/childpages/order", name: "order", component: order},
+  { path: "/childpages/list", name: "list", component: list},
   { path: "/childpages/goods", name: "goods", component: goods},
   { path: "/login", component: login},
   { path: "/index_admin", component: index_admin},
