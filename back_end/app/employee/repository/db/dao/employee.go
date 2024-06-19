@@ -43,3 +43,29 @@ func (dao *EmployeeDao) GetEmployeeByTel(successModel *pb.EmployeeSignupSuccessM
 	result := dao.Raw(sql, successModel.Tel).Scan(&successModel)
 	return result
 }
+
+func (dao *EmployeeDao) EmployeeUpdate(in *pb.EmployeeUpdateRequest) (tx *gorm.DB) {
+	//sql := `update employee set name = ?, tel = ?, level = ?,password = ? where account = ? and password = ?`
+	sql := `UPDATE employee
+			LEFT JOIN account
+			ON employee.id = account.id
+			SET employee.name=?,employee.tel=?,employee.salary=?,employee.note=?,account.password=?
+			WHERE account.account=? AND account.password=?`
+	result := dao.Exec(sql, in.Name, in.Tel, in.Salary, in.Note, in.NewPassword, in.Account, in.Password)
+	return result
+}
+
+func (dao *EmployeeDao) EmployeeDelete(in *pb.EmployeeDeleteRequest) (tx *gorm.DB) {
+	//sql := `delete from employee where password = ? and account = ?`
+	dao.Exec("SET FOREIGN_KEY_CHECKS = 0")
+	sql := `
+			DELETE account,employee
+			FROM employee
+			LEFT JOIN account
+			ON employee.id=account.id
+			WHERE account.account=? AND account.password=?
+			`
+	result := dao.Exec(sql, in.Account, in.Password)
+	dao.Exec("SET FOREIGN_KEY_CHECKS = 1")
+	return result
+}

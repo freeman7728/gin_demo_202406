@@ -50,6 +50,45 @@ message EmployeeSignupFailModel{
   string wrong_message = 7;
 }
 
+message EmployeeUpdateRequest{
+  string name = 1;
+  // @gotags: json:"tel" form:"tel"
+  string tel = 2;
+  // @gotags: json:"salary" form:"salary"
+  double salary = 3;
+  // @gotags: json:"note" form:"note"
+  string note = 4;
+  // @gotags: json:"level" form:"level"
+  int32 level = 5;
+  // @gotags: json:"password" form:"password"
+  string password = 6;
+  // @gotags: json:"account" form:"account"
+  string account = 7;
+  // @gotags: json:"new_password" form:"new_password"
+  string new_password = 8;
+}
+
+message EmployeeUpdateResponse{
+  // @gotags: json:"success" form:"success"
+  bool success = 1;
+  // @gotags: json:"code" form:"code"
+  uint32 code = 2;
+}
+
+message EmployeeDeleteRequest{
+  // @gotags: json:"password" form:"password"
+  string password = 1;
+  // @gotags: json:"account" form:"account"
+  string account = 2;
+}
+message EmployeeDeleteResponse{
+  // @gotags: json:"success" form:"success"
+  bool success = 1;
+  // @gotags: json:"code" form:"code"
+  uint32 code = 2;
+}
+
+
 message EmployeeSignupRequest{
   // @gotags: name:"employee_list" json:"employee_list" form:"employee_list" uri:"employee_list"
   repeated EmployeeModel employee_list=1;
@@ -80,7 +119,11 @@ message EmployeeLoginResponse{
   uint32 code = 3;
 }
 
+
+
 service EmployeeService{
     rpc EmployeeSignup(EmployeeSignupRequest) returns(EmployeeSignupResponse);
     rpc EmployeeLogin(EmployeeLoginRequest) returns (EmployeeLoginResponse);
+    rpc EmployeeUpdate(EmployeeUpdateRequest) returns(EmployeeUpdateResponse);
+    rpc EmployeeDelete(EmployeeDeleteRequest) returns(EmployeeDeleteResponse);
 }

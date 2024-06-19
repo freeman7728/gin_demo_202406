@@ -23,6 +23,8 @@ func NewRouter() *gin.Engine {
 	{
 		employeeRouter.POST("/signup", http.EmployeeSignupHandler)
 		employeeRouter.POST("/login", http.EmployeeLoginHandler)
+		employeeRouter.POST("/update", http.EmployeeUpdateHandler)
+		employeeRouter.POST("/delete", http.EmployeeDeleteHandler)
 	}
 	return ginRouter
 }

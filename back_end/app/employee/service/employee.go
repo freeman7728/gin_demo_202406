@@ -6,7 +6,6 @@ import (
 	"database_lesson/app/employee/repository/db/model"
 	"database_lesson/idl/pb"
 	"database_lesson/pkg/e"
-	"fmt"
 	"sync"
 )
 
@@ -34,7 +33,6 @@ func (r *EmployeeSrv) EmployeeSignup(ctx context.Context, req *pb.EmployeeSignup
 			Note:   item.Note,
 			Level:  item.Level,
 		}
-		fmt.Println(item)
 		res := ed.CreateEmployee(employee)
 		if res.Error == nil {
 			successIns := &pb.EmployeeSignupSuccessModel{
@@ -76,5 +74,39 @@ func (r *EmployeeSrv) EmployeeLogin(ctx context.Context, in *pb.EmployeeLoginReq
 	}
 	//out.Token = outIns.Token
 	out.Id = int32(outIns.Id)
+	return
+}
+func (r *EmployeeSrv) EmployeeUpdate(ctx context.Context, in *pb.EmployeeUpdateRequest, out *pb.EmployeeUpdateResponse) (err error) {
+	out.Code = e.SUCCESS
+	daoIns := dao.NewEmployeeDao(ctx)
+	res := daoIns.EmployeeUpdate(in)
+	if res.Error != nil {
+		out.Code = e.ERROR
+		return
+	}
+	if res.RowsAffected == 0 {
+		out.Success = false
+		out.Code = e.WrongPassword
+		return
+	}
+	out.Success = true
+	return
+}
+
+func (r *EmployeeSrv) EmployeeDelete(ctx context.Context, in *pb.EmployeeDeleteRequest, out *pb.EmployeeDeleteResponse) (err error) {
+	out.Code = e.SUCCESS
+	daoIns := dao.NewEmployeeDao(ctx)
+	res := daoIns.EmployeeDelete(in)
+	if res.Error != nil {
+		err = res.Error
+		out.Code = e.ERROR
+		return
+	}
+	if res.RowsAffected == 0 {
+		out.Success = false
+		out.Code = e.WrongPassword
+		return
+	}
+	out.Success = true
 	return
 }

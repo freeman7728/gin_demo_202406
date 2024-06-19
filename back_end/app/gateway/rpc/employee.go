@@ -19,3 +19,17 @@ func EmployeeLogin(ctx context.Context, req *pb.EmployeeLoginRequest) (resp *pb.
 	}
 	return
 }
+func EmployeeUpdate(ctx context.Context, req *pb.EmployeeUpdateRequest) (resp *pb.EmployeeUpdateResponse, err error) {
+	resp, err = EmployeeService.EmployeeUpdate(ctx, req)
+	if err != nil {
+		return
+	}
+	return
+}
+func EmployeeDelete(ctx context.Context, req *pb.EmployeeDeleteRequest) (resp *pb.EmployeeDeleteResponse, err error) {
+	resp, err = EmployeeService.EmployeeDelete(ctx, req)
+	if err != nil {
+		return
+	}
+	return
+}

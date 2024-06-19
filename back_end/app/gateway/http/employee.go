@@ -37,3 +37,28 @@ func EmployeeLoginHandler(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, ctl.RespSuccess(ctx, resp, "登录成功"))
 }
+func EmployeeUpdateHandler(ctx *gin.Context) {
+	var req pb.EmployeeUpdateRequest
+	if err := ctx.ShouldBind(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, ctl.RespError(ctx, err, "Update Bind 绑定参数失败"))
+	}
+	resp, err := rpc.EmployeeUpdate(ctx, &req)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, ctl.RespError(ctx, err, "EmployeeUpdate RPC 调用失败"))
+		return
+	}
+	ctx.JSON(http.StatusOK, ctl.RespSuccess(ctx, resp, e.GetMsg(int(resp.Code))))
+}
+
+func EmployeeDeleteHandler(ctx *gin.Context) {
+	var req pb.EmployeeDeleteRequest
+	if err := ctx.ShouldBind(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, ctl.RespError(ctx, err, "Delete Bind 绑定参数失败"))
+	}
+	resp, err := rpc.EmployeeDelete(ctx, &req)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, ctl.RespError(ctx, err, "EmployeeDelete RPC 调用失败"))
+		return
+	}
+	ctx.JSON(http.StatusOK, ctl.RespSuccess(ctx, resp, e.GetMsg(int(resp.Code))))
+}
