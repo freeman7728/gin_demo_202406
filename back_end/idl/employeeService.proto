@@ -3,38 +3,65 @@ package services;
 option go_package ="./;pb";
 
 message EmployeeModel{
-  // @gotags: json:"id" form:"id"
-  int32 id=1;
   // @gotags: json:"name" form:"name"
-  string name=2;
-  // @gotags: json:"password" form:"password"
-  string password=3;
+  string name=1;
   // @gotags: json:"tel" form:"tel"
-  string tel=4;
+  string tel=2;
   // @gotags: json:"salary" form:"salary"
-  double salary=5;
+  double salary=3;
   // @gotags: json:"note" form:"note"
-  string note=6;
+  string note=4;
   // @gotags: json:"level" form:"level"
-  int32 level=7;
-  // @gotags: json:"deleted_at" form:"deleted_at"
-  string deleted_at=8;
-  // @gotags: json:"account" form:"account"
-  string account=9;
+  int32 level=5;
 }
 
-message EmployeeRequest{
+message EmployeeSignupSuccessModel{
+  // @gotags: json:"id" form:"id"
+  int32 id = 1;
+  // @gotags: json:"account" form:"account"
+  string account = 2;
+  // @gotags: json:"password" form:"password"
+  string password = 3;
+  // @gotags: json:"name" form:"name"
+  string name = 4;
+  // @gotags: json:"tel" form:"tel"
+  string tel = 5;
+  // @gotags: json:"salary" form:"salary"
+  double salary = 6;
+  // @gotags: json:"note" form:"note"
+  string note = 7;
+  // @gotags: json:"level" form:"level"
+  int32 level = 8;
+}
+message EmployeeSignupFailModel{
+  // @gotags: json:"id" form:"id"
+  int32 id = 1;
+  // @gotags: json:"name" form:"name"
+  string name = 2;
+  // @gotags: json:"tel" form:"tel"
+  string tel = 3;
+  // @gotags: json:"salary" form:"salary"
+  double salary = 4;
+  // @gotags: json:"note" form:"note"
+  string note = 5;
+  // @gotags: json:"level" form:"level"
+  int32 level = 6;
+  // @gotags: json:"wrong_message" form:"wrong_message"
+  string wrong_message = 7;
+}
+
+message EmployeeSignupRequest{
   // @gotags: name:"employee_list" json:"employee_list" form:"employee_list" uri:"employee_list"
   repeated EmployeeModel employee_list=1;
   // @gotags: name:"token" json:"token" form:"token" uri:"token"
   string token=2;
 }
 
-message EmployeeResponse{
+message EmployeeSignupResponse{
   // @gotags: name:"success_list" json:"success_list" form:"success_list" uri:"success_list"
-  repeated EmployeeModel success_list=1;
+  repeated EmployeeSignupSuccessModel success_list=1;
   // @gotags: name:"fail_list" json:"fail_list" form:"fail_list" uri:"fail_list"
-  repeated EmployeeModel fail_list=2;
+  repeated EmployeeSignupFailModel fail_list=2;
   // @gotags: name:"code" json:"code" form:"code" uri:"code"
   uint32 code=3;
 }
@@ -54,6 +81,6 @@ message EmployeeLoginResponse{
 }
 
 service EmployeeService{
-    rpc EmployeeSignup(EmployeeRequest) returns(EmployeeResponse);
+    rpc EmployeeSignup(EmployeeSignupRequest) returns(EmployeeSignupResponse);
     rpc EmployeeLogin(EmployeeLoginRequest) returns (EmployeeLoginResponse);
 }

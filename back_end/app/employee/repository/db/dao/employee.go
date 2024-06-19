@@ -3,6 +3,8 @@ package dao
 import (
 	"context"
 	"database_lesson/app/employee/repository/db/model"
+	"database_lesson/idl/pb"
+	"errors"
 	"gorm.io/gorm"
 )
 
@@ -18,12 +20,26 @@ func NewEmployeeDao(ctx context.Context) *EmployeeDao {
 }
 
 func (dao *EmployeeDao) CreateEmployee(in *model.Employee) (tx *gorm.DB) {
-	sql := `INSERT INTO employee (id ,name, password, tel, salary, note, level) VALUES (?,?, ?, ?, ?, ?, ?)`
-	result := dao.Exec(sql, "123", in.Name, in.Password, in.Tel, in.Salary, in.Note, in.Level).Scan(nil)
-	return result
+	sql := `CALL CreateEmployeeWithAccount(?, ?, ?, ?, ?, ?,?)`
+	if len(in.Tel) < 6 {
+		return &gorm.DB{
+			Error: errors.New("电话长度过小"),
+		}
+	}
+	tx = dao.Exec(sql, in.Name, in.Tel, in.Tel[len(in.Tel)-6:], in.Salary, in.Note, in.Level, "@p_account")
+	return tx
 }
 func (dao *EmployeeDao) LoginEmployee(in *model.Login, out *model.Login) (tx *gorm.DB) {
 	sql := `SELECT id FROM account WHERE account = ? AND password = ?`
 	result := dao.Raw(sql, in.Account, in.Password).Scan(out)
+	return result
+}
+func (dao *EmployeeDao) GetEmployeeByTel(successModel *pb.EmployeeSignupSuccessModel) (tx *gorm.DB) {
+	sql := `SELECT employee.id,account,password,name,tel,salary,note,level
+			FROM employee
+			LEFT JOIN account
+			ON employee.id = account.id
+			WHERE employee.tel = ?`
+	result := dao.Raw(sql, successModel.Tel).Scan(&successModel)
 	return result
 }

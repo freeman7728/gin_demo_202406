@@ -23,28 +23,35 @@ func GetEmployeeSrv() *EmployeeSrv {
 	return EmployeeSrvIns
 }
 
-func (r *EmployeeSrv) EmployeeSignup(ctx context.Context, req *pb.EmployeeRequest, resp *pb.EmployeeResponse) (err error) {
+func (r *EmployeeSrv) EmployeeSignup(ctx context.Context, req *pb.EmployeeSignupRequest, resp *pb.EmployeeSignupResponse) (err error) {
 	resp.Code = e.SUCCESS
 	ed := dao.NewEmployeeDao(ctx)
 	for _, item := range req.EmployeeList {
 		employee := &model.Employee{
-			Name:     item.Name,
-			Password: item.Password,
-			Tel:      item.Tel,
-			Salary:   item.Salary,
-			Note:     item.Note,
-			Level:    item.Level,
+			Name:   item.Name,
+			Tel:    item.Tel,
+			Salary: item.Salary,
+			Note:   item.Note,
+			Level:  item.Level,
 		}
-		fmt.Println(employee)
+		fmt.Println(item)
 		res := ed.CreateEmployee(employee)
-		if res.Error != nil {
-			resp.Code = e.ERROR
-			return
-		}
-		if res.RowsAffected == 1 {
-			resp.SuccessList = append(resp.SuccessList, item)
+		if res.Error == nil {
+			successIns := &pb.EmployeeSignupSuccessModel{
+				Tel: item.Tel,
+			}
+			_ = ed.GetEmployeeByTel(successIns)
+			resp.SuccessList = append(resp.SuccessList, successIns)
 		} else {
-			resp.FailList = append(resp.FailList, item)
+			failIns := &pb.EmployeeSignupFailModel{
+				Name:         item.Name,
+				Tel:          item.Tel,
+				Salary:       item.Salary,
+				Note:         item.Note,
+				Level:        item.Level,
+				WrongMessage: res.Error.Error(),
+			}
+			resp.FailList = append(resp.FailList, failIns)
 		}
 	}
 	return

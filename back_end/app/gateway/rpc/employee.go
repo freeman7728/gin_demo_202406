@@ -5,7 +5,7 @@ import (
 	"database_lesson/idl/pb"
 )
 
-func EmployeeSignup(ctx context.Context, req *pb.EmployeeRequest) (resp *pb.EmployeeResponse, err error) {
+func EmployeeSignup(ctx context.Context, req *pb.EmployeeSignupRequest) (resp *pb.EmployeeSignupResponse, err error) {
 	resp, err = EmployeeService.EmployeeSignup(ctx, req)
 	if err != nil {
 		return

@@ -36,7 +36,7 @@ func NewEmployeeServiceEndpoints() []*api.Endpoint {
 // Client API for EmployeeService service
 
 type EmployeeService interface {
-	EmployeeSignup(ctx context.Context, in *EmployeeRequest, opts ...client.CallOption) (*EmployeeResponse, error)
+	EmployeeSignup(ctx context.Context, in *EmployeeSignupRequest, opts ...client.CallOption) (*EmployeeSignupResponse, error)
 	EmployeeLogin(ctx context.Context, in *EmployeeLoginRequest, opts ...client.CallOption) (*EmployeeLoginResponse, error)
 }
 
@@ -52,9 +52,9 @@ func NewEmployeeService(name string, c client.Client) EmployeeService {
 	}
 }
 
-func (c *employeeService) EmployeeSignup(ctx context.Context, in *EmployeeRequest, opts ...client.CallOption) (*EmployeeResponse, error) {
+func (c *employeeService) EmployeeSignup(ctx context.Context, in *EmployeeSignupRequest, opts ...client.CallOption) (*EmployeeSignupResponse, error) {
 	req := c.c.NewRequest(c.name, "EmployeeService.EmployeeSignup", in)
-	out := new(EmployeeResponse)
+	out := new(EmployeeSignupResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -75,13 +75,13 @@ func (c *employeeService) EmployeeLogin(ctx context.Context, in *EmployeeLoginRe
 // Server API for EmployeeService service
 
 type EmployeeServiceHandler interface {
-	EmployeeSignup(context.Context, *EmployeeRequest, *EmployeeResponse) error
+	EmployeeSignup(context.Context, *EmployeeSignupRequest, *EmployeeSignupResponse) error
 	EmployeeLogin(context.Context, *EmployeeLoginRequest, *EmployeeLoginResponse) error
 }
 
 func RegisterEmployeeServiceHandler(s server.Server, hdlr EmployeeServiceHandler, opts ...server.HandlerOption) error {
 	type employeeService interface {
-		EmployeeSignup(ctx context.Context, in *EmployeeRequest, out *EmployeeResponse) error
+		EmployeeSignup(ctx context.Context, in *EmployeeSignupRequest, out *EmployeeSignupResponse) error
 		EmployeeLogin(ctx context.Context, in *EmployeeLoginRequest, out *EmployeeLoginResponse) error
 	}
 	type EmployeeService struct {
@@ -95,7 +95,7 @@ type employeeServiceHandler struct {
 	EmployeeServiceHandler
 }
 
-func (h *employeeServiceHandler) EmployeeSignup(ctx context.Context, in *EmployeeRequest, out *EmployeeResponse) error {
+func (h *employeeServiceHandler) EmployeeSignup(ctx context.Context, in *EmployeeSignupRequest, out *EmployeeSignupResponse) error {
 	return h.EmployeeServiceHandler.EmployeeSignup(ctx, in, out)
 }
 
