@@ -1,0 +1,104 @@
+basePath: /
+definitions:
+  service.ProductFailToInsert:
+    properties:
+      id:
+        description: '@inject_tag: json:"id" form:"id"'
+        type: integer
+      introduction:
+        description: '@inject_tag: json:"introduction" form:"introduction"'
+        type: string
+      msg:
+        description: '@inject_tag: json:"msg" form:"msg"'
+        type: string
+      name:
+        description: '@inject_tag: json:"name" form:"name"'
+        type: string
+      note:
+        description: '@inject_tag: json:"note" form:"note"'
+        type: string
+      price:
+        description: '@inject_tag: json:"price" form:"price"'
+        type: number
+      producer_id:
+        description: '@inject_tag: json:"producer_id" form:"producer_id"'
+        type: integer
+    type: object
+  service.ProductInsertRequest:
+    properties:
+      product:
+        description: '@inject_tag: json:"product" form:"product"'
+        items:
+          $ref: '#/definitions/service.ProductModel'
+        type: array
+    type: object
+  service.ProductInsertResponse:
+    properties:
+      code:
+        description: '@inject_tag: json:"code" form:"code"'
+        type: integer
+      fail_list:
+        description: '@inject_tag: json:"fail_list" form:"fail_list"'
+        items:
+          $ref: '#/definitions/service.ProductFailToInsert'
+        type: array
+      msg:
+        description: '@inject_tag: json:"msg" form:"msg"'
+        type: string
+      success_list:
+        description: '@inject_tag: json:"success_list" form:"success_list"'
+        items:
+          $ref: '#/definitions/service.ProductModel'
+        type: array
+    type: object
+  service.ProductModel:
+    properties:
+      id:
+        description: '@inject_tag: json:"id" form:"id"'
+        type: integer
+      introduction:
+        description: '@inject_tag: json:"introduction" form:"introduction"'
+        type: string
+      name:
+        description: '@inject_tag: json:"name" form:"name"'
+        type: string
+      note:
+        description: '@inject_tag: json:"note" form:"note"'
+        type: string
+      price:
+        description: '@inject_tag: json:"price" form:"price"'
+        type: number
+      producer_id:
+        description: '@inject_tag: json:"producer_id" form:"producer_id"'
+        type: integer
+    type: object
+host: localhost:4000
+info:
+  contact: {}
+  description: 没有描述
+  title: 超市进销存系统--数据库课设接口文档
+  version: "1.0"
+paths:
+  /product/insert:
+    post:
+      consumes:
+      - application/json
+      description: Insert multiple products into the database
+      parameters:
+      - description: Product Insert Request
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/service.ProductInsertRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.ProductInsertResponse'
+      summary: Insert products
+      tags:
+      - product
+swagger: "2.0"
