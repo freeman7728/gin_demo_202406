@@ -1,0 +1,98 @@
+syntax="proto3";
+package services;
+option go_package ="./;pb";
+
+message ProductModel{
+  // @inject_tag: json:"id" form:"id"
+  int32 id = 1;
+  // @inject_tag: json:"name" form:"name"
+  string name = 2;
+  // @inject_tag: json:"price" form:"price"
+  double price = 3;
+  // @inject_tag: json:"introduction" form:"introduction"
+  string introduction = 4;
+  // @inject_tag: json:"note" form:"note"
+  string note = 5;
+  // @inject_tag: json:"producer_id" form:"producer_id"
+  int32 producer_id = 6;//供应商外码
+}
+
+message ProductFailToInsert{
+  // @inject_tag: json:"id" form:"id"
+  int32 id = 1;
+  // @inject_tag: json:"name" form:"name"
+  string name = 2;
+  // @inject_tag: json:"price" form:"price"
+  double price = 3;
+  // @inject_tag: json:"introduction" form:"introduction"
+  string introduction = 4;
+  // @inject_tag: json:"note" form:"note"
+  string note = 5;
+  // @inject_tag: json:"producer_id" form:"producer_id"
+  int32 producer_id = 6;//供应商外码
+  // @inject_tag: json:"msg" form:"msg"
+  string msg = 7;
+}
+
+message ProductInsertRequest{
+  // @inject_tag: json:"product" form:"product"
+  repeated ProductModel product = 1;
+}
+
+message ProductInsertResponse{
+  // @inject_tag: json:"success_list" form:"success_list"
+  repeated ProductModel success_list = 1;
+  // @inject_tag: json:"fail_list" form:"fail_list"
+  repeated ProductFailToInsert fail_list = 2;
+  // @inject_tag: json:"code" form:"code"
+  int32 code = 3;
+  // @inject_tag: json:"msg" form:"msg"
+  string msg = 4;
+}
+
+message ProductSelectRequest{
+}
+
+message ProductSelectResponse{
+  // @inject_tag: json:"products" form:"products"
+  repeated ProductModel products = 1;
+  // @inject_tag: json:"code" form:"code"
+  int32 code = 2;
+  // @inject_tag: json:"msg" form:"msg"
+  string msg = 3;
+}
+
+message ProductDeleteRequest{
+  // @inject_tag: json:"product" form:"product"
+  ProductModel product = 1;
+}
+
+message ProductDeleteResponse{
+  // @inject_tag: json:"success" form:"success"
+  bool success = 1;
+  // @inject_tag: json:"code" form:"code"
+  int32 code = 2;
+  // @inject_tag: json:"msg" form:"msg"
+  string msg = 3;
+}
+
+message ProductUpdateRequest{
+  // @inject_tag: json:"product" form:"product"
+  ProductModel product = 1;
+}
+
+message ProductUpdateResponse{
+  // @inject_tag: json:"success" form:"success"
+  bool success = 1;
+  // @inject_tag: json:"code" form:"code"
+  int32 code = 2;
+  // @inject_tag: json:"msg" form:"msg"
+  string msg = 3;
+}
+service ProductService{
+  rpc InsertProduct(ProductInsertRequest) returns (ProductInsertResponse);
+  rpc DeleteProduct(ProductDeleteRequest) returns (ProductDeleteResponse);
+  rpc UpdateProduct(ProductUpdateRequest) returns (ProductUpdateResponse);
+  rpc SelectProduct(ProductSelectRequest) returns (ProductSelectResponse);
+}
+

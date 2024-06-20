@@ -28,6 +28,7 @@ var (
 	EmployeeServiceAddress string
 	AuthServiceAddress     string
 	ProducerServiceAddress string
+	ProductServiceAddress  string
 
 	RedisHost     string
 	RedisPort     string
@@ -67,6 +68,7 @@ func LoadServer(file *ini.File) {
 	EmployeeServiceAddress = file.Section("server").Key("EmployeeServiceAddress").String()
 	AuthServiceAddress = file.Section("server").Key("AuthServiceAddress").String()
 	ProducerServiceAddress = file.Section("server").Key("ProducerServiceAddress").String()
+	ProductServiceAddress = file.Section("server").Key("ProductServiceAddress").String()
 }
 
 func LoadRedisData(file *ini.File) {
