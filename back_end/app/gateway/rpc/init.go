@@ -12,6 +12,7 @@ var (
 	AuthService     pb.AuthService
 	ProduceService  pb.ProducerService
 	ProductService  pb.ProductService
+	ListService     pb.ListService
 )
 
 func InitRPC() {
@@ -32,16 +33,21 @@ func InitRPC() {
 	productMicroService := micro.NewService(
 		micro.Name("productMicroService.client"),
 	)
+	listMicroService := micro.NewService(
+		micro.Name("listMicroService.client"),
+	)
 	// 用户服务调用实例
 	userService := pb.NewUserService("rpcUserService", userMicroService.Client())
 	employeeService := pb.NewEmployeeService("rpcEmployeeService", employeeMicroService.Client())
 	authService := pb.NewAuthService("rpcAuthService", authMicroService.Client())
 	produceService := pb.NewProducerService("rpcProducerService", produceMicroService.Client())
 	productService := pb.NewProductService("rpcProductService", productMicroService.Client())
+	listService := pb.NewListService("rpcListService", listMicroService.Client())
 
 	UserService = userService
 	EmployeeService = employeeService
 	AuthService = authService
 	ProduceService = produceService
 	ProductService = productService
+	ListService = listService
 }

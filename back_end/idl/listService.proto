@@ -20,7 +20,7 @@ message ListModel{
 }
 
 message ListInsertRequest{
-  // @gotags: json:"msg" form:"msg"
+  // @gotags: json:"list" form:"list"
   repeated ListModel list = 1;
 }
 message ListInsertResponse{
@@ -50,6 +50,8 @@ message ListUpdateResponse{
   bool success = 1;
   // @gotags: json:"code" form:"code"
   int32 code = 2;
+  // @gotags: json:"msg" form:"msg"
+  string msg =3;
 }
 message ListSelectRequest{
 
@@ -64,6 +66,6 @@ message ListSelectResponse{
 service ListService{
   rpc InsertList(ListInsertRequest) returns (ListInsertResponse);
   rpc DeleteList(ListDeleteRequest) returns (ListDeleteResponse);
-  rpc UpdateList(ListUpdateRequest) returns (ListDeleteResponse);
+  rpc UpdateList(ListUpdateRequest) returns (ListUpdateResponse);
   rpc SelectList(ListSelectRequest) returns (ListSelectResponse);
 }

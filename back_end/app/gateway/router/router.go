@@ -34,5 +34,12 @@ func NewRouter() *gin.Engine {
 		productRouter.POST("/delete", http.ProductDeleteHandler)
 		productRouter.POST("/select", http.ProductSelectHandler)
 	}
+	listRouter := ginRouter.Group("/list")
+	{
+		listRouter.POST("/insert", http.ListInsertHandler)
+		listRouter.POST("/update", http.ListUpdateHandler)
+		listRouter.POST("/delete", http.ListDeleteHandler)
+		listRouter.POST("/select", http.ListSelectHandler)
+	}
 	return ginRouter
 }

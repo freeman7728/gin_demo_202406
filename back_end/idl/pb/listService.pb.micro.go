@@ -38,7 +38,7 @@ func NewListServiceEndpoints() []*api.Endpoint {
 type ListService interface {
 	InsertList(ctx context.Context, in *ListInsertRequest, opts ...client.CallOption) (*ListInsertResponse, error)
 	DeleteList(ctx context.Context, in *ListDeleteRequest, opts ...client.CallOption) (*ListDeleteResponse, error)
-	UpdateList(ctx context.Context, in *ListUpdateRequest, opts ...client.CallOption) (*ListDeleteResponse, error)
+	UpdateList(ctx context.Context, in *ListUpdateRequest, opts ...client.CallOption) (*ListUpdateResponse, error)
 	SelectList(ctx context.Context, in *ListSelectRequest, opts ...client.CallOption) (*ListSelectResponse, error)
 }
 
@@ -74,9 +74,9 @@ func (c *listService) DeleteList(ctx context.Context, in *ListDeleteRequest, opt
 	return out, nil
 }
 
-func (c *listService) UpdateList(ctx context.Context, in *ListUpdateRequest, opts ...client.CallOption) (*ListDeleteResponse, error) {
+func (c *listService) UpdateList(ctx context.Context, in *ListUpdateRequest, opts ...client.CallOption) (*ListUpdateResponse, error) {
 	req := c.c.NewRequest(c.name, "ListService.UpdateList", in)
-	out := new(ListDeleteResponse)
+	out := new(ListUpdateResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -99,7 +99,7 @@ func (c *listService) SelectList(ctx context.Context, in *ListSelectRequest, opt
 type ListServiceHandler interface {
 	InsertList(context.Context, *ListInsertRequest, *ListInsertResponse) error
 	DeleteList(context.Context, *ListDeleteRequest, *ListDeleteResponse) error
-	UpdateList(context.Context, *ListUpdateRequest, *ListDeleteResponse) error
+	UpdateList(context.Context, *ListUpdateRequest, *ListUpdateResponse) error
 	SelectList(context.Context, *ListSelectRequest, *ListSelectResponse) error
 }
 
@@ -107,7 +107,7 @@ func RegisterListServiceHandler(s server.Server, hdlr ListServiceHandler, opts .
 	type listService interface {
 		InsertList(ctx context.Context, in *ListInsertRequest, out *ListInsertResponse) error
 		DeleteList(ctx context.Context, in *ListDeleteRequest, out *ListDeleteResponse) error
-		UpdateList(ctx context.Context, in *ListUpdateRequest, out *ListDeleteResponse) error
+		UpdateList(ctx context.Context, in *ListUpdateRequest, out *ListUpdateResponse) error
 		SelectList(ctx context.Context, in *ListSelectRequest, out *ListSelectResponse) error
 	}
 	type ListService struct {
@@ -129,7 +129,7 @@ func (h *listServiceHandler) DeleteList(ctx context.Context, in *ListDeleteReque
 	return h.ListServiceHandler.DeleteList(ctx, in, out)
 }
 
-func (h *listServiceHandler) UpdateList(ctx context.Context, in *ListUpdateRequest, out *ListDeleteResponse) error {
+func (h *listServiceHandler) UpdateList(ctx context.Context, in *ListUpdateRequest, out *ListUpdateResponse) error {
 	return h.ListServiceHandler.UpdateList(ctx, in, out)
 }
 
