@@ -1,0 +1,69 @@
+syntax="proto3";
+package services;
+option go_package ="./;pb";
+
+message ListModel{
+  // @gotags: json:"id" form:"id"
+  int32 id = 1;
+  // @gotags: json:"quantity" form:"quantity"
+  int32 quantity = 2;
+  // @gotags: json:"total_price" form:"total_price"
+  double total_price = 3;
+  // @gotags: json:"time" form:"time"
+  string time = 4;
+  // @gotags: json:"note" form:"note"
+  string note = 5;
+  // @gotags: json:"employee_id" form:"employee_id"
+  int32 employee_id = 6;
+  // @gotags: json:"msg" form:"msg"
+  string msg = 7;
+}
+
+message ListInsertRequest{
+  // @gotags: json:"msg" form:"msg"
+  repeated ListModel list = 1;
+}
+message ListInsertResponse{
+  // @gotags: json:"success_list" form:"success_list"
+  repeated ListModel success_list = 1;
+  // @gotags: json:"fail_list" form:"fail_list"
+  repeated ListModel fail_list = 2;
+  // @gotags: json:"code" form:"code"
+  int32 code = 3;
+}
+message ListDeleteRequest{
+  // @gotags: json:"list" form:"list"
+  ListModel list = 1;
+}
+message ListDeleteResponse{
+  // @gotags: json:"success" form:"success"
+  bool success = 1;
+  // @gotags: json:"code" form:"code"
+  int32 code = 2;
+}
+message ListUpdateRequest{
+  // @gotags: json:"list" form:"list"
+  ListModel list = 1;
+}
+message ListUpdateResponse{
+  // @gotags: json:"success" form:"success"
+  bool success = 1;
+  // @gotags: json:"code" form:"code"
+  int32 code = 2;
+}
+message ListSelectRequest{
+
+}
+message ListSelectResponse{
+  // @gotags: json:"list" form:"list"
+  repeated ListModel list = 1;
+  // @gotags: json:"code" form:"code"
+  int32 code = 2;
+}
+
+service ListService{
+  rpc InsertList(ListInsertRequest) returns (ListInsertResponse);
+  rpc DeleteList(ListDeleteRequest) returns (ListDeleteResponse);
+  rpc UpdateList(ListUpdateRequest) returns (ListDeleteResponse);
+  rpc SelectList(ListSelectRequest) returns (ListSelectResponse);
+}
