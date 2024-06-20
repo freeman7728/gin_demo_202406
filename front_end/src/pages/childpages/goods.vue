@@ -58,7 +58,7 @@
 
       <div class="main-content">
         <div class="button-group">
-      <el-button type="primary" @click="addGoods">添加商品</el-button>
+      <addGoods class="add_btn"/>
       <el-button type="warning" @click="editGoods">修改商品</el-button>
       <el-button type="info" @click="searchGoods">查找商品</el-button>
       <el-button type="danger" @click="deleteGoods">删除商品</el-button>
@@ -79,7 +79,11 @@
   <script>
   import { ref, watch } from 'vue'
   import { useRoute, useRouter} from 'vue-router'
+  import addGoods from '@/components/addGoods.vue';
   export default {
+    components: {
+      addGoods
+    },
     data() {
       return {
         isCollapse: false,

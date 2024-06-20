@@ -58,7 +58,7 @@
 
       <div class="main-content">
         <div class="button-group">
-      <el-button type="primary" @click="addCustomer">添加客户</el-button>
+      <addClient class="add_btn"/>
       <el-button type="warning" @click="editCustomer">修改客户</el-button>
       <el-button type="info" @click="searchCustomer">查找客户</el-button>
       <el-button type="danger" @click="deleteCustomer">删除客户</el-button>
@@ -82,7 +82,11 @@
   <script>
   import { ref, watch } from 'vue'
   import { useRoute, useRouter} from 'vue-router'
+  import addClient from '@/components/addClient.vue';
   export default {
+    components: {
+      addClient
+    },
     data() {
       return {
         customerData: [

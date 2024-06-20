@@ -58,7 +58,7 @@
 
       <div class="main-content">
         <div class="button-group">
-      <el-button type="primary" @click="addlist">添加清单</el-button>
+      <addList class="add_btn"/>
       <el-button type="warning" @click="editlist">修改清单</el-button>
       <el-button type="info" @click="searchlist">查找清单</el-button>
       <el-button type="danger" @click="deletelist">删除清单</el-button>
@@ -81,7 +81,11 @@
   <script>
   import { ref, watch } from 'vue'
   import { useRoute, useRouter} from 'vue-router'
+  import addList from '@/components/addList.vue';
   export default {
+    components: {
+      addList
+    },
     data() {
     return {
       tableData: [
