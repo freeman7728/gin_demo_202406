@@ -58,7 +58,7 @@
 
       <div class="main-content">
         <div class="button-group">
-      <el-button type="primary" @click="addorder">添加订单</el-button>
+      <addOrder class="add_btn"/>
       <el-button type="warning" @click="editorder">修改订单</el-button>
       <el-button type="info" @click="searchorder">查找订单</el-button>
       <el-button type="danger" @click="deleteorder">删除订单</el-button>
@@ -82,7 +82,11 @@
   <script>
   import { ref, watch } from 'vue'
   import { useRoute, useRouter} from 'vue-router'
+  import addOrder from '@/components/addOrder.vue';
   export default {
+    components: {
+      addOrder
+    },
     data() {
       return {
         isCollapse: false,
