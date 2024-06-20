@@ -1,0 +1,73 @@
+syntax="proto3";
+package services;
+option go_package ="./;pb";
+
+message DetailModel{
+  // @gotags: json:"id" form:"id"
+  int32 id = 1;
+  // @gotags: json:"product_id" form:"product_id"
+  int32 product_id = 2;
+  // @gotags: json:"quantity" form:"quantity"
+  int32 quantity = 3;
+  // @gotags: json:"total_price" form:"total_price"
+  double total_price = 4;
+  // @gotags: json:"note" form:"note"
+  string note = 5;
+  // @gotags: json:"list_id" form:"list_id"
+  int32 list_id = 6;
+  // @gotags: json:"msg" form:"msg"
+  string msg = 7;
+}
+
+message DetailInsertRequest{
+  // @gotags: json:"list" form:"list"
+  repeated DetailModel list = 1;
+}
+message DetailInsertResponse{
+  // @gotags: json:"success_list" form:"success_list"
+  repeated DetailModel success_list = 1;
+  // @gotags: json:"fail_list" form:"fail_list"
+  repeated DetailModel fail_list = 2;
+  // @gotags: json:"code" form:"code"
+  int32 code = 3;
+}
+message DetailDeleteRequest{
+  // @gotags: json:"detail" form:"detail"
+  DetailModel detail = 1;
+}
+message DetailDeleteResponse{
+  // @gotags: json:"success" form:"success"
+  bool success = 1;
+  // @gotags: json:"code" form:"code"
+  int32 code = 2;
+  // @gotags: json:"msg" form:"msg"
+  string msg =3;
+}
+message DetailUpdateRequest{
+  // @gotags: json:"detail" form:"detail"
+  DetailModel detail = 1;
+}
+message DetailUpdateResponse{
+  // @gotags: json:"success" form:"success"
+  bool success = 1;
+  // @gotags: json:"code" form:"code"
+  int32 code = 2;
+  // @gotags: json:"msg" form:"msg"
+  string msg =3;
+}
+message DetailSelectRequest{
+
+}
+message DetailSelectResponse{
+  // @gotags: json:"detail_list" form:"detail_list"
+  repeated DetailModel detail_list = 1;
+  // @gotags: json:"code" form:"code"
+  int32 code = 2;
+}
+
+service DetailService{
+  rpc InsertDetail(DetailInsertRequest) returns (DetailInsertResponse);
+  rpc DeleteDetail(DetailDeleteRequest) returns (DetailDeleteResponse);
+  rpc UpdateDetail(DetailUpdateRequest) returns (DetailUpdateResponse);
+  rpc SelectDetail(DetailSelectRequest) returns (DetailSelectResponse);
+}
