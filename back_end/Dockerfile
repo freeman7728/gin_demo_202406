@@ -18,17 +18,17 @@ ARG SERVICE
 RUN CGO_ENABLED=0 GOOS=linux go build -o /out/${SERVICE} ./app/${SERVICE}/cmd/main.go
 
 ## 第二阶段：创建运行时镜像
-#FROM scratch
-#
-## 设置构建参数
-#ARG SERVICE
-#
-## 复制所有文件，包括构建好的二进制文件和配置文件
-#COPY --from=builder /app /app
-#COPY --from=builder /out/${SERVICE} /${SERVICE}
-#
-## 设置工作目录
-#WORKDIR /app
+FROM scratch
+
+# 设置构建参数
+ARG SERVICE
+
+# 复制所有文件，包括构建好的二进制文件和配置文件
+COPY --from=builder /app /app
+COPY --from=builder /out/${SERVICE} /${SERVICE}
+
+# 设置工作目录
+WORKDIR /app
 
 # 设置入口点和命令
 ENTRYPOINT ["/gateway"]

@@ -1,56 +1,56 @@
-version: '3.8'
-
-services:
-  etcd:
-    image: quay.io/coreos/etcd:v3.5.0
-    container_name: etcd
-    ports:
-      - "2379:2379"
-      - "2380:2380"
-    command: |
-      /usr/local/bin/etcd
-      -name etcd0
-      -advertise-client-urls http://etcd:2379
-      -listen-client-urls http://0.0.0.0:2379
-      -initial-advertise-peer-urls http://etcd:2380
-      -listen-peer-urls http://0.0.0.0:2380
-      -initial-cluster etcd0=http://etcd:2380
-  mysql_database_lesson:
-    image: mysql:8.0
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: database_lesson
-    volumes:
-      - "$PWD/consts/mysql/init:/docker-entrypoint-initdb.d"
-
-  employee:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - SERVICE=employee
-    image: employee:latest
-    container_name: employee
-    environment:
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-    depends_on:
-      - mysql_database_lesson
-      - etcd
-  gateway:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - SERVICE=gateway
-    image: gateway:latest
-    container_name: gateway
-    ports:
-      - "4000:4000"
-    environment:
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-    depends_on:
-      - mysql_database_lesson
-      - etcd
+#version: '3.8'
+#
+#services:
+#  etcd:
+#    image: quay.io/coreos/etcd:v3.5.0
+#    container_name: etcd
+#    ports:
+#      - "2379:2379"
+#      - "2380:2380"
+#    command: |
+#      /usr/local/bin/etcd
+#      -name etcd0
+#      -advertise-client-urls http://etcd:2379
+#      -listen-client-urls http://0.0.0.0:2379
+#      -initial-advertise-peer-urls http://etcd:2380
+#      -listen-peer-urls http://0.0.0.0:2380
+#      -initial-cluster etcd0=http://etcd:2380
+#  mysql_database_lesson:
+#    image: mysql:8.0
+#    container_name: mysql
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: database_lesson
+#    volumes:
+#      - "$PWD/consts/mysql/init:/docker-entrypoint-initdb.d"
+#
+#  employee:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#      args:
+#        - SERVICE=employee
+#    image: employee:latest
+#    container_name: employee
+#    environment:
+#      MYSQL_USER: root
+#      MYSQL_PASSWORD: root
+#    depends_on:
+#      - mysql_database_lesson
+#      - etcd
+#  gateway:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#      args:
+#        - SERVICE=gateway
+#    image: gateway:latest
+#    container_name: gateway
+#    ports:
+#      - "4000:4000"
+#    environment:
+#      MYSQL_USER: root
+#      MYSQL_PASSWORD: root
+#    depends_on:
+#      - mysql_database_lesson
+#      - etcd
