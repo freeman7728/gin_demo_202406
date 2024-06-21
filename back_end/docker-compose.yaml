@@ -22,7 +22,6 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: database_lesson
     volumes:
-      - "$PWD/consts/mysql/data:/var/lib/mysql"
       - "$PWD/consts/mysql/conf/:/etc/mysql"
       - "$PWD/consts/mysql/init:/docker-entrypoint-initdb.d"
 
