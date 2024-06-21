@@ -19,7 +19,6 @@ FROM scratch
 
 # 复制所有文件，包括构建好的二进制文件和配置文件
 COPY --from=builder /app /app
-COPY --from=builder /out/database_design /database_design
 
 # 设置工作目录
 WORKDIR /app
