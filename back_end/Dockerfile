@@ -15,7 +15,7 @@ COPY . .
 
 # 构建每个微服务的二进制文件
 ARG SERVICE
-RUN CGO_ENABLED=0 GOOS=linux go build -o /out/${SERVICE} ./app/${SERVICE}/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o /out/${SERVICE} ./app/${SERVICE}/cmd/main.go
 
 # 第二阶段：创建运行时镜像
 FROM scratch
