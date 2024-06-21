@@ -21,5 +21,5 @@ COPY --from=builder /app /app
 WORKDIR /app
 EXPOSE 4000
 # 设置入口点和命令
-ENTRYPOINT ["/database_design"]
+ENTRYPOINT ["/app/database_design"]
 
