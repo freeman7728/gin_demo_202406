@@ -10,9 +10,10 @@
           label-width="auto"
           class="demo-ruleForm"
         >
-          <el-form-item label="订单号" prop="orderId">
-            <el-input v-model="ruleForm.orderId" autocomplete="off" />
-          </el-form-item>
+        <el-form-item label="订单号" prop="orderId">
+          <el-input v-model="ruleForm.orderId" autocomplete="off" />
+        </el-form-item>
+        <el-button @click="fetchOrderInfo" style="margin-left: 70px; margin-bottom: 30px">确定</el-button>
           <el-form-item label="清单号" prop="listId">
             <el-input v-model="ruleForm.listId" autocomplete="off" />
           </el-form-item>
@@ -44,7 +45,10 @@
   
   <script lang="ts" setup>
   import { reactive, ref } from 'vue';
-  import { ElMessageBox, FormInstance, FormRules } from 'element-plus';
+  import { ElMessageBox, FormInstance, FormRules, ElMessage } from 'element-plus';
+  import { getCurrentInstance, } from 'vue';
+  const { proxy } = getCurrentInstance();
+
   
   const dialogVisible = ref(false);
   const ruleFormRef = ref<FormInstance>();
@@ -62,6 +66,24 @@
   const rules = reactive<FormRules<typeof ruleForm>>({
     orderId: [{ required: true, message: '请输入订单号', trigger: 'blur' }],
   });
+  const fetchOrderInfo = async () => {
+    try {
+      const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/order/${ruleForm.orderId}`);
+      if (response.status === 200) {
+        ruleForm.listId = response.data.listId;
+        ruleForm.productId = response.data.productId;
+        ruleForm.purchaseQuantity = response.data.purchaseQuantity;
+        ruleForm.productPrice = response.data.productPrice;
+        ruleForm.totalPrice = response.data.totalPrice;
+        ruleForm.remark = response.data.remark;
+      } else {
+        ElMessage.error('获取订单信息失败');
+      }
+    } catch (error) {
+      ElMessage.error('获取订单信息时出错');
+      console.error(error);
+    }
+  };
   
   const handleClose = (done: () => void) => {
     ElMessageBox.confirm('确定关闭吗？').then(() => {
@@ -75,12 +97,24 @@
     dialogVisible.value = true;
   };
   
-  const submitForm = (formEl: FormInstance | undefined) => {
+  const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
-    formEl.validate((valid) => {
+    formEl.validate(async (valid) => {
       if (valid) {
         console.log('提交订单信息:', ruleForm);
-        dialogVisible.value = false; // 关闭对话框
+        try {
+          const response = await proxy.$axios.put(`${proxy.$serverUrl_test}/order/update`, ruleForm);
+          if (response.status === 200) {
+            ElMessage.success('订单信息已成功更新');
+            resetForm(formEl);
+            dialogVisible.value = false; // 关闭对话框
+          } else {
+            ElMessage.error('更新订单信息失败');
+          }
+        } catch (error) {
+          ElMessage.error('更新订单信息时出错');
+          console.error(error);
+        }
       } else {
         console.log('提交出错!');
       }

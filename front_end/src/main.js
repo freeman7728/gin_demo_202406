@@ -17,15 +17,15 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
 
-
 app.use(router);
 app.use(Print);
 app.use(ElementPlus); //  注册到vue 业务中
 
 app.config.globalProperties.$echarts = echarts;
-app.config.globalProperties.axios = axios;
-app.config.globalProperties.qs = Qs;
-app.config.globalProperties.serverUrl = "http://101.42.232.154:9001";
-app.config.globalProperties.serverUrl2 = "http://101.42.232.154:9002";
+app.config.globalProperties.$axios = axios;
+app.config.globalProperties.$qs = Qs;
+// app.config.globalProperties.$serverUrl = "http://101.42.232.154:9001";
+// app.config.globalProperties.$serverUrl2 = "http://101.42.232.154:9002";
+app.config.globalProperties.$serverUrl_test = "http://localhost:4000";
 
 app.mount('#app');

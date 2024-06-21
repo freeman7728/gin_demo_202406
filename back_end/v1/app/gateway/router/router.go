@@ -2,6 +2,7 @@ package router
 
 import (
 	"database_lesson/app/gateway/http"
+	"database_lesson/middleware"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -9,9 +10,11 @@ import (
 
 func NewRouter() *gin.Engine {
 	ginRouter := gin.Default()
+	ginRouter.Use(middleware.CORSMiddleware())
 	//ginRouter.Use(middleware.Cors())
 	//store := cookie.NewStore([]byte("something-very-secret"))
 	//ginRouter.Use(sessions.Sessions("mysession", store))
+
 	ginRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	employeeRouter := ginRouter.Group("/employee")
 	{

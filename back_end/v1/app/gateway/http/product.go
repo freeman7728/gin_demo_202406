@@ -14,6 +14,8 @@ func ProductInsertHandler(ctx *gin.Context) {
 	if err := ctx.ShouldBind(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, ctl.RespError(ctx, err, "Product Bind 绑定参数失败"))
 	}
+	fmt.Println(&req)
+	fmt.Println(ctx)
 	resp, err := rpc.ProductInsert(ctx, &req)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, ctl.RespError(ctx, err, "ProductInsert RPC 调用失败"))

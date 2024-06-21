@@ -26,7 +26,10 @@
   
   <script lang="ts" setup>
   import { reactive, ref } from 'vue';
-  import { ElMessageBox, FormInstance, FormRules } from 'element-plus';
+  import { ElMessageBox, FormInstance, FormRules, ElMessage } from 'element-plus';
+  import axios from 'axios';
+  import { getCurrentInstance, } from 'vue';
+  const { proxy } = getCurrentInstance();
   
   const dialogVisible = ref(false);
   const ruleFormRef = ref<FormInstance>();
@@ -51,13 +54,24 @@
     dialogVisible.value = true;
   };
   
-  const submitForm = (formEl: FormInstance | undefined) => {
+  const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
-    formEl.validate((valid) => {
+    formEl.validate(async (valid) => {
       if (valid) {
         console.log('删除订单号:', ruleForm.orderId);
-        // 在这里添加删除订单的逻辑，例如调用API删除订单
-        dialogVisible.value = false; // 关闭对话框
+        try {
+          const response = await proxy.$axios.delete(`${proxy.$serverUrl_test}/order/delete`, { data: { id: ruleForm.orderId } });
+          if (response.status === 200) {
+            ElMessage.success('订单已成功删除');
+            resetForm(formEl);
+            dialogVisible.value = false; // 关闭对话框
+          } else {
+            ElMessage.error('删除订单失败');
+          }
+        } catch (error) {
+          ElMessage.error('删除订单时出错');
+          console.error(error);
+        }
       } else {
         console.log('提交出错!');
       }
