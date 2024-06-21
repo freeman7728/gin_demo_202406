@@ -1,21 +1,21 @@
 package routers
 
 import (
+	"database_lesson/controllers"
 	"database_lesson/global"
 
 	"github.com/gin-gonic/gin"
 )
 
-type User struct {
-	USER_ID       int
-	USER_NAME     string
-	USER_PASSWORD string
-	USER_KEY      string
-}
-
 func InitRouter() *gin.Engine {
-
 	gin.SetMode(global.Config.System.Env)
 	router := gin.Default()
+	employeeRouter := router.Group("/employee")
+	{
+		employeeRouter.POST("/insert", controllers.InsertEmployeeController)
+		employeeRouter.POST("/login", controllers.LoginEmployeeController)
+		employeeRouter.POST("/update", controllers.UpdateEmployeeController)
+		employeeRouter.POST("/delete", controllers.DeleteEmployeeController)
+	}
 	return router
 }
