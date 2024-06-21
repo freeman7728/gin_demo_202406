@@ -2,10 +2,16 @@ package main
 
 import (
 	"database_lesson/core"
+	_ "database_lesson/docs"
 	"database_lesson/global"
 	"database_lesson/routers"
 )
 
+// @title           超市进销存系统--数据库课设接口文档
+// @version         1.0
+// @description     没有描述
+// @host      localhost:4000
+// @BasePath  /
 func main() {
 	core.InitConf()
 	global.Log = core.InitLogger()

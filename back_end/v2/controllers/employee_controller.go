@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	_ "database_lesson/dao"
 	"database_lesson/dto"
 	"database_lesson/models"
 	"database_lesson/services"
@@ -12,6 +13,14 @@ import (
 接收gin上下文，解析后转发到service处理
 */
 
+// @Summary 批量导入用户
+// @Description 批量导入用户，并且返回成功失败列表
+// @Tags employee
+// @Accept  json
+// @Produce  json
+// @Param   list body dto.EmployeeList true "Request"
+// @Success      200  {object}  dto.EmployeeInsertResult
+// @Router /employee/insert [post]
 func InsertEmployeeController(c *gin.Context) {
 	var employees dto.EmployeeList
 	if err := c.ShouldBindJSON(&employees); err != nil {
@@ -27,6 +36,14 @@ func InsertEmployeeController(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// @Summary 用户登录
+// @Description 验证账号密码
+// @Tags employee
+// @Accept  json
+// @Produce  json
+// @Param   employee body models.Employee true "Request"
+// @Success      200  msg  "登录成功或失败"
+// @Router /employee/login [post]
 func LoginEmployeeController(c *gin.Context) {
 	var employee models.Employee
 	if err := c.ShouldBindJSON(&employee); err != nil {
@@ -42,6 +59,14 @@ func LoginEmployeeController(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// @Summary 用户修改信息
+// @Description 验证账号密码，然后把密码改为新密码
+// @Tags employee
+// @Accept  json
+// @Produce  json
+// @Param   employee body dto.EmployeeUpdateRequest true "Request"
+// @Success      200  msg  "修改成功或失败"
+// @Router /employee/update [post]
 func UpdateEmployeeController(c *gin.Context) {
 	var employee dto.EmployeeUpdateRequest
 	if err := c.ShouldBindJSON(&employee); err != nil {
@@ -57,6 +82,14 @@ func UpdateEmployeeController(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// @Summary 删除用户
+// @Description 验证账号密码，然后删除用户
+// @Tags employee
+// @Accept  json
+// @Produce  json
+// @Param   employee body models.Employee true "Request"
+// @Success      200  msg  "删除成功或失败"
+// @Router /employee/delete [post]
 func DeleteEmployeeController(c *gin.Context) {
 	var employee models.Employee
 	if err := c.ShouldBindJSON(&employee); err != nil {

@@ -1,0 +1,160 @@
+basePath: /
+definitions:
+  dto.EmployeeInsertResult:
+    properties:
+      fail_list:
+        items:
+          $ref: '#/definitions/models.Employee'
+        type: array
+      success_list:
+        items:
+          $ref: '#/definitions/models.Employee'
+        type: array
+    type: object
+  dto.EmployeeList:
+    properties:
+      employee_list:
+        items:
+          $ref: '#/definitions/models.Employee'
+        type: array
+    type: object
+  dto.EmployeeUpdateRequest:
+    properties:
+      account:
+        type: string
+      id:
+        type: integer
+      level:
+        type: integer
+      msg:
+        type: string
+      name:
+        type: string
+      new_password:
+        type: string
+      note:
+        type: string
+      password:
+        type: string
+      salary:
+        type: number
+      tel:
+        type: string
+    type: object
+  models.Employee:
+    properties:
+      account:
+        type: string
+      id:
+        type: integer
+      level:
+        type: integer
+      msg:
+        type: string
+      name:
+        type: string
+      note:
+        type: string
+      password:
+        type: string
+      salary:
+        type: number
+      tel:
+        type: string
+    type: object
+host: localhost:4000
+info:
+  contact: {}
+  description: 没有描述
+  title: 超市进销存系统--数据库课设接口文档
+  version: "1.0"
+paths:
+  /employee/delete:
+    post:
+      consumes:
+      - application/json
+      description: 验证账号密码，然后删除用户
+      parameters:
+      - description: Request
+        in: body
+        name: employee
+        required: true
+        schema:
+          $ref: '#/definitions/models.Employee'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功或失败
+          schema:
+            type: msg
+      summary: 删除用户
+      tags:
+      - employee
+  /employee/insert:
+    post:
+      consumes:
+      - application/json
+      description: 批量导入用户，并且返回成功失败列表
+      parameters:
+      - description: Request
+        in: body
+        name: list
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EmployeeList'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.EmployeeInsertResult'
+      summary: 批量导入用户
+      tags:
+      - employee
+  /employee/login:
+    post:
+      consumes:
+      - application/json
+      description: 验证账号密码
+      parameters:
+      - description: Request
+        in: body
+        name: employee
+        required: true
+        schema:
+          $ref: '#/definitions/models.Employee'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登录成功或失败
+          schema:
+            type: msg
+      summary: 用户登录
+      tags:
+      - employee
+  /employee/update:
+    post:
+      consumes:
+      - application/json
+      description: 验证账号密码，然后把密码改为新密码
+      parameters:
+      - description: Request
+        in: body
+        name: employee
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EmployeeUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 修改成功或失败
+          schema:
+            type: msg
+      summary: 用户修改信息
+      tags:
+      - employee
+swagger: "2.0"

@@ -12,6 +12,6 @@ type EmployeeInsertResult struct {
 }
 
 type EmployeeUpdateRequest struct {
-	models.Employee
-	NewPassword string `json:"new_password"`
+	models.Employee `json:",inline"`
+	NewPassword     string `json:"new_password"`
 }
