@@ -38,20 +38,6 @@ services:
     depends_on:
       - mysql_database_lesson
       - etcd
-  producer:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - SERVICE=producer
-    image: producer:latest
-    container_name: producer
-    environment:
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-    depends_on:
-      - mysql_database_lesson
-      - etcd
   gateway:
     build:
       context: .
