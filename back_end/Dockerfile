@@ -25,5 +25,4 @@ ARG SERVICE
 COPY --from=builder /out/${SERVICE} /${SERVICE}
 
 # 设置入口点和命令
-ENTRYPOINT ["/bin/sh", "-c"]
-CMD ["/${SERVICE}"]
+CMD ["./employee"]
