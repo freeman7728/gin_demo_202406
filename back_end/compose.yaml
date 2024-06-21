@@ -60,8 +60,48 @@ services:
         - SERVICE=gateway
     image: gateway:latest
     container_name: gateway
-    ports:
-      - "4000:4000"
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - mysql_database_lesson
+      - etcd
+  product:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - SERVICE=product
+    image: product:latest
+    container_name: product
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - mysql_database_lesson
+      - etcd
+  list:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - SERVICE=list
+    image: list:latest
+    container_name: list
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - mysql_database_lesson
+      - etcd
+  detail:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - SERVICE=detail
+    image: detail:latest
+    container_name: detail
     environment:
       MYSQL_USER: root
       MYSQL_PASSWORD: root
