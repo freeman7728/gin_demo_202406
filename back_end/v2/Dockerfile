@@ -6,10 +6,10 @@ ENV GO111MODULE=on \
     GOARCH=amd64\
     GOPROXY=https://goproxy.cn
 # 设置/usr/local/goproject，进入容器就会直接进入到这个目录下,而不是进入到默认根目录下面
-WORKDIR /
+WORKDIR /app
 # 复制项目中的 go.mod 和 go.sum文件并下载依赖信息
-COPY go.mod .
-COPY go.sum .
+COPY go.mod /app
+COPY go.sum /app
 RUN go mod tidy
 # 将代码复制到容器中
 COPY . .
