@@ -9,7 +9,7 @@ ADD . /app/
 
 WORKDIR /app
 
-RUN CGO_ENABLED=0 GOOS=linux go build ./cmd/main.go -o main .
+RUN CGO_ENABLED=0 GOOS=linux go build -o main ./cmd/main.go
 
 # 第二阶构建，从空白镜像开始
 FROM scratch
