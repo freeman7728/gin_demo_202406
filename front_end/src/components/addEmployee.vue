@@ -1,53 +1,41 @@
 <template>
     <el-button type="primary" plain @click="openDialog">添加员工</el-button>
 
-    <el-dialog v-model="dialogVisible" title="添加员工信息" width="85%" :before-close="handleClose">
+    <el-dialog v-model="dialogVisible" title="添加员工信息" width="90%" :before-close="handleClose">
       <el-form ref="employeeForm" :rules="rules" >
         <el-row class="header-row">
-          <el-col :span="3"><strong>员工编号</strong></el-col>
-          <el-col :span="3"><strong>员工姓名</strong></el-col>
-          <el-col :span="3"><strong>员工密码</strong></el-col>
-          <el-col :span="3"><strong>员工级别</strong></el-col>
-          <el-col :span="3"><strong>员工电话</strong></el-col>
-          <el-col :span="3"><strong>员工工资</strong></el-col>
-          <el-col :span="3"><strong>备注</strong></el-col>
-          <el-col :span="3"><strong>操作</strong></el-col>
+          <el-col :span="4"><strong>员工姓名</strong></el-col>
+          <el-col :span="4"><strong>员工密码</strong></el-col>
+          <el-col :span="4"><strong>员工电话</strong></el-col>
+          <el-col :span="4"><strong>员工工资</strong></el-col>
+          <el-col :span="4"><strong>备注</strong></el-col>
+          <el-col :span="4"><strong>操作</strong></el-col>
         </el-row>
         <div v-for="(employee, index) in employees" :key="index" class="employee-row">
       <el-row :gutter="5">
-        <el-col :span="3">
-          <el-form-item :prop="'employees.' + index + '.id'" >
-            <el-input v-model="employee.id"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="3">
+        <el-col :span="4">
           <el-form-item :prop="'employees.' + index + '.name'">
             <el-input v-model="employee.name"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="4">
           <el-form-item :prop="'employees.' + index + '.password'">
             <el-input type="password" v-model="employee.password"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="3">
-          <el-form-item :prop="'employees.' + index + '.level'">
-            <el-input v-model="employee.level"></el-input>
+        <el-col :span="4">
+          <el-form-item :prop="'employees.' + index + '.tel'">
+            <el-input v-model="employee.tel"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="3">
-          <el-form-item :prop="'employees.' + index + '.phone'">
-            <el-input v-model="employee.phone"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="3">
+        <el-col :span="4">
           <el-form-item :prop="'employees.' + index + '.salary'">
             <el-input v-model="employee.salary"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="2">
-          <el-form-item :prop="'employees.' + index + '.remark'">
-            <el-input type="textarea" v-model="employee.remark"></el-input>
+        <el-col :span="3">
+          <el-form-item :prop="'employees.' + index + '.note'">
+            <el-input type="textarea" v-model="employee.note"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="3" class="action-col">
@@ -72,17 +60,16 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { ElMessageBox } from 'element-plus';
+import axios from 'axios';
 
 const dialogVisible = ref(false);
 const employees = ref([
   {
-    id: '',
     name: '',
     password: '',
-    level: '',
-    phone: '',
+    tel: '',
     salary: '',
-    remark: '',
+    note: '',
   },
 ]);
 
@@ -99,7 +86,6 @@ const handleClose = (done: () => void) => {
     ElMessageBox.confirm('确定关闭吗？').then(() => {
       done();
     }).catch(() => {
-      // Handle cancellation
     });
   };
 
@@ -109,19 +95,16 @@ const openDialog = () => {
 
 const addNewEmployee = () => {
   employees.value.push({
-    id: '',
     name: '',
     password: '',
-    level: '',
-    phone: '',
+    tel: '',
     salary: '',
-    remark: '',
+    note: '',
   });
 };
 
 const saveEmployees = () => {
   console.log('保存员工列表:', employees.value);
-  // Reset form or submit data to backend
   resetForm();
   dialogVisible.value = false;
 };
@@ -129,13 +112,11 @@ const saveEmployees = () => {
 const resetForm = () => {
   employees.value = [
     {
-      id: '',
       name: '',
       password: '',
-      level: '',
-      phone: '',
+      tel: '',
       salary: '',
-      remark: '',
+      note: '',
     },
   ];
 };

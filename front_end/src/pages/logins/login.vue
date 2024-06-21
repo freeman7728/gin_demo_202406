@@ -42,7 +42,7 @@
     </div>
   </template>
   
-  <style>
+  <style scoped>
   :root {
   --white: #e9e9e9;
   --gray: #333;
@@ -65,21 +65,17 @@
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-body {
+.container {
   align-items: center;
-  /* background: url('@/assets/img/background.jpg') no-repeat center center fixed; */
+  background: url('@/assets/img/background.jpg') no-repeat center center fixed; 
   background-size: cover;
   display: grid;
   height: 100vh;
   place-items: center;
 }
 
-.container {
-  border-radius: 8px;
-  overflow: hidden;
-}
-
 .form-title {
+  font-family: kai1;
   font-weight: 300;
   margin: 0;
   margin-bottom: 1.25rem;
@@ -94,6 +90,9 @@ body {
 }
 
 .container__form {
+  background-color: rgb(202, 194, 194);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+  border-radius: 8px;
   height: 50%;
   width: 30%; 
   position: absolute;
@@ -191,7 +190,7 @@ body {
 }
 
 .btn {
-  background-color: var(--blue);
+  background-color: rgb(132, 213, 236);
   background-image: linear-gradient(90deg, var(--blue) 0%, var(--lightblue) 74%);
   border-radius: 15px;
   border: 1px solid var(--blue);  
@@ -199,6 +198,7 @@ body {
   cursor: pointer;
   font-size: 0.8rem;
   font-weight: bold;
+  font-family: alimama;
   letter-spacing: 0.1rem;
   padding: 0.9rem 4rem;
   text-transform: uppercase;

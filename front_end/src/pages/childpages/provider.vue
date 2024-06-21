@@ -59,9 +59,9 @@
       <div class="main-content">
         <div class="button-group">
       <addClient class="add_btn"/>
-      <el-button type="warning" @click="editCustomer">修改客户</el-button>
+      <updateClient class="update_btn"/>
       <el-button type="info" @click="searchCustomer">查找客户</el-button>
-      <el-button type="danger" @click="deleteCustomer">删除客户</el-button>
+      <delClient class="del_btn"/>
       <el-button type="success" @click="exportCustomer">导出客户</el-button>
         </div>
     <el-table :data="customerData" style="width: 100%">
@@ -80,12 +80,18 @@
   </template>
   
   <script>
-  import { ref, watch } from 'vue'
-  import { useRoute, useRouter} from 'vue-router'
+  import { ref, watch } from 'vue';
+  import { useRoute, useRouter} from 'vue-router';
   import addClient from '@/components/addClient.vue';
+  import axios from 'axios';
+  import updateClient from '@/components/updateClient.vue';
+  import delClient from '@/components/delClient.vue';
+  import { onMounted } from 'vue';
   export default {
     components: {
-      addClient
+      addClient,
+      updateClient,
+      delClient
     },
     data() {
       return {
@@ -133,6 +139,7 @@
         const route = useRoute()
         const router = useRouter()
         const currentRoute = ref(route.path)
+        const customerData = ref([]);
         console.log(currentRoute);
         console.log(345);
         watch(route, (newRoute) => {
@@ -142,6 +149,28 @@
         const handleSelect = (index) => {
       router.push(index)
     }
+    const fetchcustomerData = async () => {
+      try {
+        const response = await axios.get('/get-attribute');
+        const rawData = response.data;
+        customerData.value = rawData.map(item => ({
+          id: item.id,
+          name: time.name,
+          shortName: time.short_name,
+          address: item.address,
+          companyPhone: item.tel,
+          email: item.email,
+          contactPerson: item.contact_name,
+          contactPerson: item.contact_tel,
+          remark: item.note
+        }));
+      } catch (error) {
+        console.error("获取客户数据失败：", error);
+      }
+    };
+    onMounted(() => {
+      fetchcustomerData();
+    })
 
         return {
         currentRoute,
@@ -232,7 +261,10 @@
  	background-color: #f0f2f5;
     color:rgb(39, 125, 255)
  }
-
+ .button-group{
+  display: flex; 
+  gap: 10px; 
+}
 
   </style>
   

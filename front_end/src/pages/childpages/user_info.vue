@@ -201,7 +201,7 @@
 .main-content {
     flex: 1;
     padding: 20px;
-    margin-left: 7%; 
+    margin-left: 14%; 
 }
 .info_card {
     width: 1100px;
