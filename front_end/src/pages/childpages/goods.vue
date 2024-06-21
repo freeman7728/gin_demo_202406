@@ -59,9 +59,9 @@
       <div class="main-content">
         <div class="button-group">
       <addGoods class="add_btn"/>
-      <el-button type="warning" @click="editGoods">修改商品</el-button>
+      <updateGoods class="update_btn"/>
       <el-button type="info" @click="searchGoods">查找商品</el-button>
-      <el-button type="danger" @click="deleteGoods">删除商品</el-button>
+      <delGoods class="del_btn"/>
       <el-button type="success" @click="exportGoods">导出商品</el-button>
         </div>
     <el-table :data="productData" style="width: 100%">
@@ -77,12 +77,17 @@
   </template>
   
   <script>
-  import { ref, watch } from 'vue'
-  import { useRoute, useRouter} from 'vue-router'
+  import { onMounted, ref, watch } from 'vue'
+  import { useRoute, useRouter} from 'vue-router';
+  import axios from 'axios';
   import addGoods from '@/components/addGoods.vue';
+  import updateGoods from '@/components/updateGoods.vue';
+  import delGoods from '@/components/delGoods.vue';
   export default {
     components: {
-      addGoods
+      addGoods,
+      updateGoods,
+      delGoods
     },
     data() {
       return {
@@ -91,11 +96,9 @@
     },
     methods: {
       switchToUserInfo() {
-        console.log("hahhahaah");
         this.$router.push({ name: 'userInfo'});
       },
       switchToEmployeeInfo() {
-        console.log("ashjdas");
         this.$router.push({ name: 'employeeInfo'});
       },
       switchToProvider() {
@@ -106,6 +109,7 @@
         const route = useRoute()
         const router = useRouter()
         const currentRoute = ref(route.path)
+        const productData = ref([]);
         console.log(currentRoute);
         console.log(345);
         watch(route, (newRoute) => {
@@ -115,10 +119,30 @@
         const handleSelect = (index) => {
       router.push(index)
     }
+    const fetchProductData = async () => {
+      try {
+        const response = await axios.get('/get-attribute');
+        const rawData = response.data;
+        productData.value = rawData.map(item => ({
+          productId: item.id,
+          productName: item.name,
+          unitPrice: item.price,
+          supplierId: item.producer_id,
+          description: item.introduction,
+          remark: item.note,
+        }));
+      } catch (error) {
+        console.error("获取商品数据失败：", error);
+      }
+    };
+    onMounted(() => {
+      fetchProductData();
+    })
 
-        return {
-        currentRoute,
-        handleSelect
+    return {
+      currentRoute,
+      handleSelect,
+      productData
     }
     }
   };
@@ -205,6 +229,10 @@
  	background-color: #f0f2f5;
     color:rgb(39, 125, 255)
  }
+ .button-group{
+  display: flex; 
+  gap: 10px; 
+}
   </style>
   
   

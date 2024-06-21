@@ -59,9 +59,9 @@
       <div class="main-content">
         <div class="button-group">
             <addEmployee class="add_btn"/>
-            <el-button type="warning" @click="editEmployee">修改员工</el-button>
+            <updateEmployee class="update_btn"/>
             <el-button type="info" @click="searchEmployee">查找员工</el-button>
-            <el-button type="danger" @click="deleteEmployee">删除员工</el-button>
+            <delEmployee class="del_btn"/>
             <el-button type="success" @click="exportEmployee">导出员工</el-button>
         </div>
         <div class="card-container">
@@ -94,9 +94,13 @@
   import { ref, watch } from 'vue'
   import { useRoute, useRouter} from 'vue-router'
   import addEmployee from '@/components/addEmployee.vue'
+  import delEmployee from '@/components/delEmployee.vue';
+  import updateEmployee from '@/components/updateEmployee.vue';
   export default {
     components: {
-        addEmployee
+        addEmployee,
+        delEmployee,
+        updateEmployee
     },
 
     data() {
