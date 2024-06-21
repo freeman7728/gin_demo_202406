@@ -27,7 +27,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - SERVICE=service1
+        - SERVICE=employee
     image: employee:latest
     container_name: employee
     environment:
