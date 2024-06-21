@@ -4,7 +4,7 @@ FROM golang:1.22.2 AS builder
 ENV GOPROXY https://goproxy.cn,direct
 
 # 设置工作目录
-WORKDIR /app
+WORKDIR /
 
 # 复制 go.mod 和 go.sum 文件并下载依赖
 COPY go.mod go.sum ./
