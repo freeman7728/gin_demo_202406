@@ -38,19 +38,3 @@ services:
     depends_on:
       - mysql_database_lesson
       - etcd
-#  gateway:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#      args:
-#        - SERVICE=gateway
-#    image: gateway:latest
-#    container_name: gateway
-#    ports:
-#      - "4000:4000"
-#    environment:
-#      MYSQL_USER: root
-#      MYSQL_PASSWORD: root
-#    depends_on:
-#      - mysql_database_lesson
-#      - etcd
