@@ -1,9 +1,9 @@
 mysql:
-  host: "database_lesson"
+  host: "8.146.198.97"
   port: "3306"
   db: database_lesson
   user: root
-  password: root
+  password: asd0a901231kjnbasdkajhd
   log_level: "test"
 
 
