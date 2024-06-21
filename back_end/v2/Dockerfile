@@ -6,7 +6,7 @@ ENV GO111MODULE=on \
     GOARCH=amd64\
     GOPROXY=https://goproxy.cn
 # 设置/usr/local/goproject，进入容器就会直接进入到这个目录下,而不是进入到默认根目录下面
-WORKDIR /app
+WORKDIR /
 # 复制项目中的 go.mod 和 go.sum文件并下载依赖信息
 COPY go.mod .
 COPY go.sum .
@@ -18,10 +18,9 @@ RUN go build -o database_design .
 FROM scratch
 
 # 复制所有文件，包括构建好的二进制文件和配置文件
-COPY --from=builder /app /app
-
+COPY --from=builder / /
 # 设置工作目录
-WORKDIR /app
+WORKDIR /
 EXPOSE 4000
 # 设置入口点和命令
 ENTRYPOINT ["/database_design"]
