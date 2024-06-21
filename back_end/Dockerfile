@@ -31,5 +31,5 @@ COPY --from=builder /out/${SERVICE} /${SERVICE}
 WORKDIR /app
 EXPOSE 4000
 # 设置入口点和命令
-ENTRYPOINT ["/employee"]
+ENTRYPOINT ["/gateway"]
 
