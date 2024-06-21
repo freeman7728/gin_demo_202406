@@ -32,5 +32,5 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /out/${SERVICE} ./app/${SERVICE}/cmd/ma
 
 # 设置入口点和命令
 ARG SERVICE
-CMD ["/${SERVICE}"]
+CMD /${SERVICE}
 
