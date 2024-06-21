@@ -17,7 +17,7 @@ COPY --from=builder /app/database_design /database_design
 COPY settings.yaml /app/settings.yaml
 
 # 设置工作目录
-WORKDIR /app
+WORKDIR /
 
 EXPOSE 4000
 ENTRYPOINT ["/database_design"]
