@@ -13,11 +13,11 @@ RUN go build -o database_design .
 FROM scratch
 
 # 从第一阶段复制编译好的二进制文件和相关文件到当前镜像中
-COPY --from=builder /app/database_design /database_design
+COPY --from=builder /app/database_design /app/database_design
 COPY settings.yaml /app/settings.yaml
 
 # 设置工作目录
-WORKDIR /
+WORKDIR /app
 
 EXPOSE 4000
 ENTRYPOINT ["/database_design"]
