@@ -38,3 +38,5 @@ services:
     depends_on:
       - mysql_database_lesson
       - etcd
+    ports:
+      - "4000:4000"
