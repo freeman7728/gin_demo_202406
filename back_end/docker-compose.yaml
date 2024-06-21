@@ -21,8 +21,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: database_lesson
-    ports:
-      - "3306:3306"
     volumes:
       - "$PWD/consts/mysql/init:/docker-entrypoint-initdb.d"
 
