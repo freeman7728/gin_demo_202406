@@ -24,7 +24,6 @@ func InitDB() {
 	password := config.DbPassWord
 	charset := config.Charset
 	dsn := strings.Join([]string{username, ":", password, "@tcp(", host, ":", port, ")/", database, "?charset=" + charset + "&parseTime=true"}, "")
-	fmt.Println(dsn)
 	err := Database(dsn)
 	if err != nil {
 		fmt.Println(err)

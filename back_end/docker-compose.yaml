@@ -15,12 +15,14 @@ services:
       -initial-advertise-peer-urls http://etcd:2380
       -listen-peer-urls http://0.0.0.0:2380
       -initial-cluster etcd0=http://etcd:2380
-  mysql:
+  mysql_database_lesson:
     image: mysql:8.0
     container_name: mysql_database_lesson
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: database_lesson
+    ports:
+      - "3306:3306"
 
   employee:
     build:
