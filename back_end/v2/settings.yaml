@@ -3,7 +3,7 @@ mysql:
   port: "3306"
   db: database_lesson
   user: root
-  password: asd0a901231kjnbasdkajhd
+  password: root
   log_level: "test"
 
 
