@@ -17,7 +17,7 @@ services:
       -initial-cluster etcd0=http://etcd:2380
   mysql:
     image: mysql:8.0
-    container_name: mysql
+    container_name: mysql_database_lesson
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: database_lesson
@@ -33,11 +33,9 @@ services:
     image: employee:latest
     container_name: employee
     environment:
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
       MYSQL_USER: root
       MYSQL_PASSWORD: root
-      MYSQL_DATABASE: root
+      MYSQL_DATABASE: database_lesson
     depends_on:
       - mysql
       - etcd
