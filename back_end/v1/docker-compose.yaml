@@ -24,17 +24,19 @@ services:
     volumes:
       - "$PWD/consts/mysql/init:/docker-entrypoint-initdb.d"
 
-  employee:
+  gateway:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        - SERVICE=employee
-    image: employee:latest
-    container_name: employee
+        - SERVICE=gateway
+    image: gateway:latest
+    container_name: gateway
     environment:
       MYSQL_USER: root
       MYSQL_PASSWORD: root
     depends_on:
       - mysql_database_lesson
       - etcd
+    ports:
+      - "4000:4000"

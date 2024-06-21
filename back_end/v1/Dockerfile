@@ -29,7 +29,7 @@ COPY --from=builder /out/${SERVICE} /${SERVICE}
 
 # 设置工作目录
 WORKDIR /app
-
+EXPOSE 4000
 # 设置入口点和命令
-ENTRYPOINT ["/employee"]
+ENTRYPOINT ["/gateway"]
 

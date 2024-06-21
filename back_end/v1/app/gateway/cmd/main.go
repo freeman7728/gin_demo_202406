@@ -3,10 +3,10 @@ package main
 import (
 	"database_lesson/app/gateway/rpc"
 	"fmt"
-	"time"
-
 	"github.com/go-micro/plugins/v4/registry/etcd"
 	"go-micro.dev/v4/registry"
+	"time"
+
 	"go-micro.dev/v4/web"
 
 	"database_lesson/app/gateway/router"

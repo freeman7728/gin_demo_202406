@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mysql_database_lesson:
+    image: mysql:8.0
+    container_name: mysql_database_lesson
+    environment:
+      MYSQL_ROOT_PASSWORD: asd0a901231kjnbasdkajhd
+      MYSQL_DATABASE: database_lesson
+    volumes:
+      - "$PWD/consts/mysql/init:/docker-entrypoint-initdb.d"
+    ports:
+      - "3306:3306"
+
+  database_lesson:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - SERVICE=database_lesson
+    image: database_lesson:latest
+    container_name: database_lesson
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: asd0a901231kjnbasdkajhd
+    depends_on:
+      - mysql_database_lesson
+    ports:
+      - "4000:4000"
