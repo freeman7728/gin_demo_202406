@@ -26,7 +26,10 @@
   
   <script lang="ts" setup>
   import { reactive, ref } from 'vue';
-  import { ElMessageBox, FormInstance, FormRules } from 'element-plus';
+  import { ElMessageBox, FormInstance, FormRules, ElMessage } from 'element-plus';
+  import axios from 'axios';
+  import { getCurrentInstance, } from 'vue';
+  const { proxy } = getCurrentInstance();
   
   const dialogVisible = ref(false);
   const ruleFormRef = ref<FormInstance>();
@@ -51,18 +54,29 @@
     dialogVisible.value = true;
   };
   
-  const submitForm = (formEl: FormInstance | undefined) => {
-    if (!formEl) return;
-    formEl.validate((valid) => {
-      if (valid) {
-        console.log('删除商品编号:', ruleForm.id);
-        // 在这里添加删除商品的逻辑，例如调用API删除商品
-        dialogVisible.value = false; // 关闭对话框
-      } else {
-        console.log('提交出错!');
+  const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  formEl.validate(async (valid) => {
+    if (valid) {
+      console.log('删除商品编号:', ruleForm.id);
+      try {
+        const response = await proxy.$axios.delete(`${proxy.$serverUrl_test}/product/delete`, { data: { id: ruleForm.id } });
+        if (response.status === 200) {
+          ElMessage.success('商品已成功删除');
+          resetForm(formEl);
+          dialogVisible.value = false; // 关闭对话框
+        } else {
+          ElMessage.error('删除商品失败');
+        }
+      } catch (error) {
+        ElMessage.error('删除商品时出错');
+        console.error(error);
       }
-    });
-  };
+    } else {
+      console.log('提交出错!');
+    }
+  });
+};
   
   const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return;

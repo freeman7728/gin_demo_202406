@@ -32,6 +32,7 @@ import delList from "@/components/delList.vue";
 import delOrder from "@/components/delOrder.vue";
 import searchEmployee from "@/components/searchEmployee.vue";
 import searchClient from "@/components/searchClient.vue";
+import searchList from "@/components/searchList.vue";
 
 const routes = [
   { path: "/", redirect: "/login" },
@@ -66,6 +67,7 @@ const routes = [
   { path: "/delOrder", name:"delOrder" ,component: delOrder},
   { path: "/searchEmployee", name:"searchEmployee" ,component: searchEmployee},
   { path: "/searchClient", name: "searchClient", component: searchClient},
+  { path: "/searchList", name: "searchList", component: searchList},
   { path: "/childpages/exception_window", component: exception_window},
   { path: "/index_ordinary", component: index_ordinary},
 ];

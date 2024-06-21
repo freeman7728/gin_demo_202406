@@ -64,8 +64,8 @@
         </el-row>
       </el-form>
   
-  
-      <el-table v-if="searchResults.length" :data="searchResults" style="width: 100%; margin-top: 20px;">
+      <template v-if="searchResults.length">
+      <el-table :data="searchResults" style="width: 100%; margin-top: 20px;">
         <el-table-column prop="id" label="客户编号" width="120"></el-table-column>
         <el-table-column prop="name" label="客户名称" width="150"></el-table-column>
         <el-table-column prop="shortName" label="客户简称" width="150"></el-table-column>
@@ -76,7 +76,10 @@
         <el-table-column prop="contactPhone" label="联系人电话" width="150"></el-table-column>
         <el-table-column prop="remark" label="备注" width="200"></el-table-column>
       </el-table>
-  
+    </template>
+    <template v-else>
+        <p style = "text-align: center; margin-top: 20px"> 无结果 </p>
+    </template>
       <template #footer>
         <div class="dialog-footer">
         <el-button type="primary" plain @click="searchCustomers">确定</el-button>

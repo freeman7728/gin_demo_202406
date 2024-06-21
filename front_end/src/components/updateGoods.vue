@@ -10,23 +10,24 @@
           label-width="auto"
           class="demo-ruleForm"
         >
-          <el-form-item label="商品编号" prop="id">
-            <el-input v-model="ruleForm.id" autocomplete="off" />
-          </el-form-item>
+        <el-form-item label="商品编号" prop="id">
+          <el-input v-model="ruleForm.id" autocomplete="off" />
+        </el-form-item>
+        <el-button @click="fetchProductInfo" style="margin-left: 80px; margin-bottom: 30px;">确定</el-button>
           <el-form-item label="商品名称" prop="name">
             <el-input v-model="ruleForm.name" autocomplete="off" />
           </el-form-item>
           <el-form-item label="商品单价" prop="price">
             <el-input v-model="ruleForm.price" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="供应商编号" prop="supplierId">
-            <el-input v-model="ruleForm.supplierId" autocomplete="off" />
+          <el-form-item label="供应商编号" prop="producer_id">
+            <el-input v-model="ruleForm.producer_id" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="商品简介" prop="description">
-            <el-input v-model="ruleForm.description" type="textarea" autocomplete="off" />
+          <el-form-item label="商品简介" prop="introduction">
+            <el-input v-model="ruleForm.introduction" type="textarea" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="备注" prop="remark">
-            <el-input v-model="ruleForm.remark" type="textarea" autocomplete="off" />
+          <el-form-item label="备注" prop="note">
+            <el-input v-model="ruleForm.note" type="textarea" autocomplete="off" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm(ruleFormRef)">
@@ -41,7 +42,9 @@
   
   <script lang="ts" setup>
   import { reactive, ref } from 'vue';
-  import { ElMessageBox, FormInstance, FormRules } from 'element-plus';
+  import { ElMessageBox, FormInstance, FormRules, ElMessage } from 'element-plus';
+  import { getCurrentInstance, } from 'vue';
+  const { proxy } = getCurrentInstance();
   
   const dialogVisible = ref(false);
   const ruleFormRef = ref<FormInstance>();
@@ -50,14 +53,32 @@
     id: '',
     name: '',
     price: '',
-    supplierId: '',
-    description: '',
-    remark: '',
+    producer_id: '',
+    introduction: '',
+    note: '',
   });
   
   const rules = reactive<FormRules<typeof ruleForm>>({
     id: [{ required: true, message: '请输入商品编号', trigger: 'blur' }],
   });
+  const fetchProductInfo = async () => {
+    try {
+      const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/product/${ruleForm.id}`);
+      if (response.status === 200) {
+        ruleForm.name = response.data.name;
+        ruleForm.price = response.data.price;
+        ruleForm.producer_id = response.data.producer_id;
+        ruleForm.introduction = response.data.introduction;
+        ruleForm.note = response.data.note;
+      } else {
+        ElMessage.error('获取商品信息失败');
+      }
+    } catch (error) {
+      ElMessage.error('获取商品信息时出错');
+      console.error(error);
+    }
+  };
+
   
   const handleClose = (done: () => void) => {
     ElMessageBox.confirm('确定关闭吗？').then(() => {
@@ -71,12 +92,24 @@
     dialogVisible.value = true;
   };
   
-  const submitForm = (formEl: FormInstance | undefined) => {
+  const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
-    formEl.validate((valid) => {
+    formEl.validate(async (valid) => {
       if (valid) {
         console.log('提交商品信息:', ruleForm);
-        dialogVisible.value = false; // 关闭对话框
+        try {
+          const response = await proxy.$axios.put(`${proxy.$serverUrl_test}/product/update`, ruleForm);
+          if (response.status === 200) {
+            ElMessage.success('商品信息已成功更新');
+            resetForm(formEl);
+            dialogVisible.value = false; // 关闭对话框
+          } else {
+            ElMessage.error('更新商品信息失败');
+          }
+        } catch (error) {
+          ElMessage.error('更新商品信息时出错');
+          console.error(error);
+        }
       } else {
         console.log('提交出错!');
       }
