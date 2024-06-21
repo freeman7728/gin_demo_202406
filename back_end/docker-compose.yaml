@@ -38,3 +38,73 @@ services:
     depends_on:
       - mysql_database_lesson
       - etcd
+  producer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - SERVICE=producer
+    image: producer:latest
+    container_name: producer
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - mysql_database_lesson
+      - etcd
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - SERVICE=gateway
+    image: gateway:latest
+    container_name: gateway
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - mysql_database_lesson
+      - etcd
+  product:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - SERVICE=product
+    image: product:latest
+    container_name: product
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - mysql_database_lesson
+      - etcd
+  list:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - SERVICE=list
+    image: list:latest
+    container_name: list
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - mysql_database_lesson
+      - etcd
+  detail:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - SERVICE=detail
+    image: detail:latest
+    container_name: detail
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - mysql_database_lesson
+      - etcd
