@@ -55,6 +55,7 @@ func InitRouter() *gin.Engine {
 		detailRouter.POST("/update", controllers.UpdateDetailController)
 		detailRouter.POST("/select", controllers.SelectDetailController)
 		detailRouter.GET("/:id", controllers.SelectDetailByIdController)
+		detailRouter.GET("/orderId/:id", controllers.SelectDetailByOrderIdController)
 	}
 
 	return router

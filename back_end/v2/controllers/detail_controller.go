@@ -114,3 +114,23 @@ func SelectDetailByIdController(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
+
+// @Summary 通过订单id请求订单详情
+// @Description 通过订单id请求订单详情
+// @Tags detail
+// @Accept  x-www-form-urlencoded
+// @Produce  json
+// @Success      200  {object}  dto.DetailList
+// @Router /detail/orderId/{id} [get]
+func SelectDetailByOrderIdController(c *gin.Context) {
+	var order models.Order
+	strId := c.Param("id")
+	order.Id, _ = strconv.Atoi(strId)
+	// 转发到service层处理
+	err, res := services.SelectDetailByOrderId(&order)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}

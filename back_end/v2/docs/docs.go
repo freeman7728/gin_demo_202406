@@ -84,6 +84,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/detail/orderId/{id}": {
+            "get": {
+                "description": "通过订单id请求订单详情",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "detail"
+                ],
+                "summary": "通过订单id请求订单详情",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.DetailList"
+                        }
+                    }
+                }
+            }
+        },
         "/detail/select": {
             "post": {
                 "description": "请求所有订单详情",

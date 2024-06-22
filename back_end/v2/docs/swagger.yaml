@@ -304,6 +304,21 @@ paths:
       summary: 批量导入订单详情
       tags:
       - detail
+  /detail/orderId/{id}:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 通过订单id请求订单详情
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DetailList'
+      summary: 通过订单id请求订单详情
+      tags:
+      - detail
   /detail/select:
     post:
       consumes:

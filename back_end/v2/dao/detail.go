@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"database_lesson/dto"
 	"database_lesson/global"
 	"database_lesson/models"
 	"gorm.io/gorm"
@@ -25,4 +26,9 @@ func SelectDetailDao(list *[]models.Detail) (tx *gorm.DB) {
 func SelectDetailById(model *models.Detail) (tx *gorm.DB) {
 	sql := `SELECT * FROM detail WHERE id=?`
 	return global.DB.Raw(sql, model.Id).Scan(model)
+}
+
+func SelectDetailByOrderId(model *models.Order, out *dto.DetailList) (tx *gorm.DB) {
+	sql := `SELECT * FROM detail where list_id = ?`
+	return global.DB.Raw(sql, model.Id).Scan(&out.DetailList)
 }
