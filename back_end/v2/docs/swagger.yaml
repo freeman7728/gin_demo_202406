@@ -208,16 +208,23 @@ paths:
       consumes:
       - application/json
       description: 删除供应商，返回外键检查结果和删除结果，如果有外键依赖则会提示
+      parameters:
+      - description: Producer Request
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Producer'
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: msg
           schema:
-            $ref: '#/definitions/dto.ProducerList'
-      summary: 请求所有供应商
+            type: string
+      summary: 删除供应商
       tags:
-      - employee
+      - producer
   /producer/insert:
     post:
       consumes:
@@ -239,7 +246,22 @@ paths:
             $ref: '#/definitions/dto.ProducerInsertResponseDto'
       summary: 批量导入供应商
       tags:
-      - employee
+      - producer
+  /producer/select:
+    post:
+      consumes:
+      - application/json
+      description: 删除供应商，返回外键检查结果和删除结果，如果有外键依赖则会提示
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProducerList'
+      summary: 请求所有供应商
+      tags:
+      - producer
   /producer/update:
     post:
       consumes:
@@ -261,5 +283,5 @@ paths:
             type: string
       summary: 更新供应商
       tags:
-      - employee
+      - producer
 swagger: "2.0"

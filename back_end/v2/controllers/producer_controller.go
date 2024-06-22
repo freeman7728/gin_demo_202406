@@ -9,7 +9,7 @@ import (
 
 // @Summary 批量导入供应商
 // @Description 批量导入供应商，并且返回成功失败列表
-// @Tags employee
+// @Tags producer
 // @Accept  json
 // @Produce  json
 // @Param   product body dto.ProducerList true "Producer Request"
@@ -32,7 +32,7 @@ func InsertProducerController(c *gin.Context) {
 
 // @Summary 删除供应商
 // @Description 删除供应商，返回外键检查结果和删除结果，如果有外键依赖则会提示
-// @Tags employee
+// @Tags producer
 // @Accept  json
 // @Produce  json
 // @Param   product body dto.Producer true "Producer Request"
@@ -55,7 +55,7 @@ func DeleteProducerController(c *gin.Context) {
 
 // @Summary 更新供应商
 // @Description 更新供应商，除了id之外都能改，所有不会有外键冲突
-// @Tags employee
+// @Tags producer
 // @Accept  json
 // @Produce  json
 // @Param   product body dto.Producer true "Producer Request"
@@ -78,11 +78,11 @@ func UpdateProducerController(c *gin.Context) {
 
 // @Summary 请求所有供应商
 // @Description 删除供应商，返回外键检查结果和删除结果，如果有外键依赖则会提示
-// @Tags employee
+// @Tags producer
 // @Accept  json
 // @Produce  json
 // @Success      200  {object}  dto.ProducerList
-// @Router /producer/delete [post]
+// @Router /producer/select [post]
 func SelectProducerController(c *gin.Context) {
 	// 转发到service层处理
 	err, res := services.SelectProducerService()

@@ -155,14 +155,25 @@
                     "application/json"
                 ],
                 "tags": [
-                    "employee"
+                    "producer"
                 ],
-                "summary": "请求所有供应商",
+                "summary": "删除供应商",
+                "parameters": [
+                    {
+                        "description": "Producer Request",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.Producer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "msg",
                         "schema": {
-                            "$ref": "#/definitions/dto.ProducerList"
+                            "type": "string"
                         }
                     }
                 }
@@ -178,7 +189,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "employee"
+                    "producer"
                 ],
                 "summary": "批量导入供应商",
                 "parameters": [
@@ -202,6 +213,29 @@
                 }
             }
         },
+        "/producer/select": {
+            "post": {
+                "description": "删除供应商，返回外键检查结果和删除结果，如果有外键依赖则会提示",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "producer"
+                ],
+                "summary": "请求所有供应商",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ProducerList"
+                        }
+                    }
+                }
+            }
+        },
         "/producer/update": {
             "post": {
                 "description": "更新供应商，除了id之外都能改，所有不会有外键冲突",
@@ -212,7 +246,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "employee"
+                    "producer"
                 ],
                 "summary": "更新供应商",
                 "parameters": [
