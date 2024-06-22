@@ -1,7 +1,7 @@
 <template>
     <div>
-      <el-button type="danger" @click="openDialog">删除商品</el-button>
-      <el-dialog v-model="dialogVisible" title="删除商品" width="400px" :before-close="handleClose">
+      <el-button type="danger" @click="openDialog">删除清单</el-button>
+      <el-dialog v-model="dialogVisible" title="删除清单" width="400px" :before-close="handleClose">
         <el-form
           ref="ruleFormRef"
           :model="ruleForm"
@@ -10,7 +10,7 @@
           label-width="auto"
           class="demo-ruleForm"
         >
-          <el-form-item label="商品编号" prop="id">
+          <el-form-item label="清单编号" prop="id">
             <el-input v-model="ruleForm.id" autocomplete="off" />
           </el-form-item>
           <el-form-item>
@@ -60,13 +60,14 @@
       if (valid) {
         console.log('删除商品编号:', ruleForm.id);
         try {
-          const response = await proxy.$axios.delete(`${proxy.$serverUrl_test}/product/delete`, { data: { id: ruleForm.id } });
-          if (response.status === 200) {
+          const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/order/delete`, { id: parseInt(ruleForm.id)  });
+          console.log(response);
+          if (response.data.code === 200) {
             ElMessage.success('商品已成功删除');
             resetForm(formEl);
             dialogVisible.value = false; // 关闭对话框
-          } else {
-            ElMessage.error('删除商品失败');
+          } else if (response.data.code === 400) {
+            ElMessage.error('清单不可删除，请检查依赖于该清单的订单');
           }
         } catch (error) {
           ElMessage.error('删除商品时出错');

@@ -74,15 +74,15 @@
   const fetchCustomerInfo = async () => {
     try {
       const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/customer/${ruleForm.id}`);
-      if (response.status === 200) {
-        ruleForm.name = response.data.name;
-        ruleForm.short_name = response.data.short_name;
-        ruleForm.address = response.data.address;
-        ruleForm.tel = response.data.tel;
-        ruleForm.email = response.data.email;
-        ruleForm.contact_name = response.data.contact_name;
-        ruleForm.contact_tel = response.data.contact_tel;
-        ruleForm.note = response.data.note;
+      if (response.data.code === 200) {
+        ruleForm.name = response.data.data.name;
+        ruleForm.short_name = response.data.data.short_name;
+        ruleForm.address = response.data.data.address;
+        ruleForm.tel = response.data.data.tel;
+        ruleForm.email = response.data.data.email;
+        ruleForm.contact_name = response.data.data.contact_name;
+        ruleForm.contact_tel = response.data.data.contact_tel;
+        ruleForm.note = response.data.data.note;
       } else {
         ElMessage.error('获取客户信息失败');
       }

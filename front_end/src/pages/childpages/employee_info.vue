@@ -60,12 +60,12 @@
         <div class="button-group">
             <addEmployee class="add_btn"/>
             <updateEmployee class="update_btn"/>
-            <el-button type="info" @click="searchEmployee">查找员工</el-button>
+            <searchEmployee class="search_btn"/>
             <delEmployee class="del_btn"/>
             <el-button type="success" @click="exportEmployee">导出员工</el-button>
         </div>
         <div class="card-container">
-            <el-card class="info_card" v-for="n in 6" :key="n">
+            <el-card class="info_card" v-for="employee in list" :key="employee.id">
             <div class="info_title">员工信息</div>
             <div class="flex-container">
             <div class="svg-container">
@@ -75,13 +75,15 @@
                 </svg>
             </div>
                 <div class="text-container">
-                <div class="info-item"><b>员工编号:</b> 123456</div>
-                <div class="info-item"><b>员工姓名:</b> 张三</div>
-                <div class="info-item"><b>员工密码:</b> ********</div>
-                <div class="info-item"><b>员工级别:</b> 高级工程师</div>
-                <div class="info-item"><b>员工电话:</b> 13812345678</div>
-                <div class="info-item"><b>员工工资:</b> 10000元/月</div>
-                <div class="info-item"><b>备注:</b> 无</div>
+                <div class="info-item"><b>员工编号:</b> {{ employee.id }}</div>
+                <div class="info-item"><b>员工姓名:</b> {{ employee.name }}</div>
+                <div class="info-item"><b>员工账号:</b> {{ employee.account }}</div>
+                <div class="info-item"><b>员工密码:</b>  ********        </div>
+                <div class="info-item"><b>员工级别:</b> {{ employee.level}}</div>
+                <div class="info-item"><b>员工电话:</b> {{ employee.tel }}</div>
+                <div class="info-item"><b>员工邮箱:</b> {{ employee.email }}</div>
+                <div class="info-item"><b>员工工资:</b> {{ employee.salary }}</div>
+                <div class="info-item"><b>备注:</b> {{ employee.note }}</div>
           </div>
          </div>
         </el-card>
@@ -90,57 +92,79 @@
     </div>
   </template>
   
-  <script>
-  import { ref, watch } from 'vue'
-  import { useRoute, useRouter} from 'vue-router'
-  import addEmployee from '@/components/addEmployee.vue'
+  <script setup lang="ts">
+ import { onMounted, ref, watch, computed } from 'vue'
+  import { useRoute, useRouter} from 'vue-router';
+  import axios from 'axios';
+  import { ElMessage } from 'element-plus';
+  import { getCurrentInstance, } from 'vue';
+  const { proxy } = getCurrentInstance();
+  
+  import addEmployee from '@/components/addEmployee.vue';
   import delEmployee from '@/components/delEmployee.vue';
   import updateEmployee from '@/components/updateEmployee.vue';
-  export default {
-    components: {
-        addEmployee,
-        delEmployee,
-        updateEmployee
-    },
+  import searchEmployee from '@/components/searchEmployee.vue';
 
-    data() {
-      return {
-        isCollapse: false,
-      };
-    },
-    methods: {
-      switchToUserInfo() {
-        console.log("hahhahaah");
-        this.$router.push({ name: 'userInfo'});
-      },
-      switchToEmployeeInfo() {
-        console.log("ashjdas");
-        this.$router.push({ name: 'employeeInfo'});
-      },
-      switchToProvider() {
-        this.$router.push({ name: 'provider'});
-      }
-    },
-    setup() {
-        const route = useRoute()
-        const router = useRouter()
-        const currentRoute = ref(route.path)
-        console.log(currentRoute);
-        console.log(345);
-        watch(route, (newRoute) => {
-      currentRoute.value = newRoute.path
-    })
+  
+  const route = useRoute()
+  const router = useRouter()
+  const currentRoute = ref(route.path)
+  const list = ref([]);
+  const currentPage = ref(1);
+  const pageSize = ref(10);
+  const totalItems = ref(0);
+  const size = ref('medium');  
+  const disabled = ref(false);
+  const background = ref(true);
 
-        const handleSelect = (index) => {
-      router.push(index)
-    }
-
-        return {
-        currentRoute,
-        handleSelect
-    }
-    }
+  const paginatedList = computed(() => {
+  const start = (currentPage.value - 1) * pageSize.value;
+  const end = start + pageSize.value;
+  return list.value.slice(start, end);
+});
+  watch(route, (newRoute) => {
+    currentRoute.value = newRoute.path;
+  });
+  const handleSelect = (index) => {
+    router.push(index)
   };
+  const fetchlist = async () => {
+  try {
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/employee/select`);
+    console.log("Response data:", response.data);
+
+    const rawData = response.data.data.list;
+    if (Array.isArray(rawData)) {
+      list.value = rawData.map(item => ({
+        id: item.id,
+        name: item.name,
+        account: item.account,
+        level: item.level,
+        tel: item.tel,
+        email: item.tel,
+        salary: item.salary,
+        note: item.note,
+      }));
+      totalItems.value = list.value.length;
+    } else {
+      console.error("Unexpected response format:", rawData);
+    }
+  } catch (error) {
+    console.error("获取员工数据失败：", error);
+  }
+};
+const handlePageChange = (newPage: number) => {
+  currentPage.value = newPage;
+};
+
+const handleSizeChange = (newSize: number) => {
+  pageSize.value = newSize;
+};
+
+  onMounted(() => {
+    fetchlist();
+  });
+
   </script>
     <style scoped>
   .dashboard {

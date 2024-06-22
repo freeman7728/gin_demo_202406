@@ -1,50 +1,44 @@
 <template>
-      <el-button type="primary" plain @click="openDialog">添加清单</el-button>
+      <el-button type="primary"  @click="openDialog">添加清单</el-button>
   
       <el-dialog v-model="dialogVisible" title="添加清单信息" width="85%" :before-close="handleClose">
         <el-form ref="listForm" :rules="rules" >
           <!-- 表头 -->
           <el-row class="header-row">
-            <el-col :span="3"><strong>清单号</strong></el-col>
-            <el-col :span="3"><strong>员工编号</strong></el-col>
-            <el-col :span="3"><strong>采购数量</strong></el-col>
-            <el-col :span="3"><strong>采购商品编号</strong></el-col>
-            <el-col :span="3"><strong>采购事件</strong></el-col>
-            <el-col :span="3"><strong>备注</strong></el-col>
+            <el-col :span="4"><strong>员工编号</strong></el-col>
+            <el-col :span="4"><strong>采购数量</strong></el-col>
+            <el-col :span="4"><strong>采购时间</strong></el-col>
+            <el-col :span="4"><strong>采购总价</strong></el-col>
+            <el-col :span="4"><strong>备注</strong></el-col>
             <el-col :span="3"><strong>操作</strong></el-col>
           </el-row>
   
           <!-- 输入行 -->
-          <div v-for="(listItem, index) in listItems" :key="index" class="list-item-row">
+          <div v-for="(listItem, index) in list" :key="index" class="list-item-row">
             <el-row :gutter="5">
-              <el-col :span="3">
-                <el-form-item :prop="'listItems.' + index + '.id'" >
-                  <el-input v-model="listItem.id"></el-input>
+              <el-col :span="4">
+                <el-form-item :prop="'list.' + index + '.employee_id'">
+                  <el-input v-model="listItem.employee_id"></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="3">
-                <el-form-item :prop="'listItems.' + index + '.employeeId'">
-                  <el-input v-model="listItem.employeeId"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="3">
-                <el-form-item :prop="'listItems.' + index + '.quantity'">
+              <el-col :span="4">
+                <el-form-item :prop="'list.' + index + '.quantity'">
                   <el-input type="number" v-model="listItem.quantity"></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="3">
-                <el-form-item :prop="'listItems.' + index + '.productId'">
-                  <el-input v-model="listItem.productId"></el-input>
+              <el-col :span="4">
+                <el-form-item :prop="'list.' + index + '.time'">
+                  <el-input v-model="listItem.time"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item :prop="'list.' + index + '.total_price'">
+                  <el-input v-model="listItem.total_price"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="3">
-                <el-form-item :prop="'listItems.' + index + '.event'">
-                  <el-input v-model="listItem.event"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="2">
-                <el-form-item :prop="'listItems.' + index + '.remark'">
-                  <el-input type="textarea" v-model="listItem.remark"></el-input>
+                <el-form-item :prop="'list.' + index + '.note'">
+                  <el-input type="textarea" v-model="listItem.note"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="3" class="action-col">
@@ -59,7 +53,7 @@
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="saveListItems">确定</el-button>
+            <el-button type="primary" @click="savelist">确定</el-button>
           </div>
         </template>
       </el-dialog>
@@ -67,26 +61,27 @@
   
   <script setup lang="ts">
   import { ref } from 'vue';
-  import { ElMessageBox } from 'element-plus';
+  import { ElMessageBox, ElMessage} from 'element-plus';
+  import { getCurrentInstance, } from 'vue';
+  
+  const { proxy } = getCurrentInstance();
   
   const dialogVisible = ref(false);
-  const listItems = ref([
+  const list = ref([
     {
-      id: '',
-      employeeId: '',
+      employee_id: '',
       quantity: '',
-      productId: '',
-      event: '',
-      remark: '',
+      time: '',
+      note: '',
+      total_price: ''
     },
   ]);
   
   const rules = {
     id: [{ required: true, message: '请输入清单号', trigger: 'blur' }],
-    employeeId: [{ required: true, message: '请输入员工编号', trigger: 'blur' }],
-    quantity: [{ required: true, message: '请输入采购数量', trigger: 'blur' }],
+    employee_id: [{ required: true, message: '请输入员工编号', trigger: 'blur' }],
     productId: [{ required: true, message: '请输入采购商品编号', trigger: 'blur' }],
-    event: [{ required: true, message: '请输入采购事件', trigger: 'blur' }],
+    time: [{ required: true, message: '请输入采购时间', trigger: 'blur' }],
   };
   
   const handleClose = (done: () => void) => {
@@ -102,38 +97,63 @@
   };
   
   const addNewListItem = () => {
-    listItems.value.push({
-      id: '',
-      employeeId: '',
+    list.value.push({
+      employee_id: '',
       quantity: '',
-      productId: '',
-      event: '',
-      remark: '',
+      time: '',
+      note: '',
+      total_price: ''
     });
   };
   
-  const saveListItems = () => {
-    console.log('保存清单列表:', listItems.value);
-    // Reset form or submit data to backend
-    resetForm();
-    dialogVisible.value = false;
+  const savelist = async () => {
+    const listToSave = list.value.map(list => ({
+      ...list,
+      quantity: parseInt(list.quantity),
+      employee_id: parseFloat(list.employee_id),
+      total_price: parseFloat(list.total_price)
+    }));
+
+    for (let i = 0; i < list.value.length; i ++) { 
+      const order = list.value[i];
+      if (!order.employee_id || !order.quantity || !order.time || !order.total_price) { 
+        ElMessage.error('除备注外所有字段必须填写');
+        return;
+      }
+    }
+    try {
+      const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/order/insert`, {list: listToSave})
+      console.log(response);
+      if (response.data.code === 200) {
+      console.log(list.value);
+      ElMessage.success('清单信息已成功添加至数据库');
+      resetForm();
+      dialogVisible.value = false;
+    } else {
+      console.log(response.status);
+      ElMessage.error('添加清单信息失败');
+    }
+  } catch (error) {
+    ElMessage.error('添加清单信息时出错');
+    console.error(error);
+  }
   };
   
   const resetForm = () => {
-    listItems.value = [
+    list.value = [
       {
         id: '',
-        employeeId: '',
+        employee_id: '',
         quantity: '',
         productId: '',
-        event: '',
-        remark: '',
+        time: '',
+        note: '',
       },
     ];
   };
   
   const removeListItem = (index: number) => {
-    listItems.value.splice(index, 1);
+    list.value.splice(index, 1);
   };
   </script>
   

@@ -60,94 +60,135 @@
         <div class="button-group">
       <addGoods class="add_btn"/>
       <updateGoods class="update_btn"/>
-      <el-button type="info" @click="searchGoods">查找商品</el-button>
+      <searchGoods class="search_btn"/>
       <delGoods class="del_btn"/>
       <el-button type="success" @click="exportGoods">导出商品</el-button>
-        </div>
-    <el-table :data="productData" style="width: 100%">
-      <el-table-column prop="productId" label="商品编号" width="120"></el-table-column>
-      <el-table-column prop="productName" label="商品名称" width="150"></el-table-column>
-      <el-table-column prop="unitPrice" label="商品单价" width="150"></el-table-column>
-      <el-table-column prop="supplierId" label="供应商编号" width="150"></el-table-column>
-      <el-table-column prop="description" label="商品简介" width="300"></el-table-column>
-      <el-table-column prop="remark" label="备注" width="300"></el-table-column>
+    </div>
+    <el-table :data="paginatedList" style="width: 100%">
+      <el-table-column prop="id" label="商品编号" width="120"></el-table-column>
+      <el-table-column prop="name" label="商品名称" width="150"></el-table-column>
+      <el-table-column prop="price" label="商品单价" width="150"></el-table-column>
+      <el-table-column prop="producer_id" label="供应商编号" width="150"></el-table-column>
+      <el-table-column prop="introduction" label="商品简介" width="300"></el-table-column>
+      <el-table-column prop="note" label="备注" width="300"></el-table-column>
     </el-table>
+    <el-pagination
+      v-model:current-page="currentPage"
+      v-model:page-size="pageSize"
+      :page-sizes="[10, 20, 30, 40]"
+      :size="size"
+      :disabled="disabled"
+      :background="background"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="totalItems"
+      @size-change="handleSizeChange"
+      @current-change="handlePageChange"
+      style="text-align: center; margin-top: 20px; margin-bottom: 20px; margin-left: 300px"
+    />
   </div>
     </div>
   </template>
   
-  <script>
-  import { onMounted, ref, watch } from 'vue'
+  <script setup lang="ts">
+  import { onMounted, ref, watch, computed } from 'vue'
   import { useRoute, useRouter} from 'vue-router';
   import axios from 'axios';
+  import { ElMessage } from 'element-plus';
+  import { getCurrentInstance, } from 'vue';
+  const { proxy } = getCurrentInstance();
   import addGoods from '@/components/addGoods.vue';
   import updateGoods from '@/components/updateGoods.vue';
   import delGoods from '@/components/delGoods.vue';
-  export default {
-    components: {
-      addGoods,
-      updateGoods,
-      delGoods
-    },
-    data() {
-      return {
-        isCollapse: false,
-      };
-    },
-    methods: {
-      switchToUserInfo() {
-        this.$router.push({ name: 'userInfo'});
-      },
-      switchToEmployeeInfo() {
-        this.$router.push({ name: 'employeeInfo'});
-      },
-      switchToProvider() {
-        this.$router.push({ name: 'provider'});
-      }
-    },
-    setup() {
-        const route = useRoute()
-        const router = useRouter()
-        const currentRoute = ref(route.path)
-        const productData = ref([]);
-        console.log(currentRoute);
-        console.log(345);
-        watch(route, (newRoute) => {
-      currentRoute.value = newRoute.path
-    })
+  import searchGoods from '@/components/searchGoods.vue';
 
-        const handleSelect = (index) => {
-      router.push(index)
-    }
-    const fetchProductData = async () => {
-      try {
-        const response = await axios.get('/get-attribute');
-        const rawData = response.data;
-        productData.value = rawData.map(item => ({
-          productId: item.id,
-          productName: item.name,
-          unitPrice: item.price,
-          supplierId: item.producer_id,
-          description: item.introduction,
-          remark: item.note,
-        }));
+  const isCollapse = ref(false);
+
+
+  const exportGoods = async () => {
+    try {
+        const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/product/export`);
+        if (response.status === 200) {
+          const csvData = response.data;
+          const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', 'products.csv');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          ElMessage.success('商品信息已成功导出为 CSV 文件');
+        } else {
+          ElMessage.error('导出商品信息失败');
+        }
       } catch (error) {
-        console.error("获取商品数据失败：", error);
+        ElMessage.error('导出商品信息时出错');
+        console.error(error);
       }
-    };
-    onMounted(() => {
-      fetchProductData();
-    })
-
-    return {
-      currentRoute,
-      handleSelect,
-      productData
-    }
-    }
   };
-  </script>
-    <style scoped>
+
+  const route = useRoute()
+  const router = useRouter()
+  const currentRoute = ref(route.path)
+  const list = ref([]);
+  const currentPage = ref(1);
+  const pageSize = ref(10);
+  const totalItems = ref(0);
+  const size = ref('medium');  
+  const disabled = ref(false);
+  const background = ref(true);
+
+
+  const paginatedList = computed(() => {
+  const start = (currentPage.value - 1) * pageSize.value;
+  const end = start + pageSize.value;
+  return list.value.slice(start, end);
+});
+
+  watch(route, (newRoute) => {
+    currentRoute.value = newRoute.path
+  });
+
+  const handleSelect = (index) => {
+    router.push(index)
+  };
+
+  const fetchlist = async () => {
+  try {
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/product/select`);
+    console.log("Response data:", response.data);
+
+    const rawData = response.data.data.list;
+    if (Array.isArray(rawData)) {
+      list.value = rawData.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: parseFloat(item.price),
+        producer_id: item.producer_id,
+        introduction: item.introduction,
+        note: item.note,
+      }));
+      totalItems.value = list.value.length;
+    } else {
+      console.error("Unexpected response format:", rawData);
+    }
+  } catch (error) {
+    console.error("获取商品数据失败：", error);
+  }
+};
+const handlePageChange = (newPage: number) => {
+  currentPage.value = newPage;
+};
+
+const handleSizeChange = (newSize: number) => {
+  pageSize.value = newSize;
+};
+
+  onMounted(() => {
+    fetchlist();
+  });
+</script>
+  <style scoped>
   .dashboard {
     display: flex;
     height: 100vh;
@@ -164,6 +205,7 @@
     z-index: 999;
     display: flex;
     align-items: center;
+    
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     padding-right: 10px; 
 }

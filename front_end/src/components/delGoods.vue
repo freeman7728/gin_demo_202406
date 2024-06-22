@@ -60,11 +60,12 @@
     if (valid) {
       console.log('删除商品编号:', ruleForm.id);
       try {
-        const response = await proxy.$axios.delete(`${proxy.$serverUrl_test}/product/delete`, { data: { id: ruleForm.id } });
-        if (response.status === 200) {
+        const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/product/delete`, { id: parseInt(ruleForm.id) });
+        console.log(response);
+        if (response.data.code === 200) {
           ElMessage.success('商品已成功删除');
           resetForm(formEl);
-          dialogVisible.value = false; // 关闭对话框
+          dialogVisible.value = false; 
         } else {
           ElMessage.error('删除商品失败');
         }

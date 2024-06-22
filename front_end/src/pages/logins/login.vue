@@ -259,115 +259,113 @@
 }
   </style>
   
-  <script>
-  import { ref } from 'vue';
-  import axios from 'axios';
-  import { useRouter } from 'vue-router';
-  import { ElForm, ElFormItem, ElInput, ElButton, ElMessage } from 'element-plus';
-  import 'element-plus/dist/index.css'
+  <script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
+import { ElForm, ElFormItem, ElInput, ElButton, ElMessage } from 'element-plus';
+import 'element-plus/dist/index.css';
+import { ElMessageBox,} from 'element-plus';
+import { getCurrentInstance } from 'vue';
   
-  export default {
-    name: 'login',
-    components: {
-      ElForm,
-      ElFormItem,
-      ElInput,
-      ElButton
-    },
-    setup() {
-      const appContainer = ref(null);
-      const adminForm = ref({
-        adminAccount: '',
-        adminPassword: ''
-      });
-      const ordinaryForm = ref({
-        ordinaryAccount: '',
-        ordinaryPassword: ''
-      });
-      const router = useRouter();
-      const serverUrl = ref('http://example.com');
-  
-      const ordinaryLogin = () => {
-        axios.post(`${serverUrl.value}/ordinary/login`, {
-          ordinaryId: ordinaryForm.value.ordinaryAccount,
-          ordinaryPassword: ordinaryForm.value.ordinaryPassword,
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-          .then(res => {
-            console.log(res.data);
-            if (res.data.code === 200) {
-              const result = res.data.data;
-              sessionStorage.setItem('ordinaryId', result.ordinaryId);
-              sessionStorage.setItem('ordinaryInfo', JSON.stringify(result));
-              router.replace('/ordinaryindex');
-            } else {
-              ElMessage.error('账号或密码错误！');
-            }
-          })
-          .catch(err => {
-            console.error(err);
-          });
-      };
-  
-      const adminLogin = () => {
-        axios.post(`${serverUrl.value}/admin/login`, {
-          adminId: adminForm.value.adminAccount,
-          adminPassword: adminForm.value.adminPassword,
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-          .then(res => {
-            console.log(res.data);
-            if (res.data.code === 200) {
-              const result = res.data.data;
-              sessionStorage.setItem('adminId', result.adminId);
-              sessionStorage.setItem('adminInfo', JSON.stringify(result));
-              router.replace('/adminindex');
-            } else {
-              ElMessage.error('账号或密码错误！');
-            }
-          })
-          .catch(err => {
-            console.error(err);
-          });
-      };
-  
-      const switchToSignIn = () => {
-        console.log("切换到登录");
-        if (appContainer.value) {
-          appContainer.value.classList.remove("right-panel-active");
-        }
-      };
-  
-      const switchToSignUp = () => {
-        console.log("切换到注册");
-        if (appContainer.value) {
-          appContainer.value.classList.add("right-panel-active");
-        }
-      };
-  
-      const submitForm = (formType) => {
-        if (formType === 'admin') {
-          adminLogin();
-        } else if (formType === 'ordinary') {
-          ordinaryLogin();
-        }
-      };
-  
-      return {
-        appContainer,
-        adminForm,
-        ordinaryForm,
-        switchToSignIn,
-        switchToSignUp,
-        submitForm,
-      };
+const { proxy } = getCurrentInstance();
+const dialogVisible = ref(false);
+
+const appContainer = ref<HTMLElement | null>(null);
+const adminForm = ref({
+  adminAccount: '',
+  adminPassword: ''
+});
+const ordinaryForm = ref({
+  ordinaryAccount: '',
+  ordinaryPassword: ''
+});
+
+const router = useRouter();
+
+
+// const ordinaryLogin = () => {
+//   axios.post(`${serverUrl.value}/ordinary/login`, {
+//     ordinaryId: ordinaryForm.value.ordinaryAccount,
+//     ordinaryPassword: ordinaryForm.value.ordinaryPassword,
+//   }, {
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   })
+//     .then(res => {
+//       console.log(res.data);
+//       if (res.data.code === 200) {
+//         const result = res.data.data;
+//         sessionStorage.setItem('ordinaryId', result.ordinaryId);
+//         sessionStorage.setItem('ordinaryInfo', JSON.stringify(result));
+//         router.replace('/ordinaryindex');
+//       } else {
+//         ElMessage.error('账号或密码错误！');
+//       }
+//     })
+//     .catch(err => {
+//       console.error(err);
+//     });
+// };
+
+
+const adminLogin = async () => {
+   try{
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/employee/login`, {
+    account: adminForm.value.adminAccount,
+    password: adminForm.value.adminPassword,
+  })
+    console.log(response);
+    if (response.data.code === 200) {
+        router.replace('/index_admin');
+    } else {
+      ElMessage.error('账号或密码错误！');
     }
-  };
-  </script>
+   } catch (error) {
+    ElMessage.error('登录失败');
+    console.error(error);
+   }
+  
+    // .then(res => {
+    //   console.log(res.data);
+    //   if (res.data.code === 200) {
+    //     const result = res.data;
+    //     sessionStorage.setItem('adminId', result.adminId);
+    //     sessionStorage.setItem('adminInfo', JSON.stringify(result));
+    //     router.replace('/childpages/user_info');
+    //   } else {
+    //     ElMessage.error('账号或密码错误！');
+    //   }
+    // })
+    // .catch(err => {
+    //   console.error(err);
+    // });
+  
+};
+
+const switchToSignIn = () => {
+  console.log("切换到登录");
+  if (appContainer.value) {
+    appContainer.value.classList.remove("right-panel-active");
+  }
+};
+
+
+const switchToSignUp = () => {
+  console.log("切换到注册");
+  if (appContainer.value) {
+    appContainer.value.classList.add("right-panel-active");
+  }
+};
+
+
+const submitForm = (formType: 'admin' | 'ordinary') => {
+  if (formType === 'admin') {
+    adminLogin();
+  } else if (formType === 'ordinary') {
+    ordinaryLogin();
+  }
+};
+</script>
   

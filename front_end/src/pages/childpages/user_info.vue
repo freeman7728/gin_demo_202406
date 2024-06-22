@@ -61,7 +61,7 @@
             <div class="info_title">员工信息</div>
             <div class="flex-container">
             <div class="svg-container">
-                <svg t="1718688291554" class="icon_info" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10110" width="440" height="390">
+                <svg t="1718688291554" class="icon_info" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10110" width="440" height="490">
                     <path d="M264.647884 230.201302c0 127.163947 103.580698 230.200662 231.352626 230.200663 127.771927 0 231.352626-103.036716 231.352626-230.200663a230.008668 230.008668 0 0 0-115.676313-199.353645 232.312595 232.312595 0 0 0-231.352626 0 230.008668 230.008668 0 0 0-115.644314 199.353645zM523.775625 504.624555l75.837582 130.747833c3.711882 7.359765 3.711882 14.719531 1.88794 22.079296l-79.581463 213.657189c-3.711882 11.039648-12.959587 16.575472-24.063233 16.575472a26.335161 26.335161 0 0 1-24.063233-16.575472l-79.581463-213.62519a30.655023 30.655023 0 0 1 1.85594-22.079297l75.869582-130.779831C207.305712 517.520144 0.016319 734.825217 0.016319 998.176823c0 14.719531 11.103646 25.791178 25.919174 25.791178h940.130034c14.815528 0 25.919174-11.039648 25.919173-25.791178 0-263.351606-207.289393-480.656679-468.209075-493.552268z" fill="#32C8DA" p-id="10111">
                     </path>
                 </svg>
@@ -69,10 +69,12 @@
         <div class="text-container">
         <div class="info-item"><b>员工编号:</b> 123456</div>
         <div class="info-item"><b>员工姓名:</b> 张三</div>
+        <div class="info-item"><b>账号:</b> ********</div>
         <div class="info-item"><b>员工密码:</b> ********</div>
         <div class="info-item"><b>员工级别:</b> 高级工程师</div>
         <div class="info-item"><b>员工电话:</b> 13812345678</div>
         <div class="info-item"><b>员工工资:</b> 10000元/月</div>
+        <div class="info-item"><b>员工邮箱:</b> 123@123.com</div>
         <div class="info-item"><b>备注:</b> 无</div>
           </div>
          </div>
@@ -80,55 +82,99 @@
         <div class="button-container">
             <el-button type="primary">修改账户信息</el-button>
             <el-button type="warning">退出登录</el-button>
-            <el-button type="danger">注销账户</el-button>
+            <el-button type="danger" @click="openDialog" >注销账户</el-button>
+      <el-dialog  v-model="dialogVisible" title="注销账户"  :before-close="handleClose">
+        <el-input v-model="account" placeholder="请输入账号" style="margin-bottom: 20px"></el-input>
+        <el-input v-model="password" placeholder="请输入密码" show-password style="margin-bottom: 20px"></el-input>
+        <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="logout">确 定</el-button>
+        </span>
+      </el-dialog>
         </div>
       </div>
     </div>
   </template>
   
-  <script>
+  <script setup lang="ts">
   import { ref, watch } from 'vue'
-  import { useRoute, useRouter} from 'vue-router'
-  export default {
-    data() {
-      return {
-        isCollapse: false,
-      };
-    },
-    methods: {
-      switchToUserInfo() {
-        console.log("hahhahaah");
-        this.$router.push({ name: 'userInfo'});
-      },
-      switchToEmployeeInfo() {
-        console.log("ashjdas");
-        this.$router.push({ name: 'employeeInfo'});
-      },
-      switchToProvider() {
-        this.$router.push({ name: 'provider'});
-      }
-    },
-    setup() {
-        const route = useRoute()
-        const router = useRouter()
-        const currentRoute = ref(route.path)
-        console.log(currentRoute);
-        console.log(345);
-        watch(route, (newRoute) => {
-      currentRoute.value = newRoute.path
-    })
+  import { useRoute, useRouter} from 'vue-router';
+  import { ElMessageBox, ElMessage } from 'element-plus';
 
-        const handleSelect = (index) => {
-      router.push(index)
-    }
+  import axios from 'axios';
+  import { getCurrentInstance } from 'vue';
+  
+  const { proxy } = getCurrentInstance();
 
-        return {
-        currentRoute,
-        handleSelect
-    }
-    }
+  const isCollapse = ref(false);
+
+  const dialogVisible = ref(false);
+  const account = ref('');
+  const password = ref('');
+
+  const openDialog = () => {
+    dialogVisible.value = true;
+  }
+  const handleClose = (done: () => void) => {
+    ElMessageBox.confirm('确定关闭吗？').then(() => {
+      done();
+    }).catch(() => {
+      // Handle cancellation
+    });
   };
-  </script>
+
+  const route = useRoute()
+  const router = useRouter()
+  const currentRoute = ref(route.path)
+
+  watch(route, (newRoute) => {
+    currentRoute.value = newRoute.path
+  })
+
+  const handleSelect = (index) => {
+    router.push(index)
+  }
+
+  const switchToUserInfo = () => {
+    console.log("hahhahaah");
+    router.push({ name: 'userInfo'});
+  }
+
+  const switchToEmployeeInfo = () => {
+    console.log("ashjdas");
+    router.push({ name: 'employeeInfo'});
+  }
+
+  const switchToProvider = () => {
+    router.push({ name: 'provider'});
+  }
+  const logout = async () => {
+    try {
+      const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/employee/delete`, {
+        account: account.value,
+        password: password.value,
+      });
+      if (response.data.code === 200) {
+        console.log(response);
+        ElMessage.success('注销成功');
+        dialogVisible.value = false;
+      } else {
+        console.log(response);
+        ElMessage.error('注销失败');
+      }
+    } catch (error) {
+      console.error(error);
+      ElMessage.error('注销失败');
+    }
+  }
+
+
+
+
+
+
+</script>
+
     <style scoped>
   .dashboard {
     display: flex;

@@ -60,125 +60,135 @@
         <div class="button-group">
       <addClient class="add_btn"/>
       <updateClient class="update_btn"/>
-      <el-button type="info" @click="searchCustomer">查找客户</el-button>
+      <searchClient class="search_btn"/>
       <delClient class="del_btn"/>
       <el-button type="success" @click="exportCustomer">导出客户</el-button>
         </div>
-    <el-table :data="customerData" style="width: 100%">
+    <el-table :data="paginatedList" style="width: 100%">
       <el-table-column prop="id" label="客户编号" width="120"></el-table-column>
-      <el-table-column prop="name" label="客户名称" width="150"></el-table-column>
-      <el-table-column prop="shortName" label="客户简称" width="120"></el-table-column>
-      <el-table-column prop="address" label="地址" width="200"></el-table-column>
-      <el-table-column prop="companyPhone" label="公司电话" width="150"></el-table-column>
+      <el-table-column prop="name" label="客户名称" width="120"></el-table-column>
+      <el-table-column prop="short_name" label="客户简称" width="120"></el-table-column>
+      <el-table-column prop="address" label="地址" width="150"></el-table-column>
+      <el-table-column prop="tel" label="公司电话" width="120"></el-table-column>
       <el-table-column prop="email" label="邮件" width="200"></el-table-column>
-      <el-table-column prop="contactPerson" label="联系人" width="120"></el-table-column>
-      <el-table-column prop="contactPhone" label="联系人电话" width="150"></el-table-column>
-      <el-table-column prop="remark" label="备注" width="200"></el-table-column>
+      <el-table-column prop="contact_name" label="联系人" width="120"></el-table-column>
+      <el-table-column prop="contact_tel" label="联系人电话" width="150"></el-table-column>
+      <el-table-column prop="note" label="备注" width="200"></el-table-column>
     </el-table>
+    <el-pagination
+      v-model:current-page="currentPage"
+      v-model:page-size="pageSize"
+      :page-sizes="[10, 20, 30, 40]"
+      :size="size"
+      :disabled="disabled"
+      :background="background"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="totalItems"
+      @size-change="handleSizeChange"
+      @current-change="handlePageChange"
+      style="text-align: center; margin-top: 20px; margin-bottom: 20px; margin-left: 300px"
+    />
   </div>
     </div>
+
+
   </template>
   
-  <script>
-  import { ref, watch } from 'vue';
+  <script setup lang="ts">
+  import { onMounted, ref, watch, computed } from 'vue'
   import { useRoute, useRouter} from 'vue-router';
-  import addClient from '@/components/addClient.vue';
   import axios from 'axios';
+  import { ElMessage } from 'element-plus';
+  import { getCurrentInstance, } from 'vue';
+  const { proxy } = getCurrentInstance();
+  
+  import addClient from '@/components/addClient.vue';
   import updateClient from '@/components/updateClient.vue';
   import delClient from '@/components/delClient.vue';
-  import { onMounted } from 'vue';
-  export default {
-    components: {
-      addClient,
-      updateClient,
-      delClient
-    },
-    data() {
-      return {
-        customerData: [
-        {
-          id: '001',
-          name: '客户A',
-          shortName: 'A公司',
-          address: '地址A',
-          companyPhone: '010-12345678',
-          email: 'customerA@example.com',
-          contactPerson: '张三',
-          contactPhone: '13812345678',
-          remark: '重要客户'
-        },
-        {
-          id: '002',
-          name: '客户B',
-          shortName: 'B公司',
-          address: '地址B',
-          companyPhone: '010-87654321',
-          email: 'customerB@example.com',
-          contactPerson: '李四',
-          contactPhone: '13987654321',
-          remark: '潜在客户'
-        }
-        // 你可以在这里添加更多的客户数据
-      ]
-      };
-    },
-    methods: {
-      switchToUserInfo() {
-        console.log("hahhahaah");
-        this.$router.push({ name: 'userInfo'});
-      },
-      switchToEmployeeInfo() {
-        console.log("ashjdas");
-        this.$router.push({ name: 'employeeInfo'});
-      },
-      switchToProvider() {
-        this.$router.push({ name: 'provider'});
-      }
-    },
-    setup() {
-        const route = useRoute()
-        const router = useRouter()
-        const currentRoute = ref(route.path)
-        const customerData = ref([]);
-        console.log(currentRoute);
-        console.log(345);
-        watch(route, (newRoute) => {
-      currentRoute.value = newRoute.path
-    })
-
-        const handleSelect = (index) => {
-      router.push(index)
-    }
-    const fetchcustomerData = async () => {
-      try {
-        const response = await axios.get('/get-attribute');
-        const rawData = response.data;
-        customerData.value = rawData.map(item => ({
-          id: item.id,
-          name: time.name,
-          shortName: time.short_name,
-          address: item.address,
-          companyPhone: item.tel,
-          email: item.email,
-          contactPerson: item.contact_name,
-          contactPerson: item.contact_tel,
-          remark: item.note
-        }));
-      } catch (error) {
-        console.error("获取客户数据失败：", error);
-      }
-    };
-    onMounted(() => {
-      fetchcustomerData();
-    })
-
-        return {
-        currentRoute,
-        handleSelect
-    }
-    }
+  import searchClient from '@/components/searchClient.vue';
+  
+  const route = useRoute()
+  const router = useRouter()
+  const currentRoute = ref(route.path)
+  const list = ref([]);
+  const currentPage = ref(1);
+  const pageSize = ref(10);
+  const totalItems = ref(0);
+  const size = ref('medium');  
+  const disabled = ref(false);
+  const background = ref(true);
+  
+  const paginatedList = computed(() => {
+  const start = (currentPage.value - 1) * pageSize.value;
+  const end = start + pageSize.value;
+  return list.value.slice(start, end);
+});
+  
+  watch(route, (newRoute) => {
+    currentRoute.value = newRoute.path;
+  });
+  
+  const handleSelect = (index) => {
+    router.push(index);
   };
+  
+  const fetchlist = async () => {
+  try {
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/producer/select`);
+    console.log("Response data:", response.data);
+    const rawData = response.data.data;
+    if (Array.isArray(rawData)) {
+      list.value = rawData.map(item => ({
+        id: item.id,
+        name: item.name,
+        address: item.address,
+        short_name: item.short_name,
+        tel: item.tel,
+        email: item.email,
+        contact_name: item.contact_name,
+        contact_tel: item.contact_tel,
+        note: item.note
+      }));
+      totalItems.value = list.value.length;
+    } else {
+      console.error("Unexpected response format:", rawData);
+    }
+  } catch (error) {
+    console.error("获取客户数据失败：", error);
+  }
+};
+
+const handlePageChange = (newPage: number) => {
+  currentPage.value = newPage;
+};
+
+const handleSizeChange = (newSize: number) => {
+  pageSize.value = newSize;
+};
+  
+  onMounted(() => {
+    fetchlist();
+  });
+  
+  const switchToUserInfo = () => {
+    console.log("跳转到用户信息页面");
+    router.push({ name: 'userInfo' });
+  };
+  
+  const switchToEmployeeInfo = () => {
+    console.log("跳转到员工信息页面");
+    router.push({ name: 'employeeInfo' });
+  };
+  
+  const switchToProvider = () => {
+    console.log("跳转到供应商页面");
+    router.push({ name: 'provider' });
+  };
+  
+
   </script>
+  
+  
     <style scoped>
   .dashboard {
     display: flex;

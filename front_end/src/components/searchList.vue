@@ -1,5 +1,5 @@
 <template>
-    <el-button type="primary" plain @click="openSearchDialog">查找清单</el-button>
+    <el-button type="info"  @click="openSearchDialog">查找清单</el-button>
   
     <el-dialog v-model="searchDialogVisible" title="查找清单信息" width="80%" :before-close="handleSearchClose">
       <el-form ref="searchForm" :rules="searchRules">
@@ -42,7 +42,7 @@
           <el-table-column prop="quantity" label="采购数量" width="150"></el-table-column>
           <el-table-column prop="totalPrice" label="采购总价" width="150"></el-table-column>
           <el-table-column prop="purchaseTime" label="采购时间" width="200"></el-table-column>
-          <el-table-column prop="remark" label="备注" width="200"></el-table-column>
+          <el-table-column prop="remark" label="备注" width="500"></el-table-column>
         </el-table>
       </template>
       <template v-else>
