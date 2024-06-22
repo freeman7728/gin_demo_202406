@@ -1,0 +1,95 @@
+package controllers
+
+import (
+	"database_lesson/dto"
+	"database_lesson/models"
+	"database_lesson/services"
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
+
+// @Summary 批量导入订单详情
+// @Description 批量导入订单详情，并且返回成功失败列表
+// @Tags detail
+// @Accept  json
+// @Produce  json
+// @Param   list body dto.DetailList true "Detail Request"
+// @Success      200  {object}  dto.DetailInsertResponse
+// @Router /detail/insert [post]
+func InsertDetailController(c *gin.Context) {
+	var details dto.DetailList
+	if err := c.ShouldBindJSON(&details); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	// 转发到service层处理
+	err, res := services.InsertDetailService(&details)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+// @Summary 删除订单详情
+// @Description 删除订单详情，返回外键检查结果和删除结果，如果有外键依赖则会提示
+// @Tags detail
+// @Accept  json
+// @Produce  json
+// @Param   detail body models.Detail true "Detail Request"
+// @Success      200  string  "msg"
+// @Router /detail/delete [post]
+func DeleteDetailController(c *gin.Context) {
+	var detail models.Detail
+	if err := c.ShouldBindJSON(&detail); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	// 转发到service层处理
+	err, res := services.DeleteDetailService(&detail)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+// @Summary 更新订单详情
+// @Description 更新产品，除了id之外都能改，所有不会有外键冲突
+// @Tags detail
+// @Accept  json
+// @Produce  json
+// @Param   detail body models.Detail true "Detail Request"
+// @Success      200  string  "msg"
+// @Router /detail/update [post]
+func UpdateDetailController(c *gin.Context) {
+	var detail models.Detail
+	if err := c.ShouldBindJSON(&detail); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	// 转发到service层处理
+	err, res := services.UpdateDetailService(&detail)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+// @Summary 请求所有订单详情
+// @Description 请求所有订单详情
+// @Tags detail
+// @Accept  json
+// @Produce  json
+// @Success      200  {object}  dto.DetailList
+// @Router /detail/select [post]
+func SelectDetailController(c *gin.Context) {
+	// 转发到service层处理
+	err, res := services.SelectDetailService()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}

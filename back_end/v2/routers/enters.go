@@ -43,6 +43,13 @@ func InitRouter() *gin.Engine {
 		orderRouter.POST("/update", controllers.UpdateOrderController)
 		orderRouter.POST("/select", controllers.SelectOrderController)
 	}
+	detailRouter := router.Group("/detail")
+	{
+		detailRouter.POST("/insert", controllers.InsertDetailController)
+		detailRouter.POST("/delete", controllers.DeleteDetailController)
+		detailRouter.POST("/update", controllers.UpdateDetailController)
+		detailRouter.POST("/select", controllers.SelectDetailController)
+	}
 
 	return router
 }

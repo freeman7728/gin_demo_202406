@@ -27,3 +27,4 @@ services:
       - mysql_database_lesson
     ports:
       - "4000:4000"
+    restart: always

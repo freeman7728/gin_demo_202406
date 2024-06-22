@@ -16,6 +16,131 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/detail/delete": {
+            "post": {
+                "description": "删除订单详情，返回外键检查结果和删除结果，如果有外键依赖则会提示",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "detail"
+                ],
+                "summary": "删除订单详情",
+                "parameters": [
+                    {
+                        "description": "Detail Request",
+                        "name": "detail",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Detail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "msg",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/detail/insert": {
+            "post": {
+                "description": "批量导入订单详情，并且返回成功失败列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "detail"
+                ],
+                "summary": "批量导入订单详情",
+                "parameters": [
+                    {
+                        "description": "Detail Request",
+                        "name": "list",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.DetailList"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.DetailInsertResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/detail/select": {
+            "post": {
+                "description": "请求所有订单详情",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "detail"
+                ],
+                "summary": "请求所有订单详情",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.DetailList"
+                        }
+                    }
+                }
+            }
+        },
+        "/detail/update": {
+            "post": {
+                "description": "更新产品，除了id之外都能改，所有不会有外键冲突",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "detail"
+                ],
+                "summary": "更新订单详情",
+                "parameters": [
+                    {
+                        "description": "Detail Request",
+                        "name": "detail",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Detail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "msg",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/employee/delete": {
             "post": {
                 "description": "验证账号密码，然后删除用户",
@@ -529,6 +654,34 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.DetailInsertResponse": {
+            "type": "object",
+            "properties": {
+                "fail_list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Detail"
+                    }
+                },
+                "success_list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Detail"
+                    }
+                }
+            }
+        },
+        "dto.DetailList": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Detail"
+                    }
+                }
+            }
+        },
         "dto.EmployeeInsertResult": {
             "type": "object",
             "properties": {
@@ -673,6 +826,32 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.Product"
                     }
+                }
+            }
+        },
+        "models.Detail": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "list_id": {
+                    "type": "integer"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "product_id": {
+                    "type": "integer"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "total_price": {
+                    "type": "number"
                 }
             }
         },

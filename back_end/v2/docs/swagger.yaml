@@ -1,5 +1,23 @@
 basePath: /
 definitions:
+  dto.DetailInsertResponse:
+    properties:
+      fail_list:
+        items:
+          $ref: '#/definitions/models.Detail'
+        type: array
+      success_list:
+        items:
+          $ref: '#/definitions/models.Detail'
+        type: array
+    type: object
+  dto.DetailList:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/models.Detail'
+        type: array
+    type: object
   dto.EmployeeInsertResult:
     properties:
       fail_list:
@@ -95,6 +113,23 @@ definitions:
           $ref: '#/definitions/models.Product'
         type: array
     type: object
+  models.Detail:
+    properties:
+      id:
+        type: integer
+      list_id:
+        type: integer
+      msg:
+        type: string
+      note:
+        type: string
+      product_id:
+        type: integer
+      quantity:
+        type: integer
+      total_price:
+        type: number
+    type: object
   models.Employee:
     properties:
       account:
@@ -180,6 +215,87 @@ info:
   title: 超市进销存系统--数据库课设接口文档
   version: "1.0"
 paths:
+  /detail/delete:
+    post:
+      consumes:
+      - application/json
+      description: 删除订单详情，返回外键检查结果和删除结果，如果有外键依赖则会提示
+      parameters:
+      - description: Detail Request
+        in: body
+        name: detail
+        required: true
+        schema:
+          $ref: '#/definitions/models.Detail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: msg
+          schema:
+            type: string
+      summary: 删除订单详情
+      tags:
+      - detail
+  /detail/insert:
+    post:
+      consumes:
+      - application/json
+      description: 批量导入订单详情，并且返回成功失败列表
+      parameters:
+      - description: Detail Request
+        in: body
+        name: list
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DetailList'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DetailInsertResponse'
+      summary: 批量导入订单详情
+      tags:
+      - detail
+  /detail/select:
+    post:
+      consumes:
+      - application/json
+      description: 请求所有订单详情
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DetailList'
+      summary: 请求所有订单详情
+      tags:
+      - detail
+  /detail/update:
+    post:
+      consumes:
+      - application/json
+      description: 更新产品，除了id之外都能改，所有不会有外键冲突
+      parameters:
+      - description: Detail Request
+        in: body
+        name: detail
+        required: true
+        schema:
+          $ref: '#/definitions/models.Detail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: msg
+          schema:
+            type: string
+      summary: 更新订单详情
+      tags:
+      - detail
   /employee/delete:
     post:
       consumes:
