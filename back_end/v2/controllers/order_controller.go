@@ -6,6 +6,7 @@ import (
 	"database_lesson/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 // @Summary 批量导入订单
@@ -87,6 +88,26 @@ func UpdateOrderController(c *gin.Context) {
 func SelectOrderController(c *gin.Context) {
 	// 转发到service层处理
 	err, res := services.SelectOrderService()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+// @Summary 通过id请求详情
+// @Description 通过id请求详情
+// @Tags order
+// @Accept  url
+// @Produce  json
+// @Success      200  string  models.Order
+// @Router /order/{id} [Get]
+func SelectOrderByIdController(c *gin.Context) {
+	var order models.Order
+	strId := c.Param("id")
+	order.Id, _ = strconv.Atoi(strId)
+	// 转发到service层处理
+	err, res := services.SelectOrderById(&order)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

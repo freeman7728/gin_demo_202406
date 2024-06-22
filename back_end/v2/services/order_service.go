@@ -87,3 +87,20 @@ func SelectOrderService() (err error, resp dto.Response) {
 	resp.Data = temp
 	return
 }
+func SelectOrderById(order *models.Order) (err error, resp dto.Response) {
+	resp.Code = http.StatusOK
+	res := dao.SelectOrderById(order)
+	if res.Error != nil {
+		resp.Code = http.StatusBadRequest
+		resp.Message = res.Error.Error()
+		return
+	}
+	if res.RowsAffected == 0 {
+		resp.Message = "记录不存在"
+		resp.Code = http.StatusBadRequest
+		return
+	}
+	resp.Data = order
+	resp.Message = "查询成功"
+	return
+}

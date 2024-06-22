@@ -1,7 +1,7 @@
 package models
 
 type Producer struct {
-	ID          int32  `json:"id"`
+	ID          int    `json:"id"`
 	Name        string `json:"name"`
 	ShortName   string `json:"short_name"`
 	Address     string `json:"address"`

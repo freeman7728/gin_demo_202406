@@ -22,3 +22,7 @@ func SelectDetailDao(list *[]models.Detail) (tx *gorm.DB) {
 	sql := `SELECT * FROM detail`
 	return global.DB.Raw(sql).Scan(list)
 }
+func SelectDetailById(model *models.Detail) (tx *gorm.DB) {
+	sql := `SELECT * FROM detail WHERE id=?`
+	return global.DB.Raw(sql, model.Id).Scan(model)
+}

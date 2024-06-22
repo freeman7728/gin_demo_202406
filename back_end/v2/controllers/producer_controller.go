@@ -6,6 +6,7 @@ import (
 	"database_lesson/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 // @Summary 批量导入供应商
@@ -87,6 +88,26 @@ func UpdateProducerController(c *gin.Context) {
 func SelectProducerController(c *gin.Context) {
 	// 转发到service层处理
 	err, res := services.SelectProducerService()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+// @Summary 通过id请求详情
+// @Description 通过id请求详情
+// @Tags producer
+// @Accept  url
+// @Produce  json
+// @Success      200  string  models.Producer
+// @Router /producer/{id} [Get]
+func SelectProducerByIdController(c *gin.Context) {
+	var producer models.Producer
+	strId := c.Param("id")
+	producer.ID, _ = strconv.Atoi(strId)
+	// 转发到service层处理
+	err, res := services.SelectProducerById(&producer)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -54,3 +54,7 @@ func SelectEmployeeByAccount(model *models.Employee, res *models.Employee) (tx *
 	sql := `SELECT id,name,tel,salary,note,level FROM employee WHERE id = ?`
 	return global.DB.Raw(sql, model.ID).Scan(res)
 }
+func SelectEmployeeById(model *models.Employee) (tx *gorm.DB) {
+	sql := `SELECT * FROM employee WHERE id=?`
+	return global.DB.Raw(sql, model.ID).Scan(model)
+}

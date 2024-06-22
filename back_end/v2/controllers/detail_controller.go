@@ -6,6 +6,7 @@ import (
 	"database_lesson/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 // @Summary 批量导入订单详情
@@ -87,6 +88,26 @@ func UpdateDetailController(c *gin.Context) {
 func SelectDetailController(c *gin.Context) {
 	// 转发到service层处理
 	err, res := services.SelectDetailService()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+// @Summary 通过id请求详情
+// @Description 通过id请求详情
+// @Tags detail
+// @Accept  url
+// @Produce  json
+// @Success      200  string  models.Detail
+// @Router /detail/{id} [Get]
+func SelectDetailByIdController(c *gin.Context) {
+	var detail models.Detail
+	strId := c.Param("id")
+	detail.Id, _ = strconv.Atoi(strId)
+	// 转发到service层处理
+	err, res := services.SelectDetailById(&detail)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -72,3 +72,20 @@ func SelectProducerService() (err error, resp dto.Response) {
 	resp.Data = res.ProducerList
 	return
 }
+func SelectProducerById(producer *models.Producer) (err error, resp dto.Response) {
+	resp.Code = http.StatusOK
+	res := dao.SelectProducerById(producer)
+	if res.Error != nil {
+		resp.Code = http.StatusBadRequest
+		resp.Message = res.Error.Error()
+		return
+	}
+	if res.RowsAffected == 0 {
+		resp.Message = "记录不存在"
+		resp.Code = http.StatusBadRequest
+		return
+	}
+	resp.Data = producer
+	resp.Message = "查询成功"
+	return
+}

@@ -7,6 +7,7 @@ import (
 	"database_lesson/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 /*
@@ -98,6 +99,26 @@ func DeleteEmployeeController(c *gin.Context) {
 	}
 	// 转发到service层处理
 	err, res := services.DeleteEmployeeService(&employee)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+// @Summary 通过id请求详情
+// @Description 通过id请求详情
+// @Tags employee
+// @Accept  url
+// @Produce  json
+// @Success      200  string  models.Employee
+// @Router /employee/{id} [Get]
+func SelectEmployeeByIdController(c *gin.Context) {
+	var employee models.Employee
+	strId := c.Param("id")
+	employee.ID, _ = strconv.Atoi(strId)
+	// 转发到service层处理
+	err, res := services.SelectEmployeeById(&employee)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

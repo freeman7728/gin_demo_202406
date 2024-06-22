@@ -6,6 +6,7 @@ import (
 	"database_lesson/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 // @Summary 批量导入产品
@@ -87,6 +88,26 @@ func UpdateProductController(c *gin.Context) {
 func SelectProductController(c *gin.Context) {
 	// 转发到service层处理
 	err, res := services.SelectProductService()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+// @Summary 通过id请求详情
+// @Description 通过id请求详情
+// @Tags product
+// @Accept  url
+// @Produce  json
+// @Success      200  string  models.Product
+// @Router /product/{id} [Get]
+func SelectProductByIdController(c *gin.Context) {
+	var product models.Product
+	strId := c.Param("id")
+	product.Id, _ = strconv.Atoi(strId)
+	// 转发到service层处理
+	err, res := services.SelectProductById(&product)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

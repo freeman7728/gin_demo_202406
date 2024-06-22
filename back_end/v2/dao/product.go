@@ -22,3 +22,7 @@ func SelectProductDao(list *[]models.Product) (tx *gorm.DB) {
 	sql := `SELECT * FROM product`
 	return global.DB.Raw(sql).Scan(list)
 }
+func SelectProductById(model *models.Product) (tx *gorm.DB) {
+	sql := `SELECT * FROM product WHERE id=?`
+	return global.DB.Raw(sql, model.Id).Scan(model)
+}

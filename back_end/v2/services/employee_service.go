@@ -87,3 +87,20 @@ func DeleteEmployeeService(employee *models.Employee) (err error, resp dto.Respo
 	resp.Message = "删除成功"
 	return
 }
+func SelectEmployeeById(employee *models.Employee) (err error, resp dto.Response) {
+	resp.Code = http.StatusOK
+	res := dao.SelectEmployeeById(employee)
+	if res.Error != nil {
+		resp.Code = http.StatusBadRequest
+		resp.Message = res.Error.Error()
+		return
+	}
+	if res.RowsAffected == 0 {
+		resp.Message = "记录不存在"
+		resp.Code = http.StatusBadRequest
+		return
+	}
+	resp.Data = employee
+	resp.Message = "查询成功"
+	return
+}

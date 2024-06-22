@@ -21,6 +21,7 @@ func InitRouter() *gin.Engine {
 		employeeRouter.POST("/login", controllers.LoginEmployeeController)
 		employeeRouter.POST("/update", controllers.UpdateEmployeeController)
 		employeeRouter.POST("/delete", controllers.DeleteEmployeeController)
+		employeeRouter.GET("/:id", controllers.SelectEmployeeByIdController)
 	}
 	producerRouter := router.Group("/producer")
 	{
@@ -28,6 +29,7 @@ func InitRouter() *gin.Engine {
 		producerRouter.POST("/delete", controllers.DeleteProducerController)
 		producerRouter.POST("/update", controllers.UpdateProducerController)
 		producerRouter.POST("/select", controllers.SelectProducerController)
+		producerRouter.GET("/:id", controllers.SelectProducerByIdController)
 	}
 	productRouter := router.Group("/product")
 	{
@@ -35,6 +37,7 @@ func InitRouter() *gin.Engine {
 		productRouter.POST("/delete", controllers.DeleteProductController)
 		productRouter.POST("/update", controllers.UpdateProductController)
 		productRouter.POST("/select", controllers.SelectProductController)
+		productRouter.GET("/:id", controllers.SelectProductByIdController)
 	}
 	orderRouter := router.Group("/order")
 	{
@@ -42,6 +45,7 @@ func InitRouter() *gin.Engine {
 		orderRouter.POST("/delete", controllers.DeleteOrderController)
 		orderRouter.POST("/update", controllers.UpdateOrderController)
 		orderRouter.POST("/select", controllers.SelectOrderController)
+		orderRouter.GET("/:id", controllers.SelectOrderByIdController)
 	}
 	detailRouter := router.Group("/detail")
 	{
@@ -49,6 +53,7 @@ func InitRouter() *gin.Engine {
 		detailRouter.POST("/delete", controllers.DeleteDetailController)
 		detailRouter.POST("/update", controllers.UpdateDetailController)
 		detailRouter.POST("/select", controllers.SelectDetailController)
+		detailRouter.GET("/:id", controllers.SelectDetailByIdController)
 	}
 
 	return router
