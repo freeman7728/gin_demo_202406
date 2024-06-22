@@ -5,8 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="06b8b43b-f4f7-420e-be25-17aa99e78262" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/controllers/order_controller.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dto/order_dto.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/order_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../v1/doc/接口文档.md" beforeDir="false" afterPath="$PROJECT_DIR$/../v1/doc/接口文档.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/settings.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dao/list.go" beforeDir="false" afterPath="$PROJECT_DIR$/dao/order.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs.go" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/swagger.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/swagger.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/swagger.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docs/swagger.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/list.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/order.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routers/enters.go" beforeDir="false" afterPath="$PROJECT_DIR$/routers/enters.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

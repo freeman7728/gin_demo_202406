@@ -41,6 +41,24 @@ definitions:
       tel:
         type: string
     type: object
+  dto.OrderInsertResponse:
+    properties:
+      fail_list:
+        items:
+          $ref: '#/definitions/models.Order'
+        type: array
+      success_list:
+        items:
+          $ref: '#/definitions/models.Order'
+        type: array
+    type: object
+  dto.OrderList:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/models.Order'
+        type: array
+    type: object
   dto.ProducerInsertResponseDto:
     properties:
       fail_list:
@@ -97,6 +115,23 @@ definitions:
         type: number
       tel:
         type: string
+    type: object
+  models.Order:
+    properties:
+      employee_id:
+        type: integer
+      id:
+        type: integer
+      msg:
+        type: string
+      note:
+        type: string
+      quantity:
+        type: integer
+      time:
+        type: string
+      total_price:
+        type: number
     type: object
   models.Producer:
     properties:
@@ -233,6 +268,87 @@ paths:
       summary: 用户修改信息
       tags:
       - employee
+  /order/delete:
+    post:
+      consumes:
+      - application/json
+      description: 删除订单，返回外键检查结果和删除结果，如果有外键依赖则会提示
+      parameters:
+      - description: Order Request
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/models.Order'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: msg
+          schema:
+            type: string
+      summary: 删除订单
+      tags:
+      - order
+  /order/insert:
+    post:
+      consumes:
+      - application/json
+      description: 批量导入订单，并且返回成功失败列表
+      parameters:
+      - description: Order Request
+        in: body
+        name: list
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderList'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.OrderInsertResponse'
+      summary: 批量导入订单
+      tags:
+      - order
+  /order/select:
+    post:
+      consumes:
+      - application/json
+      description: 请求所有订单
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.OrderList'
+      summary: 请求所有订单
+      tags:
+      - order
+  /order/update:
+    post:
+      consumes:
+      - application/json
+      description: 更新产品，除了id之外都能改，所有不会有外键冲突
+      parameters:
+      - description: Order Request
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/models.Order'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: msg
+          schema:
+            type: string
+      summary: 更新订单
+      tags:
+      - order
   /producer/delete:
     post:
       consumes:
