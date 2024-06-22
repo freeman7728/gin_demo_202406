@@ -98,7 +98,7 @@ func SelectOrderController(c *gin.Context) {
 // @Summary 通过id请求详情
 // @Description 通过id请求详情
 // @Tags order
-// @Accept  url
+// @Accept  x-www-form-urlencoded
 // @Produce  json
 // @Success      200  string  models.Order
 // @Router /order/{id} [Get]

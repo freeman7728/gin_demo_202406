@@ -104,3 +104,37 @@ func SelectEmployeeById(employee *models.Employee) (err error, resp dto.Response
 	resp.Message = "查询成功"
 	return
 }
+
+func DeleteEmployeeByIdWithoutPassword(model *dto.DeleteEmployeeByAdminRequest) (err error, resp dto.Response) {
+	resp.Code = http.StatusOK
+	res := dao.SelectEmployeeLevelById(&model.Operator)
+	if res.Error != nil {
+		resp.Code = http.StatusBadRequest
+		resp.Message = res.Error.Error()
+		return
+	}
+	if res.RowsAffected == 0 {
+		resp.Code = http.StatusBadRequest
+		resp.Message = "操作者不存在"
+		return
+	}
+	r := dao.CheckOrderDependency(model.Target)
+	if r != 0 {
+		resp.Code = http.StatusBadRequest
+		resp.Message = "存在订单依赖目标用户"
+		return
+	}
+	res = dao.DeleteEmployeeByIdWithoutPasswordButCheckLevel(&model.Operator, &model.Target)
+	if res.Error != nil {
+		resp.Code = http.StatusBadRequest
+		resp.Message = res.Error.Error()
+		return
+	}
+	if res.RowsAffected == 0 {
+		resp.Code = http.StatusBadRequest
+		resp.Message = "操作对象不存在或权限不足"
+		return
+	}
+	resp.Message = "删除成功"
+	return
+}

@@ -58,3 +58,25 @@ func SelectEmployeeById(model *models.Employee) (tx *gorm.DB) {
 	sql := `SELECT * FROM employee WHERE id=?`
 	return global.DB.Raw(sql, model.ID).Scan(model)
 }
+
+func SelectEmployeeLevelById(employee *models.Employee) (tx *gorm.DB) {
+	sql := `SELECT level FROM employee WHERE id=?`
+	return global.DB.Raw(sql, employee.ID).Scan(employee)
+}
+
+func DeleteEmployeeByIdWithoutPasswordButCheckLevel(operator *models.Employee, target *models.Employee) (tx *gorm.DB) {
+	sql := `delete from account 
+	left join employee
+	on account.id = employee.id
+	where employee.level > ? AND account.id=?`
+	global.DB.Exec(sql, operator.Level, target.ID)
+	sql = `DELETE FROM employee WHERE id= ? AND level > ?`
+	return global.DB.Exec(sql, target.ID, operator.Level)
+}
+
+func CheckOrderDependency(employee models.Employee) int {
+	var r int
+	sql := `SELECT count(*) r FROM list WHERE employee_id = ?`
+	global.DB.Raw(sql, employee.ID).Scan(&r)
+	return r
+}

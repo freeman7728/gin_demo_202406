@@ -21,6 +21,11 @@ type EmployeeLoginResponse struct {
 	Token string `json:"token"`
 }
 
+type DeleteEmployeeByAdminRequest struct {
+	Operator models.Employee `json:"operator"`
+	Target   models.Employee `json:"target"`
+}
+
 func AddToken(employee *models.Employee, token string) *EmployeeLoginResponse {
 	res := &EmployeeLoginResponse{
 		Employee: *employee,

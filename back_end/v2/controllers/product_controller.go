@@ -98,7 +98,7 @@ func SelectProductController(c *gin.Context) {
 // @Summary 通过id请求详情
 // @Description 通过id请求详情
 // @Tags product
-// @Accept  url
+// @Accept  x-www-form-urlencoded
 // @Produce  json
 // @Success      200  string  models.Product
 // @Router /product/{id} [Get]

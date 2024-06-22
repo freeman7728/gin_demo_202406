@@ -1,5 +1,12 @@
 basePath: /
 definitions:
+  dto.DeleteEmployeeByAdminRequest:
+    properties:
+      operator:
+        $ref: '#/definitions/models.Employee'
+      target:
+        $ref: '#/definitions/models.Employee'
+    type: object
   dto.DetailInsertResponse:
     properties:
       fail_list:
@@ -238,6 +245,21 @@ info:
   title: 超市进销存系统--数据库课设接口文档
   version: "1.0"
 paths:
+  /detail/{id}:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 通过id请求详情
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 通过id请求详情
+      tags:
+      - detail
   /detail/delete:
     post:
       consumes:
@@ -319,6 +341,21 @@ paths:
       summary: 更新订单详情
       tags:
       - detail
+  /employee/{id}:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 通过id请求详情
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 通过id请求详情
+      tags:
+      - employee
   /employee/delete:
     post:
       consumes:
@@ -339,6 +376,28 @@ paths:
           schema:
             type: msg
       summary: 删除用户
+      tags:
+      - employee
+  /employee/deleteByAdmin:
+    post:
+      consumes:
+      - application/json
+      description: 需要操作者id，操作对象id，如果操作者不存在，操作对象不存在，操作权限不足都会返回对应错误
+      parameters:
+      - description: Request
+        in: body
+        name: employee
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeleteEmployeeByAdminRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            type: string
+      summary: 管理员删除其他用户
       tags:
       - employee
   /employee/insert:
@@ -407,6 +466,21 @@ paths:
       summary: 用户修改信息
       tags:
       - employee
+  /order/{id}:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 通过id请求详情
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 通过id请求详情
+      tags:
+      - order
   /order/delete:
     post:
       consumes:
@@ -488,6 +562,21 @@ paths:
       summary: 更新订单
       tags:
       - order
+  /producer/{id}:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 通过id请求详情
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 通过id请求详情
+      tags:
+      - producer
   /producer/delete:
     post:
       consumes:
@@ -569,6 +658,21 @@ paths:
       summary: 更新供应商
       tags:
       - producer
+  /product/{id}:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 通过id请求详情
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 通过id请求详情
+      tags:
+      - product
   /product/delete:
     post:
       consumes:

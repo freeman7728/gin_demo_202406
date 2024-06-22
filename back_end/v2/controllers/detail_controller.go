@@ -98,10 +98,10 @@ func SelectDetailController(c *gin.Context) {
 // @Summary 通过id请求详情
 // @Description 通过id请求详情
 // @Tags detail
-// @Accept  url
+// @Accept  x-www-form-urlencoded
 // @Produce  json
 // @Success      200  string  models.Detail
-// @Router /detail/{id} [Get]
+// @Router /detail/{id} [get]
 func SelectDetailByIdController(c *gin.Context) {
 	var detail models.Detail
 	strId := c.Param("id")

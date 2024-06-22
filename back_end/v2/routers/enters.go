@@ -22,6 +22,7 @@ func InitRouter() *gin.Engine {
 		employeeRouter.POST("/update", controllers.UpdateEmployeeController)
 		employeeRouter.POST("/delete", controllers.DeleteEmployeeController)
 		employeeRouter.GET("/:id", controllers.SelectEmployeeByIdController)
+		employeeRouter.POST("/deleteByAdmin", controllers.DeleteEmployeeByAdminController)
 	}
 	producerRouter := router.Group("/producer")
 	{

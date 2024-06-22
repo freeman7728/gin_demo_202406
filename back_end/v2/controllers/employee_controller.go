@@ -109,7 +109,7 @@ func DeleteEmployeeController(c *gin.Context) {
 // @Summary 通过id请求详情
 // @Description 通过id请求详情
 // @Tags employee
-// @Accept  url
+// @Accept  x-www-form-urlencoded
 // @Produce  json
 // @Success      200  string  models.Employee
 // @Router /employee/{id} [Get]
@@ -119,6 +119,29 @@ func SelectEmployeeByIdController(c *gin.Context) {
 	employee.ID, _ = strconv.Atoi(strId)
 	// 转发到service层处理
 	err, res := services.SelectEmployeeById(&employee)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+// @Summary 管理员删除其他用户
+// @Description 需要操作者id，操作对象id，如果操作者不存在，操作对象不存在，操作权限不足都会返回对应错误
+// @Tags employee
+// @Accept  json
+// @Produce  json
+// @Param   employee body dto.DeleteEmployeeByAdminRequest true "Request"
+// @Success      200  string  "删除成功"
+// @Router /employee/deleteByAdmin [post]
+func DeleteEmployeeByAdminController(c *gin.Context) {
+	var model dto.DeleteEmployeeByAdminRequest
+	if err := c.ShouldBindJSON(&model); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	// 转发到service层处理
+	err, res := services.DeleteEmployeeByIdWithoutPassword(&model)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

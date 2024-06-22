@@ -141,6 +141,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/detail/{id}": {
+            "get": {
+                "description": "通过id请求详情",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "detail"
+                ],
+                "summary": "通过id请求详情",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/employee/delete": {
             "post": {
                 "description": "验证账号密码，然后删除用户",
@@ -170,6 +193,40 @@ const docTemplate = `{
                         "description": "删除成功或失败",
                         "schema": {
                             "type": "msg"
+                        }
+                    }
+                }
+            }
+        },
+        "/employee/deleteByAdmin": {
+            "post": {
+                "description": "需要操作者id，操作对象id，如果操作者不存在，操作对象不存在，操作权限不足都会返回对应错误",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "employee"
+                ],
+                "summary": "管理员删除其他用户",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "employee",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.DeleteEmployeeByAdminRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "删除成功",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -272,6 +329,29 @@ const docTemplate = `{
                         "description": "修改成功或失败",
                         "schema": {
                             "type": "msg"
+                        }
+                    }
+                }
+            }
+        },
+        "/employee/{id}": {
+            "get": {
+                "description": "通过id请求详情",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "employee"
+                ],
+                "summary": "通过id请求详情",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -395,6 +475,29 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "msg",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/{id}": {
+            "get": {
+                "description": "通过id请求详情",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "通过id请求详情",
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "type": "string"
                         }
@@ -527,6 +630,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/producer/{id}": {
+            "get": {
+                "description": "通过id请求详情",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "producer"
+                ],
+                "summary": "通过id请求详情",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/product/delete": {
             "post": {
                 "description": "删除产品，返回外键检查结果和删除结果，如果有外键依赖则会提示",
@@ -651,9 +777,43 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/product/{id}": {
+            "get": {
+                "description": "通过id请求详情",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "product"
+                ],
+                "summary": "通过id请求详情",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "dto.DeleteEmployeeByAdminRequest": {
+            "type": "object",
+            "properties": {
+                "operator": {
+                    "$ref": "#/definitions/models.Employee"
+                },
+                "target": {
+                    "$ref": "#/definitions/models.Employee"
+                }
+            }
+        },
         "dto.DetailInsertResponse": {
             "type": "object",
             "properties": {
