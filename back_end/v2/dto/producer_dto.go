@@ -3,7 +3,7 @@ package dto
 import "database_lesson/models"
 
 type ProducerInsertDto struct {
-	ProducerList *[]models.Producer `json:"producer_list"`
+	ProducerList *[]models.Producer `json:"list"`
 }
 
 type ProducerInsertResponseDto struct {
@@ -12,7 +12,7 @@ type ProducerInsertResponseDto struct {
 }
 
 type ProducerList struct {
-	ProducerList []models.Producer `json:"producer_list"`
+	ProducerList []models.Producer `json:"list"`
 }
 
 type Producer struct {

@@ -13,7 +13,7 @@ definitions:
     type: object
   dto.EmployeeList:
     properties:
-      employee_list:
+      list:
         items:
           $ref: '#/definitions/models.Employee'
         type: array
@@ -41,11 +41,6 @@ definitions:
       tel:
         type: string
     type: object
-  dto.Producer:
-    properties:
-      producer:
-        $ref: '#/definitions/models.Producer'
-    type: object
   dto.ProducerInsertResponseDto:
     properties:
       fail_list:
@@ -59,9 +54,27 @@ definitions:
     type: object
   dto.ProducerList:
     properties:
-      producer_list:
+      list:
         items:
           $ref: '#/definitions/models.Producer'
+        type: array
+    type: object
+  dto.ProductInsertResponse:
+    properties:
+      fail_list:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      success_list:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+    type: object
+  dto.ProductList:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/models.Product'
         type: array
     type: object
   models.Employee:
@@ -107,6 +120,23 @@ definitions:
         type: string
       tel:
         type: string
+    type: object
+  models.Product:
+    properties:
+      id:
+        type: integer
+      introduction:
+        type: string
+      msg:
+        type: string
+      name:
+        type: string
+      note:
+        type: string
+      price:
+        type: number
+      producer_id:
+        type: integer
     type: object
 host: localhost:4000
 info:
@@ -214,7 +244,7 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/dto.Producer'
+          $ref: '#/definitions/models.Producer'
       produces:
       - application/json
       responses:
@@ -273,7 +303,7 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/dto.Producer'
+          $ref: '#/definitions/models.Producer'
       produces:
       - application/json
       responses:
@@ -284,4 +314,85 @@ paths:
       summary: 更新供应商
       tags:
       - producer
+  /product/delete:
+    post:
+      consumes:
+      - application/json
+      description: 删除产品，返回外键检查结果和删除结果，如果有外键依赖则会提示
+      parameters:
+      - description: Producer Request
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: msg
+          schema:
+            type: string
+      summary: 删除产品
+      tags:
+      - product
+  /product/insert:
+    post:
+      consumes:
+      - application/json
+      description: 批量导入产品，并且返回成功失败列表
+      parameters:
+      - description: Producer Request
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ProductList'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductInsertResponse'
+      summary: 批量导入产品
+      tags:
+      - product
+  /product/select:
+    post:
+      consumes:
+      - application/json
+      description: 删除产品，返回外键检查结果和删除结果，如果有外键依赖则会提示
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductList'
+      summary: 请求所有产品
+      tags:
+      - product
+  /product/update:
+    post:
+      consumes:
+      - application/json
+      description: 更新产品，除了id之外都能改，所有不会有外键冲突
+      parameters:
+      - description: Producer Request
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: msg
+          schema:
+            type: string
+      summary: 更新产品
+      tags:
+      - product
 swagger: "2.0"

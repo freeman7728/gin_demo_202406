@@ -172,7 +172,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.Producer"
+                            "$ref": "#/definitions/models.Producer"
                         }
                     }
                 ],
@@ -263,7 +263,132 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.Producer"
+                            "$ref": "#/definitions/models.Producer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "msg",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/product/delete": {
+            "post": {
+                "description": "删除产品，返回外键检查结果和删除结果，如果有外键依赖则会提示",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "product"
+                ],
+                "summary": "删除产品",
+                "parameters": [
+                    {
+                        "description": "Producer Request",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "msg",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/product/insert": {
+            "post": {
+                "description": "批量导入产品，并且返回成功失败列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "product"
+                ],
+                "summary": "批量导入产品",
+                "parameters": [
+                    {
+                        "description": "Producer Request",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ProductList"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ProductInsertResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/product/select": {
+            "post": {
+                "description": "删除产品，返回外键检查结果和删除结果，如果有外键依赖则会提示",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "product"
+                ],
+                "summary": "请求所有产品",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ProductList"
+                        }
+                    }
+                }
+            }
+        },
+        "/product/update": {
+            "post": {
+                "description": "更新产品，除了id之外都能改，所有不会有外键冲突",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "product"
+                ],
+                "summary": "更新产品",
+                "parameters": [
+                    {
+                        "description": "Producer Request",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Product"
                         }
                     }
                 ],
@@ -299,7 +424,7 @@ const docTemplate = `{
         "dto.EmployeeList": {
             "type": "object",
             "properties": {
-                "employee_list": {
+                "list": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Employee"
@@ -342,14 +467,6 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.Producer": {
-            "type": "object",
-            "properties": {
-                "producer": {
-                    "$ref": "#/definitions/models.Producer"
-                }
-            }
-        },
         "dto.ProducerInsertResponseDto": {
             "type": "object",
             "properties": {
@@ -370,10 +487,38 @@ const docTemplate = `{
         "dto.ProducerList": {
             "type": "object",
             "properties": {
-                "producer_list": {
+                "list": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Producer"
+                    }
+                }
+            }
+        },
+        "dto.ProductInsertResponse": {
+            "type": "object",
+            "properties": {
+                "fail_list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Product"
+                    }
+                },
+                "success_list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Product"
+                    }
+                }
+            }
+        },
+        "dto.ProductList": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Product"
                     }
                 }
             }
@@ -442,6 +587,32 @@ const docTemplate = `{
                 },
                 "tel": {
                     "type": "string"
+                }
+            }
+        },
+        "models.Product": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "introduction": {
+                    "type": "string"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "producer_id": {
+                    "type": "integer"
                 }
             }
         }

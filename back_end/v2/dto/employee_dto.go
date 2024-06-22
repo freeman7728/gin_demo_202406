@@ -3,7 +3,7 @@ package dto
 import "database_lesson/models"
 
 type EmployeeList struct {
-	EmployeeList []models.Employee `json:"employee_list"`
+	EmployeeList []models.Employee `json:"list"`
 }
 
 type EmployeeInsertResult struct {

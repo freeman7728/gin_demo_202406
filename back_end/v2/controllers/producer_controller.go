@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database_lesson/dto"
+	"database_lesson/models"
 	"database_lesson/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -35,11 +36,11 @@ func InsertProducerController(c *gin.Context) {
 // @Tags producer
 // @Accept  json
 // @Produce  json
-// @Param   product body dto.Producer true "Producer Request"
+// @Param   product body models.Producer true "Producer Request"
 // @Success      200  string  "msg"
 // @Router /producer/delete [post]
 func DeleteProducerController(c *gin.Context) {
-	var producer dto.Producer
+	var producer models.Producer
 	if err := c.ShouldBindJSON(&producer); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -58,11 +59,11 @@ func DeleteProducerController(c *gin.Context) {
 // @Tags producer
 // @Accept  json
 // @Produce  json
-// @Param   product body dto.Producer true "Producer Request"
+// @Param   product body models.Producer true "Producer Request"
 // @Success      200  string  "msg"
 // @Router /producer/update [post]
 func UpdateProducerController(c *gin.Context) {
-	var producer dto.Producer
+	var producer models.Producer
 	if err := c.ShouldBindJSON(&producer); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

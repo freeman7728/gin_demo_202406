@@ -30,8 +30,10 @@ func LoginEmployeeService(employee *models.Employee) (err error, resp dto.Respon
 	if err != nil {
 		resp.Code = http.StatusInternalServerError
 		resp.Message = err.Error()
+		return
 	}
 	if res.ID == 0 {
+		resp.Code = 500
 		resp.Message = "账号或者密码错误"
 		return
 	}
@@ -44,6 +46,7 @@ func UpdateEmployeeService(employee *dto.EmployeeUpdateRequest) (err error, resp
 	resp.Code = http.StatusOK
 	tx := dao.EmployeeUpdate(employee)
 	if tx.RowsAffected == 0 {
+		resp.Code = 500
 		resp.Message = "账号或密码错误"
 		return
 	}
@@ -61,6 +64,7 @@ func DeleteEmployeeService(employee *models.Employee) (err error, resp dto.Respo
 	resp.Code = http.StatusOK
 	tx := dao.EmployeeDelete(employee)
 	if tx.RowsAffected == 0 {
+		resp.Code = 500
 		resp.Message = "账号或密码错误"
 		return
 	}
