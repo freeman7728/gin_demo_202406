@@ -50,6 +50,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/detail/groupByproduct": {
+            "get": {
+                "description": "按照商品，统计每种商品卖出去多少个",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "detail"
+                ],
+                "summary": "按照商品，统计每种商品卖出去多少个",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.SumGroupByProductIdList"
+                        }
+                    }
+                }
+            }
+        },
         "/detail/insert": {
             "post": {
                 "description": "批量导入订单详情，并且返回成功失败列表",
@@ -1043,6 +1066,28 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Product"
+                    }
+                }
+            }
+        },
+        "dto.SumGroupByProductId": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "sum": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.SumGroupByProductIdList": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.SumGroupByProductId"
                     }
                 }
             }

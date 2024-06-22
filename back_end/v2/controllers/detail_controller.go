@@ -134,3 +134,20 @@ func SelectDetailByOrderIdController(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
+
+// @Summary 按照商品，统计每种商品卖出去多少个
+// @Description 按照商品，统计每种商品卖出去多少个
+// @Tags detail
+// @Accept  x-www-form-urlencoded
+// @Produce  json
+// @Success      200  {object}  dto.SumGroupByProductIdList
+// @Router /detail/groupByproduct [get]
+func SelectSumGroupByProductIdController(c *gin.Context) {
+	// 转发到service层处理
+	err, res := services.SelectSumGroupByProductId()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}

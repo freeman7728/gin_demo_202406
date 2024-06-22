@@ -143,6 +143,20 @@ definitions:
           $ref: '#/definitions/models.Product'
         type: array
     type: object
+  dto.SumGroupByProductId:
+    properties:
+      id:
+        type: integer
+      sum:
+        type: integer
+    type: object
+  dto.SumGroupByProductIdList:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/dto.SumGroupByProductId'
+        type: array
+    type: object
   models.Detail:
     properties:
       id:
@@ -280,6 +294,21 @@ paths:
           schema:
             type: string
       summary: 删除订单详情
+      tags:
+      - detail
+  /detail/groupByproduct:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 按照商品，统计每种商品卖出去多少个
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SumGroupByProductIdList'
+      summary: 按照商品，统计每种商品卖出去多少个
       tags:
       - detail
   /detail/insert:

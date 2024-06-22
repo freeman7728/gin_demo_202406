@@ -56,6 +56,7 @@ func InitRouter() *gin.Engine {
 		detailRouter.POST("/select", controllers.SelectDetailController)
 		detailRouter.GET("/:id", controllers.SelectDetailByIdController)
 		detailRouter.GET("/orderId/:id", controllers.SelectDetailByOrderIdController)
+		detailRouter.GET("/groupByproduct", controllers.SelectSumGroupByProductIdController)
 	}
 
 	return router

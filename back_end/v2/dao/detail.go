@@ -27,8 +27,12 @@ func SelectDetailById(model *models.Detail) (tx *gorm.DB) {
 	sql := `SELECT * FROM detail WHERE id=?`
 	return global.DB.Raw(sql, model.Id).Scan(model)
 }
-
 func SelectDetailByOrderId(model *models.Order, out *dto.DetailList) (tx *gorm.DB) {
 	sql := `SELECT * FROM detail where list_id = ?`
 	return global.DB.Raw(sql, model.Id).Scan(&out.DetailList)
+}
+
+func SelectSumGroupByProductId(out *dto.SumGroupByProductIdList) (tx *gorm.DB) {
+	sql := `SELECT product_id id,SUM(quantity) sum FROM detail GROUP BY product_id`
+	return global.DB.Raw(sql).Scan(&out.List)
 }
