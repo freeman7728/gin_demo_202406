@@ -47,6 +47,10 @@ definitions:
     properties:
       account:
         type: string
+      email:
+        type: string
+      email_auth:
+        type: boolean
       id:
         type: integer
       level:
@@ -70,6 +74,10 @@ definitions:
     properties:
       account:
         type: string
+      email:
+        type: string
+      email_auth:
+        type: boolean
       id:
         type: integer
       level:
@@ -178,6 +186,10 @@ definitions:
     properties:
       account:
         type: string
+      email:
+        type: string
+      email_auth:
+        type: boolean
       id:
         type: integer
       level:
@@ -444,6 +456,21 @@ paths:
       summary: 管理员删除其他用户
       tags:
       - employee
+  /employee/getAll:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 获取所有员工
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 得到所有员工
+      tags:
+      - employee
   /employee/insert:
     post:
       consumes:
@@ -523,6 +550,21 @@ paths:
           schema:
             type: string
       summary: 通过id请求详情
+      tags:
+      - order
+  /order/byEmployeeId/{id}:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 通过员工id请求订单
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.OrderList'
+      summary: 通过员工id请求订单
       tags:
       - order
   /order/delete:

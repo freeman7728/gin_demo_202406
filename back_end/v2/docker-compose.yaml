@@ -9,6 +9,7 @@ services:
       MYSQL_DATABASE: database_lesson
     volumes:
       - "./mysql/init:/docker-entrypoint-initdb.d"
+      - "./mysql/conf/:/etc/mysql"
     ports:
       - "3306:3306"
 

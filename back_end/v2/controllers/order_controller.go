@@ -114,3 +114,23 @@ func SelectOrderByIdController(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
+
+// @Summary 通过员工id请求订单
+// @Description 通过员工id请求订单
+// @Tags order
+// @Accept  x-www-form-urlencoded
+// @Produce  json
+// @Success      200  {object}  dto.OrderList
+// @Router /order/byEmployeeId/{id} [get]
+func SelectOrderByEmployeeIdController(c *gin.Context) {
+	var employee models.Employee
+	strId := c.Param("id")
+	employee.ID, _ = strconv.Atoi(strId)
+	// 转发到service层处理
+	err, res := services.SelectDetailByEmployeeId(&employee)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}

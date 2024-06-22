@@ -23,6 +23,8 @@ func InitRouter() *gin.Engine {
 		employeeRouter.POST("/delete", controllers.DeleteEmployeeController)
 		employeeRouter.GET("/:id", controllers.SelectEmployeeByIdController)
 		employeeRouter.POST("/deleteByAdmin", controllers.DeleteEmployeeByAdminController)
+		employeeRouter.GET("/getAll", controllers.SelectAllEmployeeController)
+
 	}
 	producerRouter := router.Group("/producer")
 	{
@@ -47,6 +49,7 @@ func InitRouter() *gin.Engine {
 		orderRouter.POST("/update", controllers.UpdateOrderController)
 		orderRouter.POST("/select", controllers.SelectOrderController)
 		orderRouter.GET("/:id", controllers.SelectOrderByIdController)
+		orderRouter.GET("/byEmployee/:id", controllers.SelectOrderByEmployeeIdController)
 	}
 	detailRouter := router.Group("/detail")
 	{

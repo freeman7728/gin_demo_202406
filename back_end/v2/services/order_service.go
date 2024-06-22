@@ -104,3 +104,20 @@ func SelectOrderById(order *models.Order) (err error, resp dto.Response) {
 	resp.Message = "查询成功"
 	return
 }
+func SelectDetailByEmployeeId(employee *models.Employee) (err error, resp dto.Response) {
+	resp.Code = http.StatusOK
+	var list dto.DetailList
+	res := dao.SelectOrderByEmployeeId(employee, &list)
+	if res.Error != nil {
+		resp.Code = http.StatusBadRequest
+		resp.Message = res.Error.Error()
+		return
+	}
+	if res.RowsAffected == 0 {
+		resp.Code = http.StatusBadRequest
+		resp.Message = "清单为空"
+		return
+	}
+	resp.Data = list
+	return
+}

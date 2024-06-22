@@ -148,3 +148,20 @@ func DeleteEmployeeByAdminController(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
+
+// @Summary 得到所有员工
+// @Description 获取所有员工
+// @Tags employee
+// @Accept  x-www-form-urlencoded
+// @Produce  json
+// @Success      200  string  models.Employee
+// @Router /employee/getAll [Get]
+func SelectAllEmployeeController(c *gin.Context) {
+	// 转发到service层处理
+	err, res := services.SelectAllEmployee()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}

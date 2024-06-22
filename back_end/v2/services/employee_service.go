@@ -138,3 +138,17 @@ func DeleteEmployeeByIdWithoutPassword(model *dto.DeleteEmployeeByAdminRequest) 
 	resp.Message = "删除成功"
 	return
 }
+
+func SelectAllEmployee() (err error, resp dto.Response) {
+	resp.Code = http.StatusOK
+	var list dto.EmployeeList
+	res := dao.SelectAllEmployee(&list)
+	if res.Error != nil {
+		resp.Code = http.StatusBadRequest
+		resp.Message = res.Error.Error()
+		return
+	}
+	resp.Data = list
+	resp.Message = "获取成功"
+	return
+}

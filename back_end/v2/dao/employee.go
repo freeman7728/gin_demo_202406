@@ -80,3 +80,8 @@ func CheckOrderDependency(employee models.Employee) int {
 	global.DB.Raw(sql, employee.ID).Scan(&r)
 	return r
 }
+
+func SelectAllEmployee(list *dto.EmployeeList) (tx *gorm.DB) {
+	sql := `SELECT * FROM employee`
+	return global.DB.Raw(sql).Scan(&list.EmployeeList)
+}

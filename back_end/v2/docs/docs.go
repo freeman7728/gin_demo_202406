@@ -278,6 +278,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/employee/getAll": {
+            "get": {
+                "description": "获取所有员工",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "employee"
+                ],
+                "summary": "得到所有员工",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/employee/insert": {
             "post": {
                 "description": "批量导入用户，并且返回成功失败列表",
@@ -398,6 +421,29 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/byEmployeeId/{id}": {
+            "get": {
+                "description": "通过员工id请求订单",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "通过员工id请求订单",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.OrderList"
                         }
                     }
                 }
@@ -922,6 +968,12 @@ const docTemplate = `{
                 "account": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string"
+                },
+                "email_auth": {
+                    "type": "boolean"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -956,6 +1008,12 @@ const docTemplate = `{
             "properties": {
                 "account": {
                     "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "email_auth": {
+                    "type": "boolean"
                 },
                 "id": {
                     "type": "integer"
@@ -1123,6 +1181,12 @@ const docTemplate = `{
             "properties": {
                 "account": {
                     "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "email_auth": {
+                    "type": "boolean"
                 },
                 "id": {
                     "type": "integer"
