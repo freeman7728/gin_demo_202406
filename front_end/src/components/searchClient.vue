@@ -1,5 +1,5 @@
 <template>
-    <el-button type="primary" plain @click="openSearchDialog">查找客户</el-button>
+    <el-button type="info"  @click="openSearchDialog">查找客户</el-button>
   
     <el-dialog v-model="searchDialogVisible" title="查找客户信息" width="80%" :before-close="handleSearchClose">
       <el-form ref="searchForm" :rules="searchRules">
@@ -74,7 +74,7 @@
         <el-table-column prop="email" label="邮件" width="150"></el-table-column>
         <el-table-column prop="contactPerson" label="联系人" width="150"></el-table-column>
         <el-table-column prop="contactPhone" label="联系人电话" width="150"></el-table-column>
-        <el-table-column prop="remark" label="备注" width="200"></el-table-column>
+        <el-table-column prop="remark" label="备注" width="500"></el-table-column>
       </el-table>
     </template>
     <template v-else>

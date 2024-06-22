@@ -1,5 +1,5 @@
 <template>
-      <el-button type="primary" plain @click="openDialog">添加商品</el-button>
+      <el-button type="primary"  @click="openDialog">添加商品</el-button>
   
       <el-dialog v-model="dialogVisible" title="添加商品信息" width="85%" :before-close="handleClose">
         <el-form ref="productForm" :rules="rules" >
@@ -14,30 +14,30 @@
           </el-row>
   
           <!-- 输入行 -->
-          <div v-for="(product, index) in products" :key="index" class="product-row">
+          <div v-for="(product, index) in list" :key="index" class="product-row">
             <el-row :gutter="5">
               <el-col :span="4">
-                <el-form-item :prop="'products.' + index + '.name'">
+                <el-form-item :prop="'list.' + index + '.name'">
                   <el-input v-model="product.name"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item :prop="'products.' + index + '.price'">
+                <el-form-item :prop="'list.' + index + '.price'">
                   <el-input type="number" v-model="product.price"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item :prop="'products.' + index + '.producer_id'">
+                <el-form-item :prop="'list.' + index + '.producer_id'">
                   <el-input v-model="product.producer_id"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item :prop="'products.' + index + '.introduction'">
+                <el-form-item :prop="'list.' + index + '.introduction'">
                   <el-input v-model="product.introduction"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="2">
-                <el-form-item :prop="'products.' + index + '.note'">
+                <el-form-item :prop="'list.' + index + '.note'">
                   <el-input type="textarea" v-model="product.note"></el-input>
                 </el-form-item>
               </el-col>
@@ -53,7 +53,7 @@
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="saveProducts">确定</el-button>
+            <el-button type="primary" @click="savelist">确定</el-button>
           </div>
         </template>
       </el-dialog>
@@ -66,7 +66,7 @@
   
   const { proxy } = getCurrentInstance();
   const dialogVisible = ref(false);
-  const products = ref([
+  const list = ref([
     {
       name: '',
       price: '',
@@ -97,7 +97,7 @@
   };
   
   const addNewProduct = () => {
-    products.value.push({
+    list.value.push({
       name: '',
       price: '',
       producer_id: '',
@@ -106,18 +106,25 @@
     });
   };
   
-  const saveProducts = async () => {
-    for (let i = 0; i < products.value.length; i++) {
-      const product = products.value[i];
+  const savelist = async () => {
+    const productToSave = list.value.map(product => ({
+    ...product,
+    price: parseFloat(product.price),
+    producer_id: parseFloat(product.producer_id)
+  }));
+
+    for (let i = 0; i < list.value.length; i++) {
+      const product = list.value[i];
       if (!product.name || !product.price || !product.producer_id || !product.introduction) {
         ElMessage.error('除备注外所有字段都必须填写');
         return;
       }
     }
   try {
-    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/product/insert`, { products: products.value });
-    if (response.status === 200) {
-      console.log(products.value);
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/product/insert`, { list: productToSave });
+    console.log(response);
+    if (response.data.code === 200) {
+      console.log(list.value);
       ElMessage.success('商品信息已成功添加至数据库');
       resetForm();
       dialogVisible.value = false;
@@ -132,7 +139,7 @@
 };
   
   const resetForm = () => {
-    products.value = [
+    list.value = [
       {
         name: '',
         price: '',
@@ -144,7 +151,7 @@
   };
   
   const removeProduct = (index: number) => {
-    products.value.splice(index, 1);
+    list.value.splice(index, 1);
   };
   </script>
   

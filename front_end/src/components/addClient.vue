@@ -1,5 +1,5 @@
 <template>
-      <el-button type="primary" plain @click="openDialog">添加客户</el-button>
+      <el-button type="primary"  @click="openDialog">添加客户</el-button>
   
       <el-dialog v-model="dialogVisible" title="添加客户信息" width="80%" :before-close="handleClose">
         <el-form ref="customerForm" :rules="rules" >
@@ -15,45 +15,45 @@
             <el-col :span="2"><strong>操作</strong></el-col>
           </el-row>
   
-          <div v-for="(customer, index) in customers" :key="index" class="customer-row">
+          <div v-for="(customer, index) in list" :key="index" class="customer-row">
             <el-row :gutter="5">
               <el-col :span="3">
-                <el-form-item :prop="'customers.' + index + '.name'">
+                <el-form-item :prop="'list.' + index + '.name'">
                   <el-input v-model="customer.name"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="3">
-                <el-form-item :prop="'customers.' + index + '.short_name'">
+                <el-form-item :prop="'list.' + index + '.short_name'">
                   <el-input v-model="customer.short_name"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="3">
-                <el-form-item :prop="'customers.' + index + '.address'">
+                <el-form-item :prop="'list.' + index + '.address'">
                   <el-input v-model="customer.address"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="2">
-                <el-form-item :prop="'customers.' + index + '.tel'">
+                <el-form-item :prop="'list.' + index + '.tel'">
                   <el-input v-model="customer.tel"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="2">
-                <el-form-item :prop="'customers.' + index + '.email'">
+                <el-form-item :prop="'list.' + index + '.email'">
                   <el-input v-model="customer.email"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="2">
-                <el-form-item :prop="'customers.' + index + '.contact_name'">
+                <el-form-item :prop="'list.' + index + '.contact_name'">
                   <el-input v-model="customer.contact_name"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="3">
-                <el-form-item :prop="'customers.' + index + '.contact_tel'">
+                <el-form-item :prop="'list.' + index + '.contact_tel'">
                   <el-input v-model="customer.contact_tel"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="3">
-                <el-form-item :prop="'customers.' + index + '.note'">
+                <el-form-item :prop="'list.' + index + '.note'">
                   <el-input type="textarea" v-model="customer.note"></el-input>
                 </el-form-item>
               </el-col>
@@ -69,7 +69,7 @@
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="saveCustomers">确定</el-button>
+            <el-button type="primary" @click="savelist">确定</el-button>
           </div>
         </template>
       </el-dialog>
@@ -82,7 +82,7 @@
   
   const { proxy } = getCurrentInstance();
   const dialogVisible = ref(false);
-  const customers = ref([
+  const list = ref([
     {
       name: '',
       short_name: '',
@@ -119,7 +119,7 @@
   };
   
   const addNewCustomer = () => {
-    customers.value.push({
+    list.value.push({
       name: '',
       short_name: '',
       address: '',
@@ -131,10 +131,9 @@
     });
   };
   
-  const saveCustomers = async () => {
-  for (let i = 0; i < customers.value.length; i++) {
-    const customer = customers.value[i];
-    // 这里假设你的客户对象有 name, contact, address, and note 属性
+  const savelist = async () => {
+  for (let i = 0; i < list.value.length; i++) {
+    const customer = list.value[i];
     if (!customer.name || !customer.short_name || !customer.address || !customer.tel || !customer.email || !customer.contact_name || !customer.tel || !customer.note) {
       ElMessage.error('除备注外所有字段都必须填写');
       return;
@@ -142,9 +141,9 @@
   }
 
   try {
-    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/producer/insert`, { customers: customers.value });
-    if (response.status === 200) {
-      console.log(customers.value);
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/producer/insert`, { list: list.value });
+    if (response.data.code === 200) {
+      console.log(list.value);
       ElMessage.success('客户信息已成功添加至数据库');
       resetForm();
       dialogVisible.value = false;
@@ -160,7 +159,7 @@
 
   
   const resetForm = () => {
-    customers.value = [
+    list.value = [
       {
         name: '',
         short_name: '',
@@ -175,7 +174,7 @@
   };
   
   const removeCustomer = (index: number) => {
-    customers.value.splice(index, 1);
+    list.value.splice(index, 1);
   };
   </script>
   

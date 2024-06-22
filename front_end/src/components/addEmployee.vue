@@ -1,5 +1,5 @@
 <template>
-    <el-button type="primary" plain @click="openDialog">添加员工</el-button>
+    <el-button type="primary"  @click="openDialog">添加员工</el-button>
 
     <el-dialog v-model="dialogVisible" title="添加员工信息" width="90%" :before-close="handleClose">
       <el-form ref="employeeForm" :rules="rules" >
@@ -11,31 +11,31 @@
           <el-col :span="4"><strong>备注</strong></el-col>
           <el-col :span="4"><strong>操作</strong></el-col>
         </el-row>
-        <div v-for="(employee, index) in employees" :key="index" class="employee-row">
+        <div v-for="(list, index) in list" :key="index" class="employee-row">
       <el-row :gutter="5">
         <el-col :span="4">
-          <el-form-item :prop="'employees.' + index + '.name'">
-            <el-input v-model="employee.name"></el-input>
+          <el-form-item :prop="'list.' + index + '.name'">
+            <el-input v-model="list.name"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="4">
-          <el-form-item :prop="'employees.' + index + '.password'">
-            <el-input type="password" v-model="employee.password"></el-input>
+          <el-form-item :prop="'list.' + index + '.password'">
+            <el-input type="password" v-model="list.password"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="4">
-          <el-form-item :prop="'employees.' + index + '.tel'">
-            <el-input v-model="employee.tel"></el-input>
+          <el-form-item :prop="'list.' + index + '.tel'">
+            <el-input v-model="list.tel"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="4">
-          <el-form-item :prop="'employees.' + index + '.salary'">
-            <el-input v-model="employee.salary"></el-input>
+          <el-form-item :prop="'list.' + index + '.salary'">
+            <el-input v-model="list.salary"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="3">
-          <el-form-item :prop="'employees.' + index + '.note'">
-            <el-input type="textarea" v-model="employee.note"></el-input>
+          <el-form-item :prop="'list.' + index + '.note'">
+            <el-input type="textarea" v-model="list.note"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="3" class="action-col">
@@ -61,9 +61,12 @@
 import { ref } from 'vue';
 import { ElMessageBox } from 'element-plus';
 import axios from 'axios';
+import { ElMessage } from 'element-plus';
+import { getCurrentInstance } from 'vue';
+const { proxy } = getCurrentInstance();
 
 const dialogVisible = ref(false);
-const employees = ref([
+const list = ref([
   {
     name: '',
     password: '',
@@ -94,7 +97,7 @@ const openDialog = () => {
 };
 
 const addNewEmployee = () => {
-  employees.value.push({
+  list.value.push({
     name: '',
     password: '',
     tel: '',
@@ -103,14 +106,33 @@ const addNewEmployee = () => {
   });
 };
 
-const saveEmployees = () => {
-  console.log('保存员工列表:', employees.value);
-  resetForm();
-  dialogVisible.value = false;
+const saveEmployees = async () => {
+  const employeesToSave = list.value.map(employee => ({
+    ...employee,
+    salary: parseFloat(employee.salary),
+  }));
+  try {
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/employee/insert`, {
+      list: employeesToSave,
+    });
+    console.log(response); 
+    console.log('保存员工列表成功:', response.data);
+    ElMessageBox.alert('员工信息保存成功', '成功', {
+      confirmButtonText: '确定',
+    });
+    resetForm();
+    dialogVisible.value = false;
+  } catch (error) {
+    console.error('保存员工列表失败:', error);
+    ElMessageBox.alert('员工信息保存失败，请重试', '错误', {
+      confirmButtonText: '确定',
+    });
+  }
 };
 
+
 const resetForm = () => {
-  employees.value = [
+  list.value = [
     {
       name: '',
       password: '',
@@ -122,7 +144,7 @@ const resetForm = () => {
 };
 
 const removeEmployee = (index) => {
-  employees.value.splice(index, 1);
+  list.value.splice(index, 1);
 };
 </script>
 

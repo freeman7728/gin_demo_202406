@@ -23,14 +23,14 @@
           <el-form-item label="员工级别" prop="level">
             <el-input v-model="ruleForm.level" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="员工电话" prop="phone">
-            <el-input v-model="ruleForm.phone" autocomplete="off" />
+          <el-form-item label="员工电话" prop="tel">
+            <el-input v-model="ruleForm.tel" autocomplete="off" />
           </el-form-item>
           <el-form-item label="员工工资" prop="salary">
             <el-input v-model="ruleForm.salary" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="备注" prop="remark">
-            <el-input v-model="ruleForm.remark" type="textarea" autocomplete="off" />
+          <el-form-item label="备注" prop="tel">
+            <el-input v-model="ruleForm.tel" type="textarea" autocomplete="off" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm(ruleFormRef)">
@@ -58,9 +58,9 @@ const ruleForm = reactive({
   name: '',
   password: '',
   level: '',
-  phone: '',
+  tel: '',
   salary: '',
-  remark: '',
+  note: '',
 });
 
 const rules = reactive<FormRules<typeof ruleForm>>({
@@ -74,9 +74,9 @@ const fetchEmployeeInfo = async () => {
         ruleForm.name = response.data.name;
         ruleForm.password = response.data.password;
         ruleForm.level = response.data.level;
-        ruleForm.phone = response.data.phone;
+        ruleForm.tel = response.data.tel;
         ruleForm.salary = response.data.salary;
-        ruleForm.remark = response.data.remark;
+        ruleForm.tel = response.data.tel;
       } else {
         ElMessage.error('获取员工信息失败');
       }

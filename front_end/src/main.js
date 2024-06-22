@@ -26,6 +26,6 @@ app.config.globalProperties.$axios = axios;
 app.config.globalProperties.$qs = Qs;
 // app.config.globalProperties.$serverUrl = "http://101.42.232.154:9001";
 // app.config.globalProperties.$serverUrl2 = "http://101.42.232.154:9002";
-app.config.globalProperties.$serverUrl_test = "http://localhost:4000";
+app.config.globalProperties.$serverUrl_test = "http://8.146.198.97:4000";
 
 app.mount('#app');

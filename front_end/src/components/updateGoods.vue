@@ -64,12 +64,14 @@
   const fetchProductInfo = async () => {
     try {
       const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/product/${ruleForm.id}`);
-      if (response.status === 200) {
-        ruleForm.name = response.data.name;
-        ruleForm.price = response.data.price;
-        ruleForm.producer_id = response.data.producer_id;
-        ruleForm.introduction = response.data.introduction;
-        ruleForm.note = response.data.note;
+      console.log(response);
+      if (response.data.code === 200) {
+        ruleForm.name = response.data.data.name;
+        ruleForm.price = response.data.data.price;
+        ruleForm.producer_id = response.data.data.producer_id;
+        ruleForm.introduction = response.data.data.introduction;
+        ruleForm.note = response.data.data.note;
+        ElMessage.success('请修改商品信息');
       } else {
         ElMessage.error('获取商品信息失败');
       }
@@ -94,12 +96,19 @@
   
   const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
+    ruleForm.product_id = parseInt(ruleForm.product_id, 10);
+    console.log(typeof(ruleForm.product_id));
+    
+    const ruleFormToSave = list.value.map(ruleForm => ({
+    ...ruleForm,
+    product_id: parseFloat(ruleForm.product_id),
+  }));
     formEl.validate(async (valid) => {
       if (valid) {
         console.log('提交商品信息:', ruleForm);
         try {
-          const response = await proxy.$axios.put(`${proxy.$serverUrl_test}/product/update`, ruleForm);
-          if (response.status === 200) {
+          const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/product/update`, ruleForm);
+          if (response.data.code === 200) {
             ElMessage.success('商品信息已成功更新');
             resetForm(formEl);
             dialogVisible.value = false; // 关闭对话框

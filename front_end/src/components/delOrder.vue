@@ -60,8 +60,9 @@
       if (valid) {
         console.log('删除订单号:', ruleForm.orderId);
         try {
-          const response = await proxy.$axios.delete(`${proxy.$serverUrl_test}/order/delete`, { data: { id: ruleForm.orderId } });
-          if (response.status === 200) {
+          const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/detail/delete`, { id: parseInt(ruleForm.orderId)  });
+          console.log(response);
+          if (response.data.code === 200) {
             ElMessage.success('订单已成功删除');
             resetForm(formEl);
             dialogVisible.value = false; // 关闭对话框
