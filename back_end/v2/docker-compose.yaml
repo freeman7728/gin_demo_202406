@@ -17,7 +17,7 @@ services:
     image: redis # 创建容器时所需的镜像
     container_name: redis-6379 # 容器名称
     network_mode: "bridge" # host 网络模式
-    command: redis-server /usr/local/etc/redis/redis.conf # 覆盖容器启动后默认执行的命令
+    #command: redis-server /usr/local/etc/redis/redis.conf # 覆盖容器启动后默认执行的命令
     restart: always # 容器总是重新启动
     networks:
       - database_design_network
