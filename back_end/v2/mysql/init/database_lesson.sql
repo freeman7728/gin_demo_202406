@@ -11,7 +11,7 @@
  Target Server Version : 80033 (8.0.33)
  File Encoding         : 65001
 
- Date: 22/06/2024 16:58:10
+ Date: 22/06/2024 20:40:52
 */
 
 SET NAMES utf8mb4;
@@ -102,22 +102,25 @@ CREATE TABLE `employee`  (
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `deleted_at` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `level` int NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `email_is_auth` binary(1) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uniqe_tel`(`tel` ASC) USING BTREE COMMENT '手机号唯一'
-) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of employee
 -- ----------------------------
-INSERT INTO `employee` VALUES (8, 'John Doe', '123456789', 5000.00, 'New employee', NULL, 1);
-INSERT INTO `employee` VALUES (12, '123', '123123', 123.33, '1231', NULL, 1231);
-INSERT INTO `employee` VALUES (14, '123', '1236123', 123.33, '1231', NULL, 1231);
-INSERT INTO `employee` VALUES (16, '123', '12361123', 123.33, '1231', NULL, 1231);
-INSERT INTO `employee` VALUES (17, '123', '1123', 123.33, '1231', NULL, 1231);
-INSERT INTO `employee` VALUES (18, '123', '123323', 123.33, '1231', NULL, 1231);
-INSERT INTO `employee` VALUES (24, '123', '1265823', 123.00, '1231', NULL, 1231);
-INSERT INTO `employee` VALUES (29, '123', '111299223', 123.00, '1231', NULL, 1231);
-INSERT INTO `employee` VALUES (31, 'name', '123345213', 12312.00, '1231', NULL, 2);
+INSERT INTO `employee` VALUES (8, 'John Doe', '123456789', 5000.00, 'New employee', NULL, 1, NULL, NULL);
+INSERT INTO `employee` VALUES (12, '123', '123123', 123.33, '1231', NULL, 1231, NULL, NULL);
+INSERT INTO `employee` VALUES (14, '123', '1236123', 123.33, '1231', NULL, 1231, NULL, NULL);
+INSERT INTO `employee` VALUES (16, '123', '12361123', 123.33, '1231', NULL, 1231, NULL, NULL);
+INSERT INTO `employee` VALUES (17, '123', '1123', 123.33, '1231', NULL, 1231, NULL, NULL);
+INSERT INTO `employee` VALUES (18, '123', '123323', 123.33, '1231', NULL, 1231, NULL, NULL);
+INSERT INTO `employee` VALUES (24, '123', '1265823', 123.00, '1231', NULL, 1231, NULL, NULL);
+INSERT INTO `employee` VALUES (29, '123', '111299223', 123.00, '1231', NULL, 1231, NULL, NULL);
+INSERT INTO `employee` VALUES (31, 'name', '123345213', 12312.00, '1231', NULL, 2, NULL, NULL);
+INSERT INTO `employee` VALUES (32, '121231', '12312313451', 123.00, '12', NULL, 2, '123', 0x30);
 
 -- ----------------------------
 -- Table structure for list
@@ -321,6 +324,17 @@ CREATE TRIGGER `check_level_before_insert` BEFORE INSERT ON `employee` FOR EACH 
    IF NEW.level >= 3 THEN
       SET NEW.level = 2;
    END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table employee
+-- ----------------------------
+DROP TRIGGER IF EXISTS `set_email_auth`;
+delimiter ;;
+CREATE TRIGGER `set_email_auth` BEFORE INSERT ON `employee` FOR EACH ROW BEGIN
+   SET NEW.email_is_auth = FALSE;
 END
 ;;
 delimiter ;

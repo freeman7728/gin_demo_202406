@@ -295,7 +295,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.Employee"
                         }
                     }
                 }
@@ -971,7 +971,7 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
-                "email_auth": {
+                "email_is_auth": {
                     "type": "boolean"
                 },
                 "id": {
@@ -1012,7 +1012,7 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
-                "email_auth": {
+                "email_is_auth": {
                     "type": "boolean"
                 },
                 "id": {
@@ -1185,7 +1185,7 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
-                "email_auth": {
+                "email_is_auth": {
                     "type": "boolean"
                 },
                 "id": {

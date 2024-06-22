@@ -11,5 +11,5 @@ type Employee struct {
 	Level     int     `json:"level"`
 	Msg       string  `json:"msg"`
 	Email     string  `json:"email"`
-	EmailAuth bool    `json:"email_auth"`
+	EmailAuth bool    `json:"email_is_auth"`
 }

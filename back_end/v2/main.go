@@ -16,6 +16,7 @@ func main() {
 	core.InitConf()
 	global.Log = core.InitLogger()
 	global.DB = core.GormInit()
+	global.RedisClient = core.RedisInit()
 
 	router := routers.InitRouter()
 	addr := global.Config.System.Addr()

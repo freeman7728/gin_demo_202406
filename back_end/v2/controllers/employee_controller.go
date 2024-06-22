@@ -154,7 +154,7 @@ func DeleteEmployeeByAdminController(c *gin.Context) {
 // @Tags employee
 // @Accept  x-www-form-urlencoded
 // @Produce  json
-// @Success      200  string  models.Employee
+// @Success      200  {object}  models.Employee
 // @Router /employee/getAll [Get]
 func SelectAllEmployeeController(c *gin.Context) {
 	// 转发到service层处理

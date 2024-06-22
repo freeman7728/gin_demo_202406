@@ -49,7 +49,7 @@ definitions:
         type: string
       email:
         type: string
-      email_auth:
+      email_is_auth:
         type: boolean
       id:
         type: integer
@@ -76,7 +76,7 @@ definitions:
         type: string
       email:
         type: string
-      email_auth:
+      email_is_auth:
         type: boolean
       id:
         type: integer
@@ -188,7 +188,7 @@ definitions:
         type: string
       email:
         type: string
-      email_auth:
+      email_is_auth:
         type: boolean
       id:
         type: integer
@@ -467,7 +467,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/models.Employee'
       summary: 得到所有员工
       tags:
       - employee
