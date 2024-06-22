@@ -42,7 +42,7 @@ func InsertEmployeeController(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param   employee body models.Employee true "Request"
-// @Success      200  msg  "登录成功或失败"
+// @Success      200  {object}  dto.EmployeeLoginResponse
 // @Router /employee/login [post]
 func LoginEmployeeController(c *gin.Context) {
 	var employee models.Employee

@@ -11,7 +11,7 @@
  Target Server Version : 80033 (8.0.33)
  File Encoding         : 65001
 
- Date: 21/06/2024 10:31:08
+ Date: 22/06/2024 14:16:02
 */
 
 SET NAMES utf8mb4;
@@ -34,6 +34,9 @@ CREATE TABLE `account`  (
 -- Records of account
 -- ----------------------------
 INSERT INTO `account` VALUES (8, '2024060008', 'password123');
+INSERT INTO `account` VALUES (24, '2024060024', '265823');
+INSERT INTO `account` VALUES (29, '2024060029', '299223');
+INSERT INTO `account` VALUES (31, '2024060031', '123123');
 
 -- ----------------------------
 -- Table structure for auth
@@ -101,7 +104,7 @@ CREATE TABLE `employee`  (
   `level` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uniqe_tel`(`tel` ASC) USING BTREE COMMENT '手机号唯一'
-) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of employee
@@ -112,6 +115,9 @@ INSERT INTO `employee` VALUES (14, '123', '1236123', 123.33, '1231', NULL, 1231)
 INSERT INTO `employee` VALUES (16, '123', '12361123', 123.33, '1231', NULL, 1231);
 INSERT INTO `employee` VALUES (17, '123', '1123', 123.33, '1231', NULL, 1231);
 INSERT INTO `employee` VALUES (18, '123', '123323', 123.33, '1231', NULL, 1231);
+INSERT INTO `employee` VALUES (24, '123', '1265823', 123.00, '1231', NULL, 1231);
+INSERT INTO `employee` VALUES (29, '123', '111299223', 123.00, '1231', NULL, 1231);
+INSERT INTO `employee` VALUES (31, 'name', '123345213', 12312.00, '1231', NULL, 2);
 
 -- ----------------------------
 -- Table structure for list
@@ -156,15 +162,25 @@ CREATE TABLE `producer`  (
   `contact_tel` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of producer
 -- ----------------------------
-INSERT INTO `producer` VALUES (3, 'Producer Three', 'Prod3', '9101 Third St, City C, EX 10112', '333-333-3333', 'contact3@example.com', 'Charlie', '333-444-5555', 'Third producer note.');
-INSERT INTO `producer` VALUES (4, 'Producer One', 'Prod1', '1234 First St, City A, EX 12345', '111-111-1111', 'contact1@example.com', 'Alice', '111-222-3333', 'First producer note.');
-INSERT INTO `producer` VALUES (5, 'Producer Two', 'Prod2', '5678 Second St, City B, EX 67890', '222-222-2222', 'contact2@example.com', 'Bob', '222-333-4444', 'Second producer note.');
+INSERT INTO `producer` VALUES (3, 'Producer Tw', 'Prod2', '5678 Second St, City B, EX 67890', '222-222-2222', 'contact2@example.com', 'Bob', '222-333-4444', 'Second producer note.');
 INSERT INTO `producer` VALUES (6, 'Producer Three', 'Prod3', '9101 Third St, City C, EX 10112', '333-333-3333', 'contact3@example.com', 'Charlie', '333-444-5555', 'Third producer note.');
+INSERT INTO `producer` VALUES (7, 'Producer One', 'Prod1', '1234 First St, City A, EX 12345', '111-111-1111', 'contact1@example.com', 'Alice', '111-222-3333', 'First producer note.');
+INSERT INTO `producer` VALUES (8, 'Producer Two', 'Prod2', '5678 Second St, City B, EX 67890', '222-222-2222', 'contact2@example.com', 'Bob', '222-333-4444', 'Second producer note.');
+INSERT INTO `producer` VALUES (9, 'Producer Three', 'Prod3', '9101 Third St, City C, EX 10112', '333-333-3333', 'contact3@example.com', 'Charlie', '333-444-5555', 'Third producer note.');
+INSERT INTO `producer` VALUES (10, 'Producer One', 'Prod1', '1234 First St, City A, EX 12345', '111-111-1111', 'contact1@example.com', 'Alice', '111-222-3333', 'First producer note.');
+INSERT INTO `producer` VALUES (11, 'Producer Two', 'Prod2', '5678 Second St, City B, EX 67890', '222-222-2222', 'contact2@example.com', 'Bob', '222-333-4444', 'Second producer note.');
+INSERT INTO `producer` VALUES (12, 'Producer Three', 'Prod3', '9101 Third St, City C, EX 10112', '333-333-3333', 'contact3@example.com', 'Charlie', '333-444-5555', 'Third producer note.');
+INSERT INTO `producer` VALUES (13, 'Producer One', 'Prod1', '1234 First St, City A, EX 12345', '111-111-1111', 'contact1@example.com', 'Alice', '111-222-3333', 'First producer note.');
+INSERT INTO `producer` VALUES (14, 'Producer Two', 'Prod2', '5678 Second St, City B, EX 67890', '222-222-2222', 'contact2@example.com', 'Bob', '222-333-4444', 'Second producer note.');
+INSERT INTO `producer` VALUES (15, 'Producer Three', 'Prod3', '9101 Third St, City C, EX 10112', '333-333-3333', 'contact3@example.com', 'Charlie', '333-444-5555', 'Third producer note.');
+INSERT INTO `producer` VALUES (16, 'Producer One', 'Prod1', '1234 First St, City A, EX 12345', '111-111-1111', 'contact1@example.com', 'Alice', '111-222-3333', 'First producer note.');
+INSERT INTO `producer` VALUES (17, 'Producer Two', 'Prod2', '5678 Second St, City B, EX 67890', '222-222-2222', 'contact2@example.com', 'Bob', '222-333-4444', 'Second producer note.');
+INSERT INTO `producer` VALUES (18, 'Producer Three', 'Prod3', '9101 Third St, City C, EX 10112', '333-333-3333', 'contact3@example.com', 'Charlie', '333-444-5555', 'Third producer note.');
 
 -- ----------------------------
 -- Table structure for product
@@ -180,15 +196,15 @@ CREATE TABLE `product`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `fk_product_producer_1`(`producer_id` ASC) USING BTREE,
   CONSTRAINT `fk_product_producer_1` FOREIGN KEY (`producer_id`) REFERENCES `producer` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of product
 -- ----------------------------
 INSERT INTO `product` VALUES (6, '1231', 123.20, '1231sda', '123as', 3);
-INSERT INTO `product` VALUES (7, '1231', 123.20, '1231sda', '123as', 3);
+INSERT INTO `product` VALUES (7, 'Product 1', 19.99, 'This is the introduction for Product 1.', 'Note for Product 1', 9);
 INSERT INTO `product` VALUES (8, '1231', 123.20, '1231sda', '123as', 3);
-INSERT INTO `product` VALUES (9, '1231', 123.20, '1231sda', '123as', 3);
+INSERT INTO `product` VALUES (9, 'Product 1', 19.99, 'This is the introduction for Product 1.', 'Note for Product 1', 9);
 INSERT INTO `product` VALUES (14, 'Product 1', 19.99, 'This is the introduction for Product 1.', 'Note for Product 1', 3);
 INSERT INTO `product` VALUES (15, 'Product 2', 29.99, 'This is the introduction for Product 2.', 'Note for Product 2', 3);
 INSERT INTO `product` VALUES (16, 'Product 1', 19.99, 'This is the introduction for Product 1.', 'Note for Product 1', 3);
@@ -292,6 +308,32 @@ CREATE TRIGGER `after_delete_detail` AFTER DELETE ON `detail` FOR EACH ROW BEGIN
     SET `quantity` = (SELECT SUM(`quantity`) FROM `detail` WHERE `list_id` = OLD.list_id),
         `total_price` = (SELECT SUM(`total_price`) FROM `detail` WHERE `list_id` = OLD.list_id)
     WHERE `id` = OLD.list_id;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table employee
+-- ----------------------------
+DROP TRIGGER IF EXISTS `check_level_before_insert`;
+delimiter ;;
+CREATE TRIGGER `check_level_before_insert` BEFORE INSERT ON `employee` FOR EACH ROW BEGIN
+   IF NEW.level >= 3 THEN
+      SET NEW.level = 2;
+   END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table employee
+-- ----------------------------
+DROP TRIGGER IF EXISTS `check_level_before_update`;
+delimiter ;;
+CREATE TRIGGER `check_level_before_update` BEFORE UPDATE ON `employee` FOR EACH ROW BEGIN
+   IF NEW.level >= 3 THEN
+      SET NEW.level = 2;
+   END IF;
 END
 ;;
 delimiter ;

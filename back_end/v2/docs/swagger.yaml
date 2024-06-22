@@ -36,6 +36,29 @@ definitions:
           $ref: '#/definitions/models.Employee'
         type: array
     type: object
+  dto.EmployeeLoginResponse:
+    properties:
+      account:
+        type: string
+      id:
+        type: integer
+      level:
+        type: integer
+      msg:
+        type: string
+      name:
+        type: string
+      note:
+        type: string
+      password:
+        type: string
+      salary:
+        type: number
+      tel:
+        type: string
+      token:
+        type: string
+    type: object
   dto.EmployeeUpdateRequest:
     properties:
       account:
@@ -356,9 +379,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: 登录成功或失败
+          description: OK
           schema:
-            type: msg
+            $ref: '#/definitions/dto.EmployeeLoginResponse'
       summary: 用户登录
       tags:
       - employee

@@ -3,6 +3,7 @@ package services
 import (
 	"database_lesson/dao"
 	"database_lesson/dto"
+	"database_lesson/middleware"
 	"database_lesson/models"
 	"net/http"
 )
@@ -24,20 +25,29 @@ func InsertEmployeeService(employee *dto.EmployeeList) (err error, resp dto.Resp
 }
 
 func LoginEmployeeService(employee *models.Employee) (err error, resp dto.Response) {
-	var res models.Employee
+	var temp models.Employee
 	resp.Code = http.StatusOK
-	err = dao.LoginEmployee(employee, &res).Error
+	err = dao.LoginEmployee(employee, &temp).Error
 	if err != nil {
 		resp.Code = http.StatusInternalServerError
 		resp.Message = err.Error()
 		return
 	}
-	if res.ID == 0 {
+	if temp.ID == 0 {
 		resp.Code = 500
 		resp.Message = "账号或者密码错误"
 		return
 	}
-	resp.Data = res
+	var res models.Employee
+	err = dao.SelectEmployeeByAccount(&temp, &res).Error
+	if err != nil {
+		resp.Code = http.StatusInternalServerError
+		resp.Message = err.Error()
+		return
+	}
+	token, err := middleware.ReleaseToken(res)
+	res.Account = employee.Account
+	resp.Data = dto.AddToken(&res, token)
 	resp.Message = "登录成功"
 	return
 }

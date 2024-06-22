@@ -235,9 +235,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "登录成功或失败",
+                        "description": "OK",
                         "schema": {
-                            "type": "msg"
+                            "$ref": "#/definitions/dto.EmployeeLoginResponse"
                         }
                     }
                 }
@@ -707,6 +707,41 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.Employee"
                     }
+                }
+            }
+        },
+        "dto.EmployeeLoginResponse": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "salary": {
+                    "type": "number"
+                },
+                "tel": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
                 }
             }
         },

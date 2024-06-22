@@ -1,5 +1,5 @@
 mysql:
-  host: "8.146.198.97"
+  host: "localhost"
   port: "3306"
   db: database_lesson
   user: root

@@ -15,3 +15,16 @@ type EmployeeUpdateRequest struct {
 	models.Employee `json:",inline"`
 	NewPassword     string `json:"new_password"`
 }
+
+type EmployeeLoginResponse struct {
+	models.Employee
+	Token string `json:"token"`
+}
+
+func AddToken(employee *models.Employee, token string) *EmployeeLoginResponse {
+	res := &EmployeeLoginResponse{
+		Employee: *employee,
+		Token:    token,
+	}
+	return res
+}

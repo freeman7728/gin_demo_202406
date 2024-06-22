@@ -49,3 +49,8 @@ func EmployeeDelete(in *models.Employee) (tx *gorm.DB) {
 	global.DB.Exec("SET FOREIGN_KEY_CHECKS = 1")
 	return result
 }
+
+func SelectEmployeeByAccount(model *models.Employee, res *models.Employee) (tx *gorm.DB) {
+	sql := `SELECT id,name,tel,salary,note,level FROM employee WHERE id = ?`
+	return global.DB.Raw(sql, model.ID).Scan(res)
+}
