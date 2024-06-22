@@ -5,17 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="06b8b43b-f4f7-420e-be25-17aa99e78262" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/middleware/jwt.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/employee_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/employee_controller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dao/employee.go" beforeDir="false" afterPath="$PROJECT_DIR$/dao/employee.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dto/employee_dto.go" beforeDir="false" afterPath="$PROJECT_DIR$/dto/employee_dto.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysql/init/database_lesson.sql" beforeDir="false" afterPath="$PROJECT_DIR$/mysql/init/database_lesson.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/employee_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/employee_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware/jwt.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/jwt.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/settings.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/settings.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../数据库课设开发随笔.md" beforeDir="false" afterPath="$PROJECT_DIR$/../数据库课设开发随笔.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

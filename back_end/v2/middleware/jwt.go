@@ -17,6 +17,7 @@ type Claims struct {
 // 登录成功之后就调用这个方法来释放token
 func ReleaseToken(employee models.Employee) (string, error) {
 	//定义token的过期时间:7天
+	//TODO 可以把过期时间抽象到yaml
 	expirationTime := time.Now().Add(7 * 24 * time.Hour)
 	claims := &Claims{
 		UserId: employee.ID,
