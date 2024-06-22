@@ -12,9 +12,9 @@ func SetupCorsMiddleware() gin.HandlerFunc {
 
 	// 或者使用自定义配置
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:4000"}        // 允许特定源
-	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"} // 允许特定方法
-	config.AllowHeaders = []string{"Origin"}                       // 允许特定标头
+	config.AllowOrigins = []string{"*"}                                       // 允许特定源
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}            // 允许特定方法
+	config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization"} // 允许特定标头
 
 	return cors.New(config)
 }

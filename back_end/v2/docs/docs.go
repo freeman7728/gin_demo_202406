@@ -151,6 +151,97 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/producer/delete": {
+            "post": {
+                "description": "删除供应商，返回外键检查结果和删除结果，如果有外键依赖则会提示",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "employee"
+                ],
+                "summary": "请求所有供应商",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ProducerList"
+                        }
+                    }
+                }
+            }
+        },
+        "/producer/insert": {
+            "post": {
+                "description": "批量导入供应商，并且返回成功失败列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "employee"
+                ],
+                "summary": "批量导入供应商",
+                "parameters": [
+                    {
+                        "description": "Producer Request",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ProducerList"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ProducerInsertResponseDto"
+                        }
+                    }
+                }
+            }
+        },
+        "/producer/update": {
+            "post": {
+                "description": "更新供应商，除了id之外都能改，所有不会有外键冲突",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "employee"
+                ],
+                "summary": "更新供应商",
+                "parameters": [
+                    {
+                        "description": "Producer Request",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.Producer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "msg",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -217,6 +308,42 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.Producer": {
+            "type": "object",
+            "properties": {
+                "producer": {
+                    "$ref": "#/definitions/models.Producer"
+                }
+            }
+        },
+        "dto.ProducerInsertResponseDto": {
+            "type": "object",
+            "properties": {
+                "fail_list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Producer"
+                    }
+                },
+                "success_list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Producer"
+                    }
+                }
+            }
+        },
+        "dto.ProducerList": {
+            "type": "object",
+            "properties": {
+                "producer_list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Producer"
+                    }
+                }
+            }
+        },
         "models.Employee": {
             "type": "object",
             "properties": {
@@ -243,6 +370,41 @@ const docTemplate = `{
                 },
                 "salary": {
                     "type": "number"
+                },
+                "tel": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Producer": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "contact_name": {
+                    "type": "string"
+                },
+                "contact_tel": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "short_name": {
+                    "type": "string"
                 },
                 "tel": {
                     "type": "string"

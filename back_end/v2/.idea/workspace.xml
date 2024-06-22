@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="06b8b43b-f4f7-420e-be25-17aa99e78262" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/v2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/v2.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/producer_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/producer_controller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dao/producer.go" beforeDir="false" afterPath="$PROJECT_DIR$/dao/producer.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dto/producer_dto.go" beforeDir="false" afterPath="$PROJECT_DIR$/dto/producer_dto.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/producer_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/producer_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/cors.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

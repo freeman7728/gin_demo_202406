@@ -41,6 +41,29 @@ definitions:
       tel:
         type: string
     type: object
+  dto.Producer:
+    properties:
+      producer:
+        $ref: '#/definitions/models.Producer'
+    type: object
+  dto.ProducerInsertResponseDto:
+    properties:
+      fail_list:
+        items:
+          $ref: '#/definitions/models.Producer'
+        type: array
+      success_list:
+        items:
+          $ref: '#/definitions/models.Producer'
+        type: array
+    type: object
+  dto.ProducerList:
+    properties:
+      producer_list:
+        items:
+          $ref: '#/definitions/models.Producer'
+        type: array
+    type: object
   models.Employee:
     properties:
       account:
@@ -59,6 +82,29 @@ definitions:
         type: string
       salary:
         type: number
+      tel:
+        type: string
+    type: object
+  models.Producer:
+    properties:
+      address:
+        type: string
+      contact_name:
+        type: string
+      contact_tel:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      msg:
+        type: string
+      name:
+        type: string
+      note:
+        type: string
+      short_name:
+        type: string
       tel:
         type: string
     type: object
@@ -155,6 +201,65 @@ paths:
           schema:
             type: msg
       summary: 用户修改信息
+      tags:
+      - employee
+  /producer/delete:
+    post:
+      consumes:
+      - application/json
+      description: 删除供应商，返回外键检查结果和删除结果，如果有外键依赖则会提示
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProducerList'
+      summary: 请求所有供应商
+      tags:
+      - employee
+  /producer/insert:
+    post:
+      consumes:
+      - application/json
+      description: 批量导入供应商，并且返回成功失败列表
+      parameters:
+      - description: Producer Request
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ProducerList'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProducerInsertResponseDto'
+      summary: 批量导入供应商
+      tags:
+      - employee
+  /producer/update:
+    post:
+      consumes:
+      - application/json
+      description: 更新供应商，除了id之外都能改，所有不会有外键冲突
+      parameters:
+      - description: Producer Request
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Producer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: msg
+          schema:
+            type: string
+      summary: 更新供应商
       tags:
       - employee
 swagger: "2.0"
