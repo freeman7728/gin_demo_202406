@@ -15,7 +15,7 @@ import (
 // @Produce  json
 // @Param   detail body models.Employee true "Employee Request"
 // @Success      200  string  "msg"
-// @Router /email/ [post]
+// @Router /email [post]
 func GenCodeController(c *gin.Context) {
 	var employee models.Employee
 	if err := c.ShouldBindJSON(&employee); err != nil {

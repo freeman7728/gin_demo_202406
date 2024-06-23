@@ -63,7 +63,7 @@ func InitRouter() *gin.Engine {
 	}
 	emailRouter := router.Group("/email")
 	{
-		emailRouter.POST("/", controllers.GenCodeController)
+		emailRouter.POST("", controllers.GenCodeController)
 		emailRouter.POST("/auth", controllers.VerifyCodeController)
 	}
 

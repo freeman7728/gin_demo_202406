@@ -5,6 +5,7 @@ import (
 	"database_lesson/dto"
 	"database_lesson/middleware"
 	"database_lesson/models"
+	"fmt"
 	"net/http"
 )
 
@@ -91,6 +92,7 @@ func DeleteEmployeeService(employee *models.Employee) (err error, resp dto.Respo
 func SelectEmployeeById(employee *models.Employee) (err error, resp dto.Response) {
 	resp.Code = http.StatusOK
 	res := dao.SelectEmployeeById(employee)
+	fmt.Println(employee)
 	if res.Error != nil {
 		resp.Code = http.StatusBadRequest
 		resp.Message = res.Error.Error()
