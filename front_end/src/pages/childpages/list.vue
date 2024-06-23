@@ -175,7 +175,7 @@ const fetchlist = async () => {
         id: item.id,
         employee_id: item.employee_id,
         quantity: item.quantity,
-        total_price: item.total_quantity,
+        total_price: item.total_price,
         time: item.time,
         note: item.note,
       }));

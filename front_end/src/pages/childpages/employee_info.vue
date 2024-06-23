@@ -101,12 +101,14 @@
                 <div class="info-item"><b>员工邮箱:</b> {{ employee.email }}</div>
                 <div class="info-item"><b>员工工资:</b> {{ employee.salary }}</div>
                 <div class="info-item"><b>备注:</b> {{ employee.note }}</div>
+                <div class="info-item"><b>邮箱是否激活:</b> {{ getFlag(employee.email_is_auth) }}</div>
           </div>
          </div>
         </el-card>
         </div>
       </div>
     </div>
+    <el-backtop :right="100" :bottom="100" />
   </template>
   
   <script setup lang="ts">
@@ -241,6 +243,7 @@ const importProducts = async () => {
         email: item.tel,
         salary: item.salary,
         note: item.note,
+        email_is_auth: item.email_is_auth,
       }));
       totalItems.value = list.value.length;
     } else {
@@ -267,6 +270,13 @@ const getEmployeeLevel = (level: number): string => {
     return 'employee';
   }
 };
+const getFlag = (email_is_flag) => {
+  if(email_is_flag === 0) {
+    return '否';
+  } else {
+    return '是';
+  }
+}
 
 const exportEmployee = async () => {
   try {

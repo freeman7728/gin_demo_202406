@@ -69,7 +69,6 @@
         ruleForm.list_id = response.data.data.list_id;
         ruleForm.product_id = response.data.data.product_id;
         ruleForm.quantity = response.data.data.quantity;
-        ruleForm.productPrice = response.data.data.productPrice;
         ruleForm.total_price = response.data.data.total_price;
         ruleForm.note = response.data.data.note;
       } else {

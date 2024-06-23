@@ -71,7 +71,7 @@
       <el-table-column prop="product_id" label="商品编号" width="150"></el-table-column>
       <el-table-column prop="quantity" label="采购数量" width="150"></el-table-column>
       <el-table-column prop="unit_price" label="商品单价" width="150"></el-table-column>
-      <el-table-column prop="total_price" label="商品总价" width="150"></el-table-column>
+      <el-table-column prop="total_price" label="商品总价" width="250"></el-table-column>
       <el-table-column prop="note" label="备注" width="220"></el-table-column>
     </el-table>
     <el-pagination

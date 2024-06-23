@@ -66,7 +66,7 @@
     <el-button type="success" @click="openImportDialog">导入商品</el-button>
     <el-dialog
       title="导入商品"
-      v-model="dialogVisible"
+      v-model="dialogVisible_import"
       width="30%"
       center
       :close-on-click-modal="false"
@@ -79,17 +79,26 @@
 
   <div style="margin-top: 10px;">
     <el-button type="primary" @click="importProducts">确认导入</el-button>
-    <el-button @click="dialogVisible = false" style="margin-left: 10px;">取消</el-button>
+    <el-button @click="dialogVisible_import = false" style="margin-left: 10px;">取消</el-button>
   </div>
     </el-dialog>
       <el-button type="success" @click="exportGoods">导出商品</el-button>
+      <el-button type="success" @click="statisticsGoods">统计商品数量</el-button>
+
+
+      <el-dialog v-model ="dialogVisible" title="商品数量统计" width="50%">
+        <el-table :data="tableData" style="width: 100%">
+          <el-table-column prop="id" label="商品编号"></el-table-column>
+          <el-table-column prop="sum" label="商品出售数量"></el-table-column>
+        </el-table>
+      </el-dialog>
     </div>
     <el-table :data="paginatedList" style="width: 100%">
       <el-table-column prop="id" label="商品编号" width="120"></el-table-column>
-      <el-table-column prop="name" label="商品名称" width="150"></el-table-column>
+      <el-table-column prop="name" label="商品名称" width="200"></el-table-column>
       <el-table-column prop="price" label="商品单价" width="150"></el-table-column>
-      <el-table-column prop="producer_id" label="供应商编号" width="150"></el-table-column>
-      <el-table-column prop="introduction" label="商品简介" width="300"></el-table-column>
+      <el-table-column prop="producer_id" label="供应商编号" width="200"></el-table-column>
+      <el-table-column prop="introduction" label="商品简介" width="350"></el-table-column>
       <el-table-column prop="note" label="备注" width="350"></el-table-column>
     </el-table>
     <el-pagination
@@ -123,18 +132,35 @@
 
   const isCollapse = ref(false);
   const selectedFileName = ref('');
-  const dialogVisible = ref(false);
+  const dialogVisible_import = ref(false);
   const fileInput = ref<HTMLInputElement | null>(null);
-  let dataList: any[] = []; // 定义在外部作用域
+  const dialogVisible = ref(false); 
+  let dataList: any[] = []; 
+  const tableData = ref([]); // 存储表格数据
 
 const openImportDialog = () => {
-  dialogVisible.value = true;
+  dialogVisible_import.value = true;
 };
 
 const handleFileInputClick = () => {
   fileInput.value?.click();
 };
 
+const statisticsGoods = async () => {
+  try {
+    const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/detail/groupByproduct`); 
+    console.log(response);
+    if (response.data.code === 200) {
+      tableData.value = response.data.data.list; 
+      dialogVisible.value = true; 
+    } else {
+      ElMessage.error('获取数据失败'); 
+    }
+  } catch (error) {
+    console.error(error); 
+    ElMessage.error('获取数据时出现错误');
+  }
+};
 const handleFileUpload = () => {
   const file = fileInput.value?.files?.[0];
   if (!file) {
@@ -192,7 +218,7 @@ const importProducts = async () => {
     console.error(error);
   }
 
-  dialogVisible.value = false; // 关闭对话框
+  dialogVisible_import.value = false; // 关闭对话框
 };
 
 

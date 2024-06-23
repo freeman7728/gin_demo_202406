@@ -13,8 +13,8 @@
   
         <el-row :gutter="5" class="search-row">
           <el-col :span="4">
-            <el-form-item :prop="'search.orderId'">
-              <el-input v-model="searchCriteria.orderId"></el-input>
+            <el-form-item :prop="'search.id'">
+              <el-input v-model="searchCriteria.id"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="4">
@@ -23,18 +23,18 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item :prop="'search.unitPrice'">
-              <el-input v-model.number="searchCriteria.unitPrice"></el-input>
+            <el-form-item :prop="'search.price'">
+              <el-input v-model.number="searchCriteria.price"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item :prop="'search.totalPrice'">
-              <el-input v-model.number="searchCriteria.totalPrice"></el-input>
+            <el-form-item :prop="'search.total_price'">
+              <el-input v-model.number="searchCriteria.total_price"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item :prop="'search.remark'">
-              <el-input type="textarea" v-model="searchCriteria.remark"></el-input>
+            <el-form-item :prop="'search.note'">
+              <el-input type="textarea" v-model="searchCriteria.note"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -42,11 +42,13 @@
   
       <template v-if="searchResults.length">
         <el-table :data="searchResults" style="width: 100%; margin-top: 20px;">
-          <el-table-column prop="orderId" label="采购清单号" width="170"></el-table-column>
+          <el-table-column prop="id" label="采购订单号" width="150"></el-table-column>
+          <el-table-column prop="list_id" label="采购清单号" width="150"></el-table-column>
+          <el-table-column prop="product_id" label="采购商品编号" width="150"></el-table-column>
           <el-table-column prop="quantity" label="采购数量" width="170"></el-table-column>
-          <el-table-column prop="unitPrice" label="商品单价" width="170"></el-table-column>
-          <el-table-column prop="totalPrice" label="商品总价" width="170"></el-table-column>
-          <el-table-column prop="remark" label="备注" width="490"></el-table-column>
+          <el-table-column prop="price" label="商品单价" width="170"></el-table-column>
+          <el-table-column prop="total_price" label="商品总价" width="170"></el-table-column>
+          <el-table-column prop="note" label="备注" width="290"></el-table-column>
         </el-table>
       </template>
       <template v-else>
@@ -63,18 +65,53 @@
   </template>
   
   <script setup lang="ts">
-  import { ref } from 'vue';
-  import { ElMessageBox } from 'element-plus';
+  import { onMounted, ref, watch, computed } from 'vue'
+  import { useRoute, useRouter} from 'vue-router';
+  import axios from 'axios';
+  import { ElMessage, ElMessageBox } from 'element-plus';
+  import { getCurrentInstance, } from 'vue';
+  const { proxy } = getCurrentInstance();
+
   
   const searchDialogVisible = ref(false);
   const searchCriteria = ref({
-    orderId: '',
+    id: '',
     quantity: null,
-    unitPrice: null,
-    totalPrice: null,
-    remark: '',
+    price: null,
+    total_price: null,
+    note: '',
   });
-  
+  const list = ref([{
+    id: '',
+    quantity: null,
+    price: null,
+    total_price: null,
+    note: '',
+  }
+  ]);
+  const fetchlist = async () => {
+  try {
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/detail/select`);
+    console.log("Response data:", response.data);
+
+    const rawData = response.data.data.list;
+    if (Array.isArray(rawData)) {
+      list.value = rawData.map(item => ({
+        id: item.id,
+        list_id: item.list_id,
+        price: parseFloat(item.total_price) / parseInt(item.quantity),
+        product_id: item.product_id,
+        total_price: item.total_price,
+        quantity: item.quantity,
+        note: item.note,
+      }));
+    } else {
+      console.error("Unexpected response format:", rawData);
+    }
+  } catch (error) {
+    console.error("获取商品数据失败：", error);
+  }
+};
   const searchResults = ref([]);
   
   const searchRules = {
@@ -90,6 +127,9 @@
         // Handle cancellation
       });
   };
+  onMounted(() => {
+    fetchlist();
+  });
   
   const openSearchDialog = () => {
     searchDialogVisible.value = true;
@@ -97,17 +137,20 @@
   
   const searchOrders = () => {
     // Simulate a search by filtering a mock order list
-    const mockOrders = [
-      { orderId: '001', quantity: 10, unitPrice: 100, totalPrice: 1000, remark: '备注1' },
-      { orderId: '002', quantity: 5, unitPrice: 200, totalPrice: 1000, remark: '备注2' },
-      // Add more mock orders as needed
-    ];
-  
-    searchResults.value = mockOrders.filter(order => {
-      return Object.keys(searchCriteria.value).every(key => {
-        return searchCriteria.value[key] === '' || searchCriteria.value[key] === null || order[key].toString().includes(searchCriteria.value[key].toString());
-      });
+
+    console.log(list.value);
+    searchResults.value = list.value.filter(product => {
+        return Object.keys(searchCriteria.value).every(key => {
+        return searchCriteria.value[key] === '' ||
+             searchCriteria.value[key] === null ||
+             (product[key] !== undefined && product[key].toString().includes(searchCriteria.value[key].toString()));
     });
+    });
+
+
+    if (searchResults.value.length === 0) {
+      console.log('无结果');
+    }
   };
   </script>
   
