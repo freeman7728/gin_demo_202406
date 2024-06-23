@@ -10,6 +10,7 @@ import (
 
 func InsertEmployeeService(employee *dto.EmployeeList) (err error, resp dto.Response) {
 	var res dto.EmployeeInsertResult
+	resp.Code = http.StatusOK
 	for _, model := range employee.EmployeeList {
 		err := dao.InsertEmployeeDao(model).Error
 		if err != nil {
