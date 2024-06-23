@@ -9,7 +9,7 @@ import Qs from 'qs'
 import Print from 'vue-print-nb'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import * as ElementPlusIconsVue from '@element-plus/icons-vue' // ElementPlus-icon
+import * as ElementPlusIconsVue from '@element-plus/icons-vue' 
 
 const app = createApp(App);
 
@@ -19,13 +19,11 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 app.use(router);
 app.use(Print);
-app.use(ElementPlus); //  注册到vue 业务中
+app.use(ElementPlus); 
 
 app.config.globalProperties.$echarts = echarts;
 app.config.globalProperties.$axios = axios;
 app.config.globalProperties.$qs = Qs;
-// app.config.globalProperties.$serverUrl = "http://101.42.232.154:9001";
-// app.config.globalProperties.$serverUrl2 = "http://101.42.232.154:9002";
 app.config.globalProperties.$serverUrl_test = "http://8.146.198.97:4000";
 
 app.mount('#app');

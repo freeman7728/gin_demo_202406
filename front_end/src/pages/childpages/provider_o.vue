@@ -119,7 +119,7 @@ const isCollapse = ref(false);
 const selectedFileName = ref('');
 const dialogVisible = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
-let dataList: any[] = []; // 定义在外部作用域
+let dataList: any[] = []; 
 
 const paginatedList = computed(() => {
 const start = (currentPage.value - 1) * pageSize.value;
@@ -140,7 +140,7 @@ if (!file) {
   ElMessage.error('请先选择要导入的 CSV 文件');
   return;
 }
-selectedFileName.value = file.name; // 更新选择的文件名称显示
+selectedFileName.value = file.name; 
 const reader = new FileReader();
 reader.onload = (event) => {
   if (event.target) {
@@ -153,7 +153,7 @@ reader.readAsText(file);
 
 const processData = (csvData: string) => {
 const rows = csvData.split('\n');
-rows.shift(); // 去除表头
+rows.shift(); 
 
 dataList = rows.map(row => {
   const columns = row.split(',');
@@ -195,7 +195,7 @@ try {
   console.error(error);
 }
 
-dialogVisible.value = false; // 关闭对话框
+dialogVisible.value = false; 
 };
 
 watch(route, (newRoute) => {

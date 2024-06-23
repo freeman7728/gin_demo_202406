@@ -9,7 +9,6 @@
           <el-form-item prop="adminPassword">
             <el-input v-model="adminForm.adminPassword" type="password" placeholder="密码" class="input" />
           </el-form-item>
-          <a href="#" class="link">忘记密码？</a>
           <el-button type="primary" native-type="submit" class="btn">登录</el-button>
         </el-form>
       </div>
@@ -23,7 +22,6 @@
           <el-form-item prop="ordinaryPassword">
             <el-input v-model="ordinaryForm.ordinaryPassword" type="password" placeholder="密码" class="input" />
           </el-form-item>
-          <a href="#" class="link">忘记密码？</a>
           <el-button type="primary" native-type="submit" class="btn">登录</el-button>
         </el-form>
 
@@ -67,7 +65,7 @@
 
 .container {
   align-items: center;
-  background: url('@/assets/img/background.jpg') no-repeat center center fixed; 
+  background: url('@/assets/img/back1.png') no-repeat center center fixed; 
   background-size: cover;
   display: grid;
   height: 100vh;
@@ -141,7 +139,7 @@
 
 .overlay {
   background-color: var(--lightblue);
-  background: url('@/assets/img/background.jpg');
+  background: url('@/assets/img/back2.jpg');
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;

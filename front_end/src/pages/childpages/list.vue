@@ -27,7 +27,7 @@
               <path d="M737.28 654.848h-81.92a42.496 42.496 0 0 0 0 84.992h81.92a42.496 42.496 0 1 0 0-84.992z m0-212.48h-81.92a39.936 39.936 0 0 0-40.96 42.496v84.992a39.936 39.936 0 0 0 40.96 42.496h81.92a44.544 44.544 0 0 0 46.08-42.496V484.864a44.032 44.032 0 0 0-46.08-42.496z m179.2-200.192l-102.4-102.4A131.584 131.584 0 0 0 721.92 102.4H332.8a131.584 131.584 0 0 0-92.16 37.376l-102.4 102.4A142.336 142.336 0 0 0 102.4 332.288v492.544a126.976 126.976 0 0 0 128 127.488h593.92a126.976 126.976 0 0 0 128-127.488V332.288a142.848 142.848 0 0 0-35.84-90.112z m-614.4-42.496a51.2 51.2 0 0 1 30.72-12.288h389.12a51.2 51.2 0 0 1 30.72 12.288l71.68 72.704H230.4z m563.2 625.152a39.936 39.936 0 0 1-40.96 42.496H230.4a39.936 39.936 0 0 1-40.96-42.496v-424.96A39.936 39.936 0 0 1 230.4 358.4h593.92a39.936 39.936 0 0 1 40.96 42.496z" p-id="8502">
               </path>
             </svg>
-            <router-link to="/childpages/goods">商品管理</router-link>
+            <router-link to="/childpages/goods">清单管理</router-link>
           </el-menu-item>
           <el-menu-item index="/childpages/list">
             <svg t="1718618288070" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10427" width="23" height="192">
@@ -62,6 +62,26 @@
       <updateList class="update_btn"/>
       <searchList class="search_btn"/>
       <delList class="del_btn"/>
+
+      <el-button type="success" @click="openImportDialog">导入清单</el-button>
+        <el-dialog
+          title="导入清单"
+          v-model="dialogVisible_import"
+          width="30%"
+          center
+          :close-on-click-modal="false"
+        >
+        <div style="display: flex; align-items: center;">
+        <el-button type="primary" @click="handleFileInputClick">选择文件</el-button>
+        <input type="file" ref="fileInput" style="display: none" accept=".csv" @change="handleFileUpload">
+        <span v-if="selectedFileName" style="margin-left: 10px;">已选择文件: {{ selectedFileName }}</span>
+      </div>
+
+      <div style="margin-top: 10px;">
+        <el-button type="primary" @click="importProducts">确认导入</el-button>
+        <el-button @click="dialogVisible_import = false" style="margin-left: 10px;">取消</el-button>
+      </div>
+    </el-dialog>
       <el-button type="success" @click="exportlist">导出清单</el-button>
         </div>
         <div>
@@ -83,7 +103,7 @@
   <el-dialog v-model="dialogVisible" title="订单详情" width="800px">
       <el-table :data="orderDetails">
         <el-table-column prop="id" label="订单号"></el-table-column>
-        <el-table-column prop="product_id" label="商品号"></el-table-column>
+        <el-table-column prop="product_id" label="清单号"></el-table-column>
         <el-table-column prop="quantity" label="数量"></el-table-column>
         <el-table-column prop="total_price" label="总价"></el-table-column>
         <el-table-column prop="note" label="备注"></el-table-column>
@@ -135,6 +155,14 @@
   const size = ref('medium');  
   const disabled = ref(false);
   const background = ref(true);
+  const isCollapse = ref(false);
+  const selectedFileName = ref('');
+  const dialogVisible_import = ref(false);
+  const fileInput = ref<HTMLInputElement | null>(null);
+  let dataList: any[] = []; 
+  const tableData = ref([]); // 存储表格数据
+
+  
 
 watch(route, (newRoute) => {
   currentRoute.value = newRoute.path;
@@ -224,6 +252,79 @@ const exportlist = async () => {
     console.error(error);
   }
 };
+const openImportDialog = () => {
+  dialogVisible_import.value = true;
+};
+
+const handleFileInputClick = () => {
+  fileInput.value?.click();
+};
+
+const handleFileUpload = () => {
+  const file = fileInput.value?.files?.[0];
+  if (!file) {
+    ElMessage.error('请先选择要导入的 CSV 文件');
+    return;
+  }
+  selectedFileName.value = file.name; // 更新选择的文件名称显示
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    if (event.target) {
+      const csvData = event.target.result as string;
+      processData(csvData); 
+    }
+  };
+  reader.readAsText(file);
+};
+
+const processData = (csvData: string) => {
+  const rows = csvData.split('\n');
+  rows.shift(); // 去除表头
+
+  dataList = rows.map(row => {
+    const columns = row.split(',');
+    if (columns.length === 5) {
+      return {
+        employee_id: parseInt(columns[0].trim()),
+        quantity: parseInt(columns[1].trim()), 
+        time: columns[2].trim(), 
+        total_price: parseFloat(columns[3].trim()),
+        note: columns[4].trim()
+      };
+    } else {
+      return null;
+    }
+  }).filter(item => item !== null);
+
+  console.log(dataList);
+};
+
+const importProducts = async () => {
+  console.log(456);
+  console.log(dataList);
+  try {
+    const response = await axios.post(`${proxy.$serverUrl_test}/order/insert`, {list: dataList});
+    console.log(response);
+    console.log(dataList);
+    if (response.data.code === 200) {
+      ElMessage.success('清单信息导入成功');
+      console.log(response.data); 
+    } else {
+      ElMessage.error('清单信息导入失败'); 
+    }
+  } catch (error) {
+    ElMessage.error('清单信息导入时出错');
+    console.error(error);
+  }
+
+  dialogVisible_import.value = false; // 关闭对话框
+};
+
+
+
+
+
+
 
 const handleSizeChange = (newSize: number) => {
   pageSize.value = newSize;
