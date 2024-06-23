@@ -8,7 +8,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: database_lesson
     volumes:
-      - "./mysql/init:/docker-entrypoint-initdb.d"
+      - "./consts/mysql/init:/docker-entrypoint-initdb.d"
     ports:
       - "3306:3306"
     networks:
@@ -21,6 +21,8 @@ services:
     restart: always # 容器总是重新启动
     networks:
       - database_design_network
+    volumes:
+      - "./consts/redis/config:/opt/config"
 
   database_lesson:
     build:
