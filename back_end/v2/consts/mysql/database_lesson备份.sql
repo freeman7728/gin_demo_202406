@@ -11,7 +11,7 @@
  Target Server Version : 80033 (8.0.33)
  File Encoding         : 65001
 
- Date: 23/06/2024 21:20:24
+ Date: 23/06/2024 13:49:11
 */
 
 SET NAMES utf8mb4;
@@ -33,11 +33,12 @@ CREATE TABLE `account`  (
 -- ----------------------------
 -- Records of account
 -- ----------------------------
-INSERT INTO `account` VALUES (47, '2024060047', '490652');
-INSERT INTO `account` VALUES (48, '2024060048', '426280');
-INSERT INTO `account` VALUES (49, '2024060049', '747992');
-INSERT INTO `account` VALUES (50, '2024060050', '570625');
-INSERT INTO `account` VALUES (51, '2024060051', '381196');
+INSERT INTO `account` VALUES (8, '2024060008', 'password123');
+INSERT INTO `account` VALUES (24, '2024060024', '265823');
+INSERT INTO `account` VALUES (29, '2024060029', '299223');
+INSERT INTO `account` VALUES (31, '2024060031', '21231231');
+INSERT INTO `account` VALUES (35, '2024060035', '129223');
+INSERT INTO `account` VALUES (36, '2024060036', '658233');
 
 -- ----------------------------
 -- Table structure for detail
@@ -55,16 +56,24 @@ CREATE TABLE `detail`  (
   INDEX `fk_detail_list_1`(`list_id` ASC) USING BTREE,
   CONSTRAINT `fk_detail_list_1` FOREIGN KEY (`list_id`) REFERENCES `list` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_detail_product_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of detail
 -- ----------------------------
-INSERT INTO `detail` VALUES (26, 26, 50, 4999.50, 'First detail item', 15);
-INSERT INTO `detail` VALUES (27, 35, 25, 2249.75, 'Second detail item', 15);
-INSERT INTO `detail` VALUES (28, 27, 10, 499.90, 'Third detail item', 15);
-INSERT INTO `detail` VALUES (29, 26, 100, 9999.00, 'Fourth detail item', 16);
-INSERT INTO `detail` VALUES (30, 30, 75, 9749.25, 'Fifth detail item', 19);
+INSERT INTO `detail` VALUES (6, 6, 0, 15153.60, '', 3);
+INSERT INTO `detail` VALUES (7, 6, 123, 15153.60, '12312', 3);
+INSERT INTO `detail` VALUES (8, 6, 123, 15153.60, '12312', 3);
+INSERT INTO `detail` VALUES (9, 6, 123, 15153.60, '12312', 3);
+INSERT INTO `detail` VALUES (10, 6, 123, 15153.60, '12312', 3);
+INSERT INTO `detail` VALUES (11, 6, 123, 15153.60, '12312', 3);
+INSERT INTO `detail` VALUES (14, 6, 123, 15153.60, '12312', 6);
+INSERT INTO `detail` VALUES (15, 6, 1000, 15153.60, '', 6);
+INSERT INTO `detail` VALUES (16, 6, 123, 15153.60, '12312', 6);
+INSERT INTO `detail` VALUES (17, 6, 123, 15153.60, '12312', 6);
+INSERT INTO `detail` VALUES (18, 6, 123, 15153.60, '12312', 6);
+INSERT INTO `detail` VALUES (19, 6, 123, 15153.60, '12312', 6);
+INSERT INTO `detail` VALUES (24, 21, 10, 199.90, 'First detail item', 9);
 
 -- ----------------------------
 -- Table structure for employee
@@ -79,18 +88,26 @@ CREATE TABLE `employee`  (
   `deleted_at` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `level` int NOT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `email_is_auth` int NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 52 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+  `email_is_auth` binary(1) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uniqe_tel`(`tel` ASC) USING BTREE COMMENT '手机号唯一'
+) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of employee
 -- ----------------------------
-INSERT INTO `employee` VALUES (47, '邓秀英', '93928490652', 4129.00, '老板', NULL, 0, '1357880399@qq.com', 0);
-INSERT INTO `employee` VALUES (48, '曹晓明', '10468426280', 3152.00, '管理员', NULL, 1, 'cxia@icloud.com', 0);
-INSERT INTO `employee` VALUES (49, '陈子韬', '04842747992', 3284.00, '新员工', NULL, 2, 'zc6@icloud.com', 0);
-INSERT INTO `employee` VALUES (50, '石致远', '77604570625', 3299.00, '新员工', NULL, 2, 'szhiyuan504@icloud.com', 0);
-INSERT INTO `employee` VALUES (51, '董岚', '69252381196', 2743.00, '新员工', NULL, 2, 'dolan811@hotmail.com', 0);
+INSERT INTO `employee` VALUES (8, 'John Doe', '123456789', 5000.00, 'New employee', NULL, 1, NULL, NULL);
+INSERT INTO `employee` VALUES (12, '123', '123123', 123.33, '1231', NULL, 1231, NULL, NULL);
+INSERT INTO `employee` VALUES (14, '123', '1236123', 123.33, '1231', NULL, 1231, NULL, NULL);
+INSERT INTO `employee` VALUES (16, '123', '12361123', 123.33, '1231', NULL, 1231, NULL, NULL);
+INSERT INTO `employee` VALUES (17, '123', '1123', 123.33, '1231', NULL, 1231, NULL, NULL);
+INSERT INTO `employee` VALUES (18, '123', '123323', 123.33, '1231', NULL, 1231, NULL, NULL);
+INSERT INTO `employee` VALUES (24, '123', '1265823', 123.00, '1231', NULL, 2, '1', 0x30);
+INSERT INTO `employee` VALUES (29, '123', '111299223', 123.00, '1231', NULL, 1231, NULL, NULL);
+INSERT INTO `employee` VALUES (31, '2024060031', '12312', 123.51, 'nnnn', NULL, 2, '12345@123.com', NULL);
+INSERT INTO `employee` VALUES (32, '121231', '12312313451', 123.00, '12', NULL, 2, '1357880399@qq.com', 0x30);
+INSERT INTO `employee` VALUES (35, '123', '11129223', 123.00, '1231', NULL, 2, '123@123', 0x30);
+INSERT INTO `employee` VALUES (36, '123', '12658233', 123.00, '1231', NULL, 2, '', 0x30);
 
 -- ----------------------------
 -- Table structure for list
@@ -106,16 +123,19 @@ CREATE TABLE `list`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `fk_list_employee_1`(`employee_id` ASC) USING BTREE,
   CONSTRAINT `fk_list_employee_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of list
 -- ----------------------------
-INSERT INTO `list` VALUES (15, 85, 7749.15, '2024-06-23 10:00:00', 'First list item', 49);
-INSERT INTO `list` VALUES (16, 100, 9999.00, '2024-06-23 11:00:00', 'Second list item', 49);
-INSERT INTO `list` VALUES (17, NULL, NULL, '2024-06-23 12:00:00', 'Third list item', 49);
-INSERT INTO `list` VALUES (18, NULL, NULL, '2024-06-23 13:00:00', 'Fourth list item', 50);
-INSERT INTO `list` VALUES (19, 75, 9749.25, '2024-06-23 14:00:00', 'Fifth list item', 51);
+INSERT INTO `list` VALUES (3, 615, 90921.60, '2023-01-01T12:00:00Z', 'This is a note for List 1.', 14);
+INSERT INTO `list` VALUES (4, 123, 123.34, '123123', '12312', 8);
+INSERT INTO `list` VALUES (5, 123, 234.00, '123', '23', 18);
+INSERT INTO `list` VALUES (6, 1615, 90921.60, '123123', '12312', 8);
+INSERT INTO `list` VALUES (7, 123, 123.34, '123123', '12312', 8);
+INSERT INTO `list` VALUES (8, 123, 123.34, '123123', '12312', 8);
+INSERT INTO `list` VALUES (9, 10, 199.90, '123123', '12312', 8);
+INSERT INTO `list` VALUES (14, 20, 299.99, '2023-01-02T15:00:00Z', 'This is a note for List 2.', 14);
 
 -- ----------------------------
 -- Table structure for producer
@@ -132,14 +152,25 @@ CREATE TABLE `producer`  (
   `contact_tel` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of producer
 -- ----------------------------
-INSERT INTO `producer` VALUES (19, 'Producer One', 'Prod1', '1234 First St - City A - EX 12345', '111-111-1111', 'contact1@example.com', 'Alice', '111-222-3333', 'First producer note');
-INSERT INTO `producer` VALUES (20, 'Producer Two', 'Prod2', '5678 Second St - City B - EX 67890', '222-222-2222', 'contact2@example.com', 'Bob', '222-333-4444', 'Second producer note');
-INSERT INTO `producer` VALUES (21, 'Producer Three', 'Prod3', '9101 Third St - City C - EX 10112', '333-333-3333', 'contact3@example.com', 'Charlie', '333-444-5555', 'Third producer note');
+INSERT INTO `producer` VALUES (3, 'Producer Tw', 'Prod2', '5678 Second St, City B, EX 67890', '222-222-2222', 'contact2@example.com', 'Bob', '222-333-4444', 'Second producer note.');
+INSERT INTO `producer` VALUES (6, 'Producer Three', 'Prod3', '9101 Third St, City C, EX 10112', '333-333-3333', 'contact3@example.com', 'Charlie', '333-444-5555', 'Third producer note.');
+INSERT INTO `producer` VALUES (7, 'Producer One', 'Prod1', '1234 First St, City A, EX 12345', '111-111-1111', 'contact1@example.com', 'Alice', '111-222-3333', 'First producer note.');
+INSERT INTO `producer` VALUES (8, 'Producer Two', 'Prod2', '5678 Second St, City B, EX 67890', '222-222-2222', 'contact2@example.com', 'Bob', '222-333-4444', 'Second producer note.');
+INSERT INTO `producer` VALUES (9, 'Producer Three', 'Prod3', '9101 Third St, City C, EX 10112', '333-333-3333', 'contact3@example.com', 'Charlie', '333-444-5555', 'Third producer note.');
+INSERT INTO `producer` VALUES (10, 'Producer One', 'Prod1', '1234 First St, City A, EX 12345', '111-111-1111', 'contact1@example.com', 'Alice', '111-222-3333', 'First producer note.');
+INSERT INTO `producer` VALUES (11, 'Producer Two', 'Prod2', '5678 Second St, City B, EX 67890', '222-222-2222', 'contact2@example.com', 'Bob', '222-333-4444', 'Second producer note.');
+INSERT INTO `producer` VALUES (12, 'Producer Three', 'Prod3', '9101 Third St, City C, EX 10112', '333-333-3333', 'contact3@example.com', 'Charlie', '333-444-5555', 'Third producer note.');
+INSERT INTO `producer` VALUES (13, 'Producer One', 'Prod1', '1234 First St, City A, EX 12345', '111-111-1111', 'contact1@example.com', 'Alice', '111-222-3333', 'First producer note.');
+INSERT INTO `producer` VALUES (14, 'Producer Two', 'Prod2', '5678 Second St, City B, EX 67890', '222-222-2222', 'contact2@example.com', 'Bob', '222-333-4444', 'Second producer note.');
+INSERT INTO `producer` VALUES (15, 'Producer Three', 'Prod3', '9101 Third St, City C, EX 10112', '333-333-3333', 'contact3@example.com', 'Charlie', '333-444-5555', 'Third producer note.');
+INSERT INTO `producer` VALUES (16, 'Producer One', 'Prod1', '1234 First St, City A, EX 12345', '111-111-1111', 'contact1@example.com', 'Alice', '111-222-3333', 'First producer note.');
+INSERT INTO `producer` VALUES (17, 'Producer Two', 'Prod2', '5678 Second St, City B, EX 67890', '222-222-2222', 'contact2@example.com', 'Bob', '222-333-4444', 'Second producer note.');
+INSERT INTO `producer` VALUES (18, 'Producer Three', 'Prod3', '9101 Third St, City C, EX 10112', '333-333-3333', 'contact3@example.com', 'Charlie', '333-444-5555', 'Third producer note.');
 
 -- ----------------------------
 -- Table structure for product
@@ -155,21 +186,20 @@ CREATE TABLE `product`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `fk_product_producer_1`(`producer_id` ASC) USING BTREE,
   CONSTRAINT `fk_product_producer_1` FOREIGN KEY (`producer_id`) REFERENCES `producer` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of product
 -- ----------------------------
-INSERT INTO `product` VALUES (26, 'Product 1', 99.99, 'Introduction for Product 1', 'Note for Product 1', 19);
-INSERT INTO `product` VALUES (27, 'Product 2', 49.99, 'Introduction for Product 2', 'Note for Product 2', 19);
-INSERT INTO `product` VALUES (28, 'Product 3', 199.99, 'Introduction for Product 3', 'Note for Product 3', 19);
-INSERT INTO `product` VALUES (29, 'Product 4', 79.99, 'Introduction for Product 4', 'Note for Product 4', 19);
-INSERT INTO `product` VALUES (30, 'Product 5', 129.99, 'Introduction for Product 5', 'Note for Product 5', 21);
-INSERT INTO `product` VALUES (31, 'Product 6', 149.99, 'Introduction for Product 6', 'Note for Product 6', 21);
-INSERT INTO `product` VALUES (32, 'Product 7', 199.99, 'Introduction for Product 7', 'Note for Product 7', 21);
-INSERT INTO `product` VALUES (33, 'Product 8', 39.99, 'Introduction for Product 8', 'Note for Product 8', 20);
-INSERT INTO `product` VALUES (34, 'Product 9', 299.99, 'Introduction for Product 9', 'Note for Product 9', 20);
-INSERT INTO `product` VALUES (35, 'Product 10', 89.99, 'Introduction for Product 10', 'Note for Product 10', 20);
+INSERT INTO `product` VALUES (6, '1231', 123.20, '1231sda', '123as', 3);
+INSERT INTO `product` VALUES (7, 'Product 1', 19.99, 'This is the introduction for Product 1.', 'Note for Product 1', 9);
+INSERT INTO `product` VALUES (8, '1231', 123.20, '1231sda', '123as', 3);
+INSERT INTO `product` VALUES (9, 'Product 1', 19.99, 'This is the introduction for Product 1.', 'Note for Product 1', 9);
+INSERT INTO `product` VALUES (14, 'Product 1', 19.99, 'This is the introduction for Product 1.', 'Note for Product 1', 3);
+INSERT INTO `product` VALUES (15, 'Product 2', 29.99, 'This is the introduction for Product 2.', 'Note for Product 2', 3);
+INSERT INTO `product` VALUES (16, 'Product 1', 19.99, 'This is the introduction for Product 1.', 'Note for Product 1', 3);
+INSERT INTO `product` VALUES (18, 'Product 1', 19.99, 'This is the introduction for Product 1.', 'Note for Product 1', 3);
+INSERT INTO `product` VALUES (21, 'Product 1', 19.99, 'This is the introduction for Product 1.', 'Note for Product 1', 3);
 
 -- ----------------------------
 -- Procedure structure for CreateEmployeeWithAccount
@@ -317,7 +347,7 @@ DROP TRIGGER IF EXISTS `reset_auth`;
 delimiter ;;
 CREATE TRIGGER `reset_auth` BEFORE UPDATE ON `employee` FOR EACH ROW BEGIN
    IF NEW.email != OLD.email THEN
-      SET NEW.email_is_auth = 0;
+      SET NEW.email_is_auth = FALSE;
    END IF;
 END
 ;;
