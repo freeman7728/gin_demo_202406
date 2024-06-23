@@ -96,7 +96,7 @@ func SelectEmployeeById(employee *models.Employee) (err error, resp dto.Response
 		return
 	}
 	if res.RowsAffected == 0 {
-		resp.Message = "记录不存在"
+		resp.Message = "员工记录不存在"
 		resp.Code = http.StatusBadRequest
 		return
 	}

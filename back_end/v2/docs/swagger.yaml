@@ -1,5 +1,12 @@
 basePath: /
 definitions:
+  dto.CertifyDto:
+    properties:
+      code:
+        type: string
+      id:
+        type: integer
+    type: object
   dto.DeleteEmployeeByAdminRequest:
     properties:
       operator:
@@ -397,6 +404,50 @@ paths:
       summary: 更新订单详情
       tags:
       - detail
+  /email/:
+    post:
+      consumes:
+      - application/json
+      description: 使用用户id，向对应用户的邮箱发送验证码
+      parameters:
+      - description: Employee Request
+        in: body
+        name: detail
+        required: true
+        schema:
+          $ref: '#/definitions/models.Employee'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: msg
+          schema:
+            type: string
+      summary: 发送邮箱验证码
+      tags:
+      - email
+  /email/auth:
+    post:
+      consumes:
+      - application/json
+      description: 使用用户id，和验证码检查
+      parameters:
+      - description: certify Request
+        in: body
+        name: detail
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CertifyDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: msg
+          schema:
+            type: string
+      summary: 检查邮箱验证码
+      tags:
+      - email
   /employee/{id}:
     get:
       consumes:

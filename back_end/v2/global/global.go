@@ -3,7 +3,7 @@ package global
 import (
 	"database_lesson/config"
 
-	"github.com/go-redis/redis/v8"
+	"github.com/go-redis/redis"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )

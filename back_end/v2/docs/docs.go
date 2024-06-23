@@ -210,6 +210,74 @@ const docTemplate = `{
                 }
             }
         },
+        "/email/": {
+            "post": {
+                "description": "使用用户id，向对应用户的邮箱发送验证码",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "email"
+                ],
+                "summary": "发送邮箱验证码",
+                "parameters": [
+                    {
+                        "description": "Employee Request",
+                        "name": "detail",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Employee"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "msg",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/email/auth": {
+            "post": {
+                "description": "使用用户id，和验证码检查",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "email"
+                ],
+                "summary": "检查邮箱验证码",
+                "parameters": [
+                    {
+                        "description": "certify Request",
+                        "name": "detail",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CertifyDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "msg",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/employee/delete": {
             "post": {
                 "description": "验证账号密码，然后删除用户",
@@ -895,6 +963,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.CertifyDto": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.DeleteEmployeeByAdminRequest": {
             "type": "object",
             "properties": {

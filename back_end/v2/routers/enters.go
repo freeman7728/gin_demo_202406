@@ -61,6 +61,11 @@ func InitRouter() *gin.Engine {
 		detailRouter.GET("/orderId/:id", controllers.SelectDetailByOrderIdController)
 		detailRouter.GET("/groupByproduct", controllers.SelectSumGroupByProductIdController)
 	}
+	emailRouter := router.Group("/email")
+	{
+		emailRouter.POST("/", controllers.GenCodeController)
+		emailRouter.POST("/auth", controllers.VerifyCodeController)
+	}
 
 	return router
 }

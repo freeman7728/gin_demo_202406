@@ -2,7 +2,7 @@ package core
 
 import (
 	"database_lesson/global"
-	"github.com/go-redis/redis/v8"
+	"github.com/go-redis/redis"
 )
 
 func RedisInit() *redis.Client {

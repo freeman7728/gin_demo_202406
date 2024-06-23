@@ -85,3 +85,8 @@ func SelectAllEmployee(list *dto.EmployeeList) (tx *gorm.DB) {
 	sql := `SELECT * FROM employee`
 	return global.DB.Raw(sql).Scan(&list.EmployeeList)
 }
+
+func SetEmailAuthById(certifyDto *dto.CertifyDto) (tx *gorm.DB) {
+	sql := `UPDATE employee SET email_is_auth = true WHERE id=?`
+	return global.DB.Exec(sql, certifyDto.ID)
+}
