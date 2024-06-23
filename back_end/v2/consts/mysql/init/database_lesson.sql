@@ -11,7 +11,7 @@
  Target Server Version : 80033 (8.0.33)
  File Encoding         : 65001
 
- Date: 23/06/2024 10:58:27
+ Date: 23/06/2024 13:49:11
 */
 
 SET NAMES utf8mb4;
@@ -36,24 +36,9 @@ CREATE TABLE `account`  (
 INSERT INTO `account` VALUES (8, '2024060008', 'password123');
 INSERT INTO `account` VALUES (24, '2024060024', '265823');
 INSERT INTO `account` VALUES (29, '2024060029', '299223');
-INSERT INTO `account` VALUES (31, '2024060031', '123123');
-
--- ----------------------------
--- Table structure for auth
--- ----------------------------
-DROP TABLE IF EXISTS `auth`;
-CREATE TABLE `auth`  (
-  `id` int UNSIGNED NOT NULL,
-  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `level` int NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `unique_token`(`token` ASC) USING BTREE,
-  CONSTRAINT `fk_auth_employee_1` FOREIGN KEY (`id`) REFERENCES `employee` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of auth
--- ----------------------------
+INSERT INTO `account` VALUES (31, '2024060031', '21231231');
+INSERT INTO `account` VALUES (35, '2024060035', '129223');
+INSERT INTO `account` VALUES (36, '2024060036', '658233');
 
 -- ----------------------------
 -- Table structure for detail
@@ -106,7 +91,7 @@ CREATE TABLE `employee`  (
   `email_is_auth` binary(1) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uniqe_tel`(`tel` ASC) USING BTREE COMMENT '手机号唯一'
-) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of employee
@@ -119,8 +104,10 @@ INSERT INTO `employee` VALUES (17, '123', '1123', 123.33, '1231', NULL, 1231, NU
 INSERT INTO `employee` VALUES (18, '123', '123323', 123.33, '1231', NULL, 1231, NULL, NULL);
 INSERT INTO `employee` VALUES (24, '123', '1265823', 123.00, '1231', NULL, 2, '1', 0x30);
 INSERT INTO `employee` VALUES (29, '123', '111299223', 123.00, '1231', NULL, 1231, NULL, NULL);
-INSERT INTO `employee` VALUES (31, 'name', '123345213', 12312.00, '1231', NULL, 2, NULL, NULL);
-INSERT INTO `employee` VALUES (32, '121231', '12312313451', 123.00, '12', NULL, 2, '123', 0x30);
+INSERT INTO `employee` VALUES (31, '2024060031', '12312', 123.51, 'nnnn', NULL, 2, '12345@123.com', NULL);
+INSERT INTO `employee` VALUES (32, '121231', '12312313451', 123.00, '12', NULL, 2, '1357880399@qq.com', 0x30);
+INSERT INTO `employee` VALUES (35, '123', '11129223', 123.00, '1231', NULL, 2, '123@123', 0x30);
+INSERT INTO `employee` VALUES (36, '123', '12658233', 123.00, '1231', NULL, 2, '', 0x30);
 
 -- ----------------------------
 -- Table structure for list
@@ -224,6 +211,7 @@ CREATE PROCEDURE `CreateEmployeeWithAccount`(IN p_name VARCHAR(255),
     IN p_password VARCHAR(255),
     IN p_salary DECIMAL,
     IN p_note VARCHAR(255),
+		IN p_email VARCHAR(255),
     IN p_level INT,
     OUT p_account VARCHAR(255))
 BEGIN
@@ -233,8 +221,8 @@ BEGIN
     DECLARE id_suffix VARCHAR(4);
     
     -- 插入新员工记录
-    INSERT INTO employee (name, tel, salary, note, level)
-    VALUES (p_name, p_tel, p_salary, p_note, p_level);
+    INSERT INTO employee (name, tel, salary, note, level,email)
+    VALUES (p_name, p_tel, p_salary, p_note, p_level,p_email);
     
     -- 获取最后插入的ID
     SET last_id = LAST_INSERT_ID();
