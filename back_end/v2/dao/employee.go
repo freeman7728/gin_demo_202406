@@ -90,3 +90,8 @@ func SetEmailAuthById(certifyDto *dto.CertifyDto) (tx *gorm.DB) {
 	sql := `UPDATE employee SET email_is_auth = true WHERE id=?`
 	return global.DB.Exec(sql, certifyDto.ID)
 }
+
+func UpdateEmployeeById(employee *models.Employee) (tx *gorm.DB) {
+	sql := `UPDATE employee SET name=?,tel=?,salary=?,note=?,email=?,level=? where id = ?`
+	return global.DB.Exec(sql, employee.Name, employee.Tel, employee.Salary, employee.Note, employee.Email, employee.Level, employee.ID)
+}

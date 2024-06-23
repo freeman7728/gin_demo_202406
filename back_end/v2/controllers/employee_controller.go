@@ -165,3 +165,26 @@ func SelectAllEmployeeController(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
+
+// @Summary 根据员工id修改姓名，电话，工资，备注，级别，邮箱
+// @Description 根据员工id修改姓名，电话，工资，备注，级别，邮箱
+// @Tags employee
+// @Accept  json
+// @Produce  json
+// @Param   employee body models.Employee true "Request"
+// @Success      200  msg  "修改成功或失败"
+// @Router /employee/updateById [post]
+func UpdateEmployeeByIdController(c *gin.Context) {
+	var employee models.Employee
+	if err := c.ShouldBindJSON(&employee); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	// 转发到service层处理
+	err, res := services.UpdateEmployeeById(&employee)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}

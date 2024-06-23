@@ -153,3 +153,15 @@ func SelectAllEmployee() (err error, resp dto.Response) {
 	resp.Message = "获取成功"
 	return
 }
+
+func UpdateEmployeeById(employee *models.Employee) (err error, resp dto.Response) {
+	resp.Code = http.StatusOK
+	res := dao.UpdateEmployeeById(employee)
+	if res.Error != nil {
+		resp.Code = http.StatusBadRequest
+		resp.Message = res.Error.Error()
+		return
+	}
+	resp.Message = "更改成功"
+	return
+}

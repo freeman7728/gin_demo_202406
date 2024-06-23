@@ -471,6 +471,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/employee/updateById": {
+            "post": {
+                "description": "根据员工id修改姓名，电话，工资，备注，级别，邮箱",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "employee"
+                ],
+                "summary": "根据员工id修改姓名，电话，工资，备注，级别，邮箱",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "employee",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Employee"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "修改成功或失败",
+                        "schema": {
+                            "type": "msg"
+                        }
+                    }
+                }
+            }
+        },
         "/employee/{id}": {
             "get": {
                 "description": "通过id请求详情",
