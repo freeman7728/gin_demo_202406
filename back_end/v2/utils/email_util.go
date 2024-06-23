@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"crypto/tls"
 	"database_lesson/dto"
 	"database_lesson/global"
 	"fmt"
@@ -35,8 +36,12 @@ func SendEmailValidate(em []string) (string, error) {
 	</div>
 	`, em[0], t, vCode)
 	e.Text = []byte(content)
+	TLSClientConfig := &tls.Config{
+		// 指定不校验 SSL/TLS 证书
+		InsecureSkipVerify: true,
+	}
 	//设置服务器相关的配置
-	err := e.Send("smtp.qq.com:587", smtp.PlainAuth("", "1357880399@qq.com", "oyagqeommuakidaf", "smtp.qq.com"))
+	err := e.SendWithStartTLS("smtp.qq.com:587", smtp.PlainAuth("", "1357880399@qq.com", "oyagqeommuakidaf", "smtp.qq.com"), TLSClientConfig)
 	return vCode, err
 }
 
