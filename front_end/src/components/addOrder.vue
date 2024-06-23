@@ -114,7 +114,7 @@
         ElMessage.error('除备注外所有字段必须填写');
         return;
       }
-      if (order.quantity <= 0) {
+      if (parseInt(order.quantity) <= 0) {
         ElMessage.error('采购数量必须为正数');
         return;
       }
