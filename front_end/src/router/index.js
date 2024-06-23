@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import login from "@/pages/logins/login.vue";
 import index_admin from "@/pages/indexs/index_admin.vue";
 import index_ordinary from "@/pages/indexs/index_ordinary.vue";
-import exception_window from "@/pages/childpages/exception_window.vue";
 import user_info from "@/pages/childpages/user_info.vue";
 import user_info_o from "@/pages/childpages/user_info_o.vue";
 import employee_info from "@/pages/childpages/employee_info.vue";
@@ -72,7 +71,6 @@ const routes = [
   { path: "/searchGoods", name:"searchGoods" ,component: searchGoods},
   { path: "/searchList", name: "searchList", component: searchList},
   { path: "/searchOrder", name: "searchOrder", component: searchOrder},
-  { path: "/childpages/exception_window", component: exception_window},
   { path: "/index_ordinary", component: index_ordinary},
 ];
 

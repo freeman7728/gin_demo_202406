@@ -345,8 +345,6 @@ const switchToSignUp = () => {
     appContainer.value.classList.add("right-panel-active");
   }
 };
-
-
 const submitForm = (formType: 'admin' | 'ordinary') => {
   if (formType === 'admin') {
     adminLogin();
@@ -354,5 +352,7 @@ const submitForm = (formType: 'admin' | 'ordinary') => {
     ordinaryLogin();
   }
 };
+
+
 </script>
   

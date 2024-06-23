@@ -62,6 +62,25 @@
       <updateClient class="update_btn"/>
       <searchClient class="search_btn"/>
       <delClient class="del_btn"/>
+      <el-button type="success" @click="openImportDialog">导入客户</el-button>
+    <el-dialog
+      title="导入客户"
+      v-model="dialogVisible"
+      width="30%"
+      center
+      :close-on-click-modal="false"
+    >
+    <div style="display: flex; align-items: center;">
+    <el-button type="primary" @click="handleFileInputClick">选择文件</el-button>
+    <input type="file" ref="fileInput" style="display: none" accept=".csv" @change="handleFileUpload">
+    <span v-if="selectedFileName" style="margin-left: 10px;">已选择文件: {{ selectedFileName }}</span>
+  </div>
+
+  <div style="margin-top: 10px;">
+    <el-button type="primary" @click="importProducts">确认导入</el-button>
+    <el-button @click="dialogVisible = false" style="margin-left: 10px;">取消</el-button>
+  </div>
+    </el-dialog>
       <el-button type="success" @click="exportCustomer">导出客户</el-button>
         </div>
     <el-table :data="paginatedList" style="width: 100%">
@@ -118,11 +137,88 @@
   const disabled = ref(false);
   const background = ref(true);
 
+  const isCollapse = ref(false);
+  const selectedFileName = ref('');
+  const dialogVisible = ref(false);
+  const fileInput = ref<HTMLInputElement | null>(null);
+  let dataList: any[] = []; // 定义在外部作用域
+
   const paginatedList = computed(() => {
   const start = (currentPage.value - 1) * pageSize.value;
   const end = start + pageSize.value;
   return list.value.slice(start, end);
 });
+const openImportDialog = () => {
+  dialogVisible.value = true;
+};
+
+const handleFileInputClick = () => {
+  fileInput.value?.click();
+};
+
+const handleFileUpload = () => {
+  const file = fileInput.value?.files?.[0];
+  if (!file) {
+    ElMessage.error('请先选择要导入的 CSV 文件');
+    return;
+  }
+  selectedFileName.value = file.name; // 更新选择的文件名称显示
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    if (event.target) {
+      const csvData = event.target.result as string;
+      processData(csvData); 
+    }
+  };
+  reader.readAsText(file);
+};
+
+const processData = (csvData: string) => {
+  const rows = csvData.split('\n');
+  rows.shift(); // 去除表头
+
+  dataList = rows.map(row => {
+    const columns = row.split(',');
+    console.log(columns.length);
+    if (columns.length === 8) {
+      return {
+        name: columns[0].trim(),
+        short_name: columns[1].trim(),
+        address: columns[2].trim(),
+        tel: columns[3].trim(),
+        email: columns[4].trim(),
+        contact_name: columns[5].trim(),
+        contact_tel: columns[6].trim(),
+        note: columns[7].trim()
+      };
+    } else {
+      return null;
+    }
+  }).filter(item => item !== null);
+
+  console.log(dataList);
+};
+
+const importProducts = async () => {
+  console.log(456);
+  console.log(dataList);
+  try {
+    const response = await axios.post(`${proxy.$serverUrl_test}/producer/insert`, {list: dataList});
+    console.log(response);
+    console.log(dataList);
+    if (response.data.code === 200) {
+      ElMessage.success('客户信息导入成功');
+      console.log(response.data); 
+    } else {
+      ElMessage.error('客户信息导入失败'); 
+    }
+  } catch (error) {
+    ElMessage.error('客户信息导入时出错');
+    console.error(error);
+  }
+
+  dialogVisible.value = false; // 关闭对话框
+};
   
   watch(route, (newRoute) => {
     currentRoute.value = newRoute.path;

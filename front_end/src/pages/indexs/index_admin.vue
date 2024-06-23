@@ -61,78 +61,332 @@
           <div class="info_title">员工信息</div>
           <div class="flex-container">
           <div class="svg-container">
-              <svg t="1718688291554" class="icon_info" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10110" width="440" height="390">
+              <svg t="1718688291554" class="icon_info" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10110" width="440" height="490">
                   <path d="M264.647884 230.201302c0 127.163947 103.580698 230.200662 231.352626 230.200663 127.771927 0 231.352626-103.036716 231.352626-230.200663a230.008668 230.008668 0 0 0-115.676313-199.353645 232.312595 232.312595 0 0 0-231.352626 0 230.008668 230.008668 0 0 0-115.644314 199.353645zM523.775625 504.624555l75.837582 130.747833c3.711882 7.359765 3.711882 14.719531 1.88794 22.079296l-79.581463 213.657189c-3.711882 11.039648-12.959587 16.575472-24.063233 16.575472a26.335161 26.335161 0 0 1-24.063233-16.575472l-79.581463-213.62519a30.655023 30.655023 0 0 1 1.85594-22.079297l75.869582-130.779831C207.305712 517.520144 0.016319 734.825217 0.016319 998.176823c0 14.719531 11.103646 25.791178 25.919174 25.791178h940.130034c14.815528 0 25.919174-11.039648 25.919173-25.791178 0-263.351606-207.289393-480.656679-468.209075-493.552268z" fill="#32C8DA" p-id="10111">
                   </path>
               </svg>
           </div>
       <div class="text-container">
-      <div class="info-item"><b>员工编号:</b> 123456</div>
-      <div class="info-item"><b>员工姓名:</b> 张三</div>
-      <div class="info-item"><b>员工密码:</b> ********</div>
-      <div class="info-item"><b>员工级别:</b> 高级工程师</div>
-      <div class="info-item"><b>员工电话:</b> 13812345678</div>
-      <div class="info-item"><b>员工工资:</b> 10000元/月</div>
-      <div class="info-item"><b>备注:</b> 无</div>
+      <div class="info-item"><b>员工编号:</b> {{ employee.id }}</div>
+      <div class="info-item"><b>员工姓名:</b> {{ employee.name }}</div>
+      <div class="info-item"><b>员工级别:</b> {{ employeeLevel }}</div>
+      <div class="info-item"><b>员工电话:</b> {{ employee.tel }}</div>
+      <div class="info-item"><b>员工工资:</b> {{ employee.salary }}</div>
+      <div class="info-item"><b>员工邮箱:</b> {{ employee.email }}</div>
+      <div class="info-item"><b>备注:</b> {{ employee.note }}</div>
+      <div class="info-item"><b>邮箱是否激活:</b> {{ getFlag(employee.email_is_auth) }}</div>
         </div>
        </div>
       </el-card>
       <div class="button-container">
-          <el-button type="primary">修改账户信息</el-button>
-          <el-button type="warning">退出登录</el-button>
-          <el-button type="danger">注销账户</el-button>
+        <el-button type="success" @click="openDialogEmail">邮箱验证</el-button>
+              <el-dialog
+                title="输入邮箱验证码"
+                v-model="dialogVisible_email"
+                width="30%"
+                @close="resetDialog"
+              >
+                <el-form :model="formData" label-width="100px">
+                  <el-form-item label="邮箱验证码" required>
+                    <el-input v-model="formData.code" placeholder="请输入邮箱验证码"></el-input>
+                  </el-form-item>
+                </el-form>
+
+                <span slot="footer" class="dialog-footer">
+                  <el-button @click="dialogVisible_email = false">取消</el-button>
+                  <el-button type="primary" @click="confirmEmail">确定</el-button>
+                </span>
+              </el-dialog>
+        <el-button type="primary" @click="openDialog_1">修改账户信息</el-button>
+  <el-dialog v-model="dialogVisible_1" title="修改账户信息" width="600px">
+    <el-form :model="employee" label-width="100px" class="form-align">
+      <el-form-item label="员工姓名">
+        <el-input v-model="employee.name" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="员工电话">
+        <el-input v-model="employee.tel" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="员工邮箱">
+        <el-input v-model="employee.email" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="备注">
+        <el-input v-model="employee.note" type="textarea" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="请输入账号">
+        <el-input v-model="employee.account" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="请输入原密码">
+        <el-input v-model="employee.password" type="password" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="请输入新密码">
+        <el-input v-model="employee.new_password" type="password" autocomplete="off" />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="submitForm">保存</el-button>
+        <el-button @click="closeDialog_1">取消</el-button>
+      </el-form-item>
+    </el-form>
+  </el-dialog>
+          <el-button type="warning" @click="logout_1">退出登录</el-button>
+          <el-button type="danger" @click="openDialog" >注销账户</el-button>
+    <el-dialog  v-model="dialogVisible" title="注销账户"  :before-close="handleClose">
+      <el-input v-model="account" placeholder="请输入账号" style="margin-bottom: 20px"></el-input>
+      <el-input v-model="password" placeholder="请输入密码" show-password style="margin-bottom: 20px"></el-input>
+      <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="logout">确 定</el-button>
+      </span>
+    </el-dialog>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { ref, watch } from 'vue'
-import { useRoute, useRouter} from 'vue-router'
-export default {
-  data() {
-    return {
-      isCollapse: false,
-    };
-  },
-  methods: {
-    switchToUserInfo() {
-      console.log("hahhahaah");
-      this.$router.push({ name: 'userInfo'});
-    },
-    switchToEmployeeInfo() {
-      console.log("ashjdas");
-      this.$router.push({ name: 'employeeInfo'});
-    },
-    switchToProvider() {
-      this.$router.push({ name: 'provider'});
-    }
-  },
-  setup() {
-      const route = useRoute()
-      const router = useRouter()
-      const currentRoute = ref(route.path)
-      console.log(currentRoute);
-      console.log(345);
-      watch(route, (newRoute) => {
-    currentRoute.value = newRoute.path
-  })
+<script setup lang="ts">
+import { onMounted, ref, watch, computed, reactive } from 'vue'
+import { useRoute, useRouter} from 'vue-router';
+import { ElMessageBox, ElMessage } from 'element-plus';
 
-      const handleSelect = (index) => {
-    router.push(index)
+import axios from 'axios';
+import { getCurrentInstance } from 'vue';
+
+const { proxy } = getCurrentInstance();
+
+const isCollapse = ref(false);
+
+const dialogVisible_email = ref(false); 
+const formData = reactive({
+  code: '' 
+});
+
+
+const openDialogEmail = async () => {
+try {
+  const id = localStorage.getItem('employeeId');
+   // 获取员工ID
+  if (!id) {
+    throw new Error('员工ID未找到');
   }
 
-      return {
-      currentRoute,
-      handleSelect
+  const response = await axios.post(`${proxy.$serverUrl_test}/email`, {
+    id: parseInt(id)
+  });
+  console.log(response);
+
+  if (response.data.code === 200) {
+    dialogVisible_email.value = true;
+  } else {
+    ElMessage.error('调用邮箱验证接口失败');
   }
-  }
+} catch (error) {
+  console.error('调用邮箱验证接口时出错', error);
+  ElMessage.error('调用邮箱验证接口时出错');
+}
 };
+
+const confirmEmail = async () => {
+try {
+  const id = localStorage.getItem('employeeId'); // 获取员工ID
+  const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/email/auth`, {
+    id: parseInt(id),
+    code: formData.code
+  });
+  if (response.data.code === 200) {
+    ElMessage.success('邮箱验证成功');
+    dialogVisible_email.value = false; 
+  } else {
+    ElMessage.error(response.data.message);
+  }
+} catch (error) {
+  console.error('邮箱验证时出错', error);
+  ElMessage.error('邮箱验证时出错');
+}
+};
+
+const resetDialog = () => {
+  dialogVisible_email.value = false;
+  formData.code = '';
+};
+
+const employee = reactive({
+  id: '',
+  name: '',
+  level: '',
+  tel: '',
+  salary: '',
+  email: '',
+  note: '',
+  account: '',
+  password: '',
+  new_password: '',
+  email_is_auth: '',
+});
+
+const employeeLevel = computed(() => {
+if (employee.level === 0) {
+  return 'root';
+} else if (employee.level === 1) {
+  return 'admin';
+} else {
+  return 'employee';
+}
+});
+const getFlag = (email_is_flag) => {
+if(email_is_flag === 0) {
+  return '否';
+} else {
+  return '是';
+}
+}
+const dialogVisible_1 = ref(false);
+const dialogVisible = ref(false);
+const account = ref('');
+const password = ref('');
+
+const submitForm = async () => {
+try {
+  const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/employee/update`, {
+    id: employee.id,
+    name: employee.name,
+    tel: employee.tel,
+    email: employee.email,
+    note: employee.note,
+    account: employee.account,
+    password: employee.password,
+    new_password: employee.new_password
+  });
+  console.log(employee.password);
+  console.log(response);
+  if (response.data.code === 200) {
+    ElMessage.success('账户信息已成功更新');
+    closeDialog_1();
+  } else {
+    ElMessage.error('更新账户信息失败');
+  }
+} catch (error) {
+  ElMessage.error('更新账户信息时出错');
+  console.error(error);
+}
+};
+
+const openDialog = () => {
+  dialogVisible.value = true;
+}
+const openDialog_1 = () => {
+  dialogVisible_1.value = true;
+}
+const closeDialog_1 = () => {
+dialogVisible_1.value = false;
+};
+const handleClose = (done: () => void) => {
+  ElMessageBox.confirm('确定关闭吗？').then(() => {
+    done();
+  }).catch(() => {
+    // Handle cancellation
+  });
+};
+const logout_1 = () => {
+ localStorage.clear();
+
+// 显示消息提示
+ElMessage.success('已成功退出登录');
+
+// 重定向到登录页面
+router.replace('/login');
+};
+
+const route = useRoute()
+const router = useRouter()
+const currentRoute = ref(route.path)
+
+watch(route, (newRoute) => {
+  currentRoute.value = newRoute.path
+})
+
+const handleSelect = (index) => {
+  router.push(index)
+}
+const fetchProductInfo = async () => {
+  try {
+    const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/employee/${localStorage.getItem('employeeId')}`);
+    console.log(response);
+    if (response.data.code === 200) {
+      const data = response.data.data;
+        employee.id = data.id;
+        employee.name = data.name;
+        employee.level = data.level;
+        employee.tel = data.tel;
+        employee.salary = data.salary;
+        employee.email = data.email;
+        employee.note = data.note;
+        employee.email_is_auth = data.email_is_auth;
+      } else {
+      ElMessage.error('获取员工信息失败');
+    }
+    } catch (error) {
+      ElMessage.error('获取员工信息时出错');
+      console.error(error);
+    }
+};
+
+const switchToUserInfo = () => {
+  console.log("hahhahaah");
+  router.push({ name: 'userInfo'});
+}
+
+const switchToEmployeeInfo = () => {
+  console.log("ashjdas");
+  router.push({ name: 'employeeInfo'});
+}
+onMounted(() => {
+  fetchProductInfo();
+  console.log(localStorage.getItem('employeeId'));
+  console.log(localStorage.getItem('employeeToken'));
+});
+const switchToProvider = () => {
+  router.push({ name: 'provider'});
+}
+const getEmployeeId = () => {
+return localStorage.getItem('employeeId');
+};
+
+const getEmployeeToken = () => {
+return localStorage.getItem('employeeToken');
+};
+const logout = async () => {
+  try {
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/employee/delete`, {
+      account: account.value,
+      password: password.value,
+    });
+    if (response.data.code === 200) {
+      console.log(response);
+      ElMessage.success('注销成功');
+      dialogVisible.value = false;
+    } else {
+      console.log(response);
+      ElMessage.error('注销失败');
+    }
+  } catch (error) {
+    console.error(error);
+    ElMessage.error('注销失败');
+  }
+}
+
+
+
+
+
+
 </script>
+
   <style scoped>
 .dashboard {
   display: flex;
   height: 100vh;
+}
+.form-align .el-form-item__label {
+text-align: right;
 }
 
 .top-box {

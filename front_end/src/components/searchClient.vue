@@ -27,8 +27,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item :prop="'search.shortName'">
-              <el-input v-model="searchCriteria.shortName"></el-input>
+            <el-form-item :prop="'search.short_name'">
+              <el-input v-model="searchCriteria.short_name"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="3">
@@ -37,8 +37,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="2">
-            <el-form-item :prop="'search.companyPhone'">
-              <el-input v-model="searchCriteria.companyPhone"></el-input>
+            <el-form-item :prop="'search.tel'">
+              <el-input v-model="searchCriteria.tel"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="2">
@@ -47,18 +47,18 @@
             </el-form-item>
           </el-col>
           <el-col :span="2">
-            <el-form-item :prop="'search.contactPerson'">
-              <el-input v-model="searchCriteria.contactPerson"></el-input>
+            <el-form-item :prop="'search.contact_name'">
+              <el-input v-model="searchCriteria.contact_name"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item :prop="'search.contactPhone'">
-              <el-input v-model="searchCriteria.contactPhone"></el-input>
+            <el-form-item :prop="'search.contact_tel'">
+              <el-input v-model="searchCriteria.contact_tel"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="2">
-            <el-form-item :prop="'search.remark'">
-              <el-input type="textarea" v-model="searchCriteria.remark"></el-input>
+            <el-form-item :prop="'search.note'">
+              <el-input type="textarea" v-model="searchCriteria.note"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -68,13 +68,13 @@
       <el-table :data="searchResults" style="width: 100%; margin-top: 20px;">
         <el-table-column prop="id" label="客户编号" width="120"></el-table-column>
         <el-table-column prop="name" label="客户名称" width="150"></el-table-column>
-        <el-table-column prop="shortName" label="客户简称" width="150"></el-table-column>
+        <el-table-column prop="short_name" label="客户简称" width="150"></el-table-column>
         <el-table-column prop="address" label="地址" width="150"></el-table-column>
-        <el-table-column prop="companyPhone" label="公司电话" width="150"></el-table-column>
+        <el-table-column prop="tel" label="公司电话" width="150"></el-table-column>
         <el-table-column prop="email" label="邮件" width="150"></el-table-column>
-        <el-table-column prop="contactPerson" label="联系人" width="150"></el-table-column>
-        <el-table-column prop="contactPhone" label="联系人电话" width="150"></el-table-column>
-        <el-table-column prop="remark" label="备注" width="500"></el-table-column>
+        <el-table-column prop="contact_name" label="联系人" width="150"></el-table-column>
+        <el-table-column prop="contact_tel" label="联系人电话" width="150"></el-table-column>
+        <el-table-column prop="note" label="备注" width="500"></el-table-column>
       </el-table>
     </template>
     <template v-else>
@@ -90,21 +90,37 @@
   </template>
   
   <script setup lang="ts">
-  import { ref } from 'vue';
-  import { ElMessageBox } from 'element-plus';
+  import { onMounted, ref, watch, computed } from 'vue'
+  import { useRoute, useRouter} from 'vue-router';
+  import axios from 'axios';
+  import { ElMessage, ElMessageBox } from 'element-plus';
+  import { getCurrentInstance, } from 'vue';
+  const { proxy } = getCurrentInstance();
   
   const searchDialogVisible = ref(false);
   const searchCriteria = ref({
     id: '',
     name: '',
-    shortName: '',
+    short_name: '',
     address: '',
-    companyPhone: '',
+    tel: '',
     email: '',
-    contactPerson: '',
-    contactPhone: '',
-    remark: '',
+    contact_name: '',
+    contact_tel: '',
+    note: '',
   });
+  const list = ref([{
+    id: '',
+    name: '',
+    short_name: '',
+    address: '',
+    tel: '',
+    email: '',
+    contact_name: '',
+    contact_tel: '',
+    note: '',
+  }
+  ]);
   
   const searchResults = ref([]);
   
@@ -119,24 +135,52 @@
       // Handle cancellation
     });
   };
+
+  const fetchlist = async () => {
+  try {
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/producer/select`);
+    console.log("Response data:", response.data);
+    const rawData = response.data.data;
+    if (Array.isArray(rawData)) {
+      list.value = rawData.map(item => ({
+        id: item.id,
+        name: item.name,
+        address: item.address,
+        short_name: item.short_name,
+        tel: item.tel,
+        email: item.email,
+        contact_name: item.contact_name,
+        contact_tel: item.contact_tel,
+        note: item.note
+      }));
+    } else {
+      console.error("Unexpected response format:", rawData);
+    }
+  } catch (error) {
+    console.error("获取客户数据失败：", error);
+  }
+};
   
   const openSearchDialog = () => {
     searchDialogVisible.value = true;
   };
-  
+  onMounted(() => {
+    fetchlist();
+  });
   const searchCustomers = () => {
     // Simulate a search by filtering a mock customer list
-    const mockCustomers = [
-      { id: '1', name: '客户A', shortName: 'A', address: '地址1', companyPhone: '123456', email: 'a@test.com', contactPerson: '联系人A', contactPhone: '1234567890', remark: '备注1' },
-      { id: '2', name: '客户B', shortName: 'B', address: '地址2', companyPhone: '234567', email: 'b@test.com', contactPerson: '联系人B', contactPhone: '0987654321', remark: '备注2' },
-      // Add more mock customers as needed
-    ];
+
   
-    searchResults.value = mockCustomers.filter(customer => {
+    searchResults.value = list.value.filter(product => {
       return Object.keys(searchCriteria.value).every(key => {
-        return searchCriteria.value[key] === '' || customer[key].includes(searchCriteria.value[key]);
-      });
+      return searchCriteria.value[key] === '' ||
+             searchCriteria.value[key] === null ||
+             (product[key] !== undefined && product[key].toString().includes(searchCriteria.value[key].toString()));
     });
+    });
+    if (searchResults.value.length === 0) {
+      console.log('无结果');
+    }
   };
   </script>
   

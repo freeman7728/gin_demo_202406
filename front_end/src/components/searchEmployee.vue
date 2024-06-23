@@ -26,15 +26,15 @@
           <el-col :span="3">
             <el-form-item :prop="'search.level'">
               <el-select v-model="searchCriteria.level" placeholder="请选择">
-                <el-option label="root" value="root"></el-option>
-                <el-option label="admin" value="admin"></el-option>
-                <el-option label="ordinary" value="ordinary"></el-option>
+                <el-option label="root" value="0"></el-option>
+                <el-option label="admin" value="1"></el-option>
+                <el-option label="ordinary" value="2"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item :prop="'search.phone'">
-              <el-input v-model="searchCriteria.phone"></el-input>
+            <el-form-item :prop="'search.tel'">
+              <el-input v-model="searchCriteria.tel"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="3">
@@ -43,8 +43,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item :prop="'search.remark'">
-              <el-input type="textarea" v-model="searchCriteria.remark"></el-input>
+            <el-form-item :prop="'search.note'">
+              <el-input type="textarea" v-model="searchCriteria.note"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -56,11 +56,14 @@
       <el-table :data="searchResults" style="width: 100%; margin-top: 20px;">
         <el-table-column prop="id" label="员工编号" width="120"></el-table-column>
         <el-table-column prop="name" label="员工姓名" width="150"></el-table-column>
-        <el-table-column prop="password" label="员工密码" width="150"></el-table-column>
-        <el-table-column prop="level" label="员工级别" width="150"></el-table-column>
-        <el-table-column prop="phone" label="员工电话" width="150"></el-table-column>
+        <el-table-column prop="level" label="员工级别" width="150">
+          <template #default="{ row }">
+            {{ getLevelText(row.level) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="tel" label="员工电话" width="150"></el-table-column>
         <el-table-column prop="salary" label="员工工资" width="150"></el-table-column>
-        <el-table-column prop="remark" label="备注" width="500"></el-table-column>
+        <el-table-column prop="note" label="备注" width="500"></el-table-column>
       </el-table>
     </template>
     <template v-else>
@@ -77,25 +80,75 @@
   </template>
   
   <script setup lang="ts">
-  import { ref } from 'vue';
-  import { ElMessageBox } from 'element-plus';
+  import { onMounted, ref, watch, computed } from 'vue'
+  import { useRoute, useRouter} from 'vue-router';
+  import axios from 'axios';
+  import { ElMessage, ElMessageBox } from 'element-plus';
+  import { getCurrentInstance, } from 'vue';
+  const { proxy } = getCurrentInstance();
   
   const searchDialogVisible = ref(false);
   const searchCriteria = ref({
     id: '',
     name: '',
     level: '',
-    phone: '',
+    tel: '',
     salary: '',
-    remark: '',
+    note: '',
   });
+  const list = ref([{
+    id: '',
+    name: '',
+    level: '',
+    tel: '',
+    salary: '',
+    note: '',
+  }
+  ]);
   
   const searchResults = ref([]);
   
   const searchRules = {
     // Define rules if needed for validation
   };
-  
+  const getLevelText = (level) => {
+  if (level === 0) {
+    return 'root';
+  } else if (level === 1) {
+    return 'admin';
+  } else {
+    return 'ordinary';
+
+  }
+
+};
+  const fetchlist = async () => {
+  try {
+    const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/employee/getAll`);
+    console.log("Response data:", response.data);
+
+    const rawData = response.data.data.list;
+    if (Array.isArray(rawData)) {
+      list.value = rawData.map(item => ({
+        id: item.id,
+        name: item.name,
+        account: item.account,
+        level: item.level,
+        tel: item.tel,
+        email: item.tel,
+        salary: item.salary,
+        note: item.note,
+      }));
+    } else {
+      console.error("Unexpected response format:", rawData);
+    }
+  } catch (error) {
+    console.error("获取员工数据失败：", error);
+  }
+};  
+onMounted(() => {
+    fetchlist();
+  });
   const handleSearchClose = (done: () => void) => {
     ElMessageBox.confirm('确定关闭吗？').then(() => {
       done();
@@ -110,17 +163,17 @@
   
   const searchEmployees = () => {
     // Simulate a search by filtering a mock employee list
-    const mockEmployees = [
-      { id: '1', name: '员工A', password: 'pass123', level: 'root', phone: '123456', salary: '10000', remark: '备注1' },
-      { id: '2', name: '员工B', password: 'pass456', level: 'admin', phone: '234567', salary: '8000', remark: '备注2' },
-      // Add more mock employees as needed
-    ];
-  
-    searchResults.value = mockEmployees.filter(employee => {
+    console.log(list.value);
+    searchResults.value = list.value.filter(product => {
       return Object.keys(searchCriteria.value).every(key => {
-        return searchCriteria.value[key] === '' || employee[key].includes(searchCriteria.value[key]);
-      });
+      return searchCriteria.value[key] === '' ||
+             searchCriteria.value[key] === null ||
+             (product[key] !== undefined && product[key].toString().includes(searchCriteria.value[key].toString()));
     });
+    });
+    if (searchResults.value.length === 0) {
+      console.log('无结果');
+    }
   };
   </script>
   

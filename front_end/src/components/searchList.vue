@@ -153,6 +153,9 @@
       console.log('无结果');
     }
   };
+  onMounted(() => {
+    fetchlist();
+  });
 
   </script>
   
