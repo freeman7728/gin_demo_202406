@@ -27,7 +27,7 @@ func GenCode(employee *models.Employee) (err error, resp dto.Response) {
 	code, result := utils.SendEmailValidate([]string{employee.Email})
 	if result != nil {
 		resp.Code = http.StatusBadRequest
-		resp.Message = "验证码发送失败"
+		resp.Message = result.Error()
 		return
 	}
 	//接下来把把员工id作为键，验证码作为值插进去

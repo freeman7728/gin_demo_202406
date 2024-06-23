@@ -37,7 +37,6 @@ func SendEmailValidate(em []string) (string, error) {
 	e.Text = []byte(content)
 	//设置服务器相关的配置
 	err := e.Send("smtp.qq.com:587", smtp.PlainAuth("", "1357880399@qq.com", "oyagqeommuakidaf", "smtp.qq.com"))
-	fmt.Println(111)
 	return vCode, err
 }
 
