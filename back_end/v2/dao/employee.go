@@ -9,13 +9,13 @@ import (
 )
 
 func InsertEmployeeDao(employee models.Employee) (tx *gorm.DB) {
-	sql := `CALL CreateEmployeeWithAccount(?, ?, ?, ?, ?, ?,?)`
+	sql := `CALL CreateEmployeeWithAccount(?, ?, ?, ?, ?, ?, ?, ?)`
 	if len(employee.Tel) < 6 {
 		return &gorm.DB{
 			Error: errors.New("电话长度过小"),
 		}
 	}
-	tx = global.DB.Exec(sql, employee.Name, employee.Tel, employee.Tel[len(employee.Tel)-6:], employee.Salary, employee.Note, employee.Level, "@p_account")
+	tx = global.DB.Exec(sql, employee.Name, employee.Tel, employee.Tel[len(employee.Tel)-6:], employee.Salary, employee.Note, employee.Email, employee.Level, "@p_account")
 	return tx
 }
 
@@ -29,9 +29,9 @@ func EmployeeUpdate(in *dto.EmployeeUpdateRequest) (tx *gorm.DB) {
 	sql := `UPDATE employee
 			LEFT JOIN account
 			ON employee.id = account.id
-			SET employee.name=?,employee.tel=?,employee.salary=?,employee.note=?,account.password=?
+			SET employee.name=?,employee.tel=?,employee.salary=?,employee.note=?,employee.email=?,account.password=?
 			WHERE account.account=? AND account.password=?`
-	result := global.DB.Exec(sql, in.Name, in.Tel, in.Salary, in.Note, in.NewPassword, in.Account, in.Password)
+	result := global.DB.Exec(sql, in.Name, in.Tel, in.Salary, in.Note, in.Email, in.NewPassword, in.Account, in.Password)
 	return result
 }
 
