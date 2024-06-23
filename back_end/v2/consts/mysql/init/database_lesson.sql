@@ -11,7 +11,7 @@
  Target Server Version : 80033 (8.0.33)
  File Encoding         : 65001
 
- Date: 22/06/2024 20:40:52
+ Date: 23/06/2024 10:58:27
 */
 
 SET NAMES utf8mb4;
@@ -117,7 +117,7 @@ INSERT INTO `employee` VALUES (14, '123', '1236123', 123.33, '1231', NULL, 1231,
 INSERT INTO `employee` VALUES (16, '123', '12361123', 123.33, '1231', NULL, 1231, NULL, NULL);
 INSERT INTO `employee` VALUES (17, '123', '1123', 123.33, '1231', NULL, 1231, NULL, NULL);
 INSERT INTO `employee` VALUES (18, '123', '123323', 123.33, '1231', NULL, 1231, NULL, NULL);
-INSERT INTO `employee` VALUES (24, '123', '1265823', 123.00, '1231', NULL, 1231, NULL, NULL);
+INSERT INTO `employee` VALUES (24, '123', '1265823', 123.00, '1231', NULL, 2, '1', 0x30);
 INSERT INTO `employee` VALUES (29, '123', '111299223', 123.00, '1231', NULL, 1231, NULL, NULL);
 INSERT INTO `employee` VALUES (31, 'name', '123345213', 12312.00, '1231', NULL, 2, NULL, NULL);
 INSERT INTO `employee` VALUES (32, '121231', '12312313451', 123.00, '12', NULL, 2, '123', 0x30);
@@ -347,6 +347,19 @@ delimiter ;;
 CREATE TRIGGER `check_level_before_update` BEFORE UPDATE ON `employee` FOR EACH ROW BEGIN
    IF NEW.level >= 3 THEN
       SET NEW.level = 2;
+   END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table employee
+-- ----------------------------
+DROP TRIGGER IF EXISTS `reset_auth`;
+delimiter ;;
+CREATE TRIGGER `reset_auth` BEFORE UPDATE ON `employee` FOR EACH ROW BEGIN
+   IF NEW.email != OLD.email THEN
+      SET NEW.email_is_auth = FALSE;
    END IF;
 END
 ;;

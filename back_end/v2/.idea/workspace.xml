@@ -4,25 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="06b8b43b-f4f7-420e-be25-17aa99e78262" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/controllers/email_controller.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dto/email_dto.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/email_service.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/email_util.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/Redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/core/Redis.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dao/employee.go" beforeDir="false" afterPath="$PROJECT_DIR$/dao/employee.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/docs.go" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/swagger.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/swagger.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/swagger.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docs/swagger.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/global/global.go" beforeDir="false" afterPath="$PROJECT_DIR$/global/global.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/cors.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routers/enters.go" beforeDir="false" afterPath="$PROJECT_DIR$/routers/enters.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/employee_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/employee_service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../数据库课设开发随笔.md" beforeDir="false" afterPath="$PROJECT_DIR$/../数据库课设开发随笔.md" afterDir="false" />
-    </list>
+    <list default="true" id="06b8b43b-f4f7-420e-be25-17aa99e78262" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
