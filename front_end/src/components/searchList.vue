@@ -17,18 +17,18 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item :prop="'search.employeeId'">
-              <el-input v-model="searchCriteria.employeeId"></el-input>
+            <el-form-item :prop="'search.employee_id'">
+              <el-input v-model="searchCriteria.employee_id"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item :prop="'search.purchaseTime'">
-              <el-date-picker v-model="searchCriteria.purchaseTime" type="date" placeholder="选择日期"></el-date-picker>
+            <el-form-item :prop="'search.time'">
+              <el-date-picker v-model="searchCriteria.time" type="date" placeholder="选择日期"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item :prop="'search.remark'">
-              <el-input type="textarea" v-model="searchCriteria.remark"></el-input>
+            <el-form-item :prop="'search.note'">
+              <el-input type="textarea" v-model="searchCriteria.note"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -38,11 +38,11 @@
       <template v-if="searchResults.length">
         <el-table :data="searchResults" style="width: 100%; margin-top: 20px;">
           <el-table-column prop="id" label="清单号" width="120"></el-table-column>
-          <el-table-column prop="employeeId" label="员工编号" width="150"></el-table-column>
+          <el-table-column prop="employee_id" label="员工编号" width="150"></el-table-column>
           <el-table-column prop="quantity" label="采购数量" width="150"></el-table-column>
-          <el-table-column prop="totalPrice" label="采购总价" width="150"></el-table-column>
-          <el-table-column prop="purchaseTime" label="采购时间" width="200"></el-table-column>
-          <el-table-column prop="remark" label="备注" width="500"></el-table-column>
+          <el-table-column prop="total_price" label="采购总价" width="150"></el-table-column>
+          <el-table-column prop="time" label="采购时间" width="200"></el-table-column>
+          <el-table-column prop="note" label="备注" width="500"></el-table-column>
         </el-table>
       </template>
       <template v-else>
@@ -59,22 +59,63 @@
   </template>
   
   <script setup lang="ts">
-  import { ref } from 'vue';
-  import { ElMessageBox } from 'element-plus';
+  import { onMounted, ref, watch, computed } from 'vue'
+  import { useRoute, useRouter} from 'vue-router';
+  import axios from 'axios';
+  import { ElMessage, ElMessageBox } from 'element-plus';
+  import { getCurrentInstance, } from 'vue';
+  const { proxy } = getCurrentInstance();
   
   const searchDialogVisible = ref(false);
   const searchCriteria = ref({
     id: '',
-    employeeId: '',
-    purchaseTime: '',
-    remark: '',
+    employee_id: '',
+    time: '',
+    note: '',
+    quantity: '',
+    total_price: ''
   });
+
+  const list = ref([{
+    id: '',
+    employee_id: '',
+    time: '',
+    note: '',
+    quantity: '',
+    total_price: ''
+  }
+  ]);
   
   const searchResults = ref([]);
   
   const searchRules = {
     // Define rules if needed for validation
   };
+
+
+  const fetchlist = async () => {
+  try {
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/order/select`);
+    console.log("Response data:", response.data);
+
+    const rawData = response.data.data.list;
+    if (Array.isArray(rawData)) {
+      list.value = rawData.map(item => ({
+        id: item.id,
+        employee_id: item.employee_id,
+        time: item.time,
+        note: item.note,
+        total_price: item.total_price,
+        quantity: item.quantity
+      }));
+      console.log(list.value);
+    } else {
+      console.error("Unexpected response format:", rawData);
+    }
+  } catch (error) {
+    console.error("获取清单数据失败：", error);
+  }
+};
   
   const handleSearchClose = (done: () => void) => {
     ElMessageBox.confirm('确定关闭吗？').then(() => {
@@ -87,14 +128,11 @@
   const openSearchDialog = () => {
     searchDialogVisible.value = true; 
   };
-  
+  onMounted(() => {
+    fetchlist();
+  });
   const searchInventories = () => {
     // Simulate a search by filtering a mock inventory list
-    const mockInventories = [
-      { id: '1', employeeId: '101', quantity: '50', totalPrice: '5000', purchaseTime: '2024-01-01', remark: '备注1' },
-      { id: '2', employeeId: '102', quantity: '30', totalPrice: '3000', purchaseTime: '2024-02-01', remark: '备注2' },
-      // Add more mock inventories as needed
-    ];
   
     const formatDate = (date) => {
       const d = new Date(date);
@@ -102,21 +140,20 @@
       const day = `${d.getDate()}`.padStart(2, '0');
       return `${d.getFullYear()}-${month}-${day}`;
     };
-  
-    searchResults.value = mockInventories.filter(inventory => {
+    console.log(list.value);
+    searchResults.value = list.value.filter(product => {
       return Object.keys(searchCriteria.value).every(key => {
-        if (key === 'purchaseTime') {
-          return searchCriteria.value[key] === '' || formatDate(inventory[key]) === formatDate(searchCriteria.value[key]);
-        } else {
-          return searchCriteria.value[key] === '' || inventory[key].includes(searchCriteria.value[key]);
-        }
-      });
+      return searchCriteria.value[key] === '' ||
+             searchCriteria.value[key] === null ||
+             (product[key] !== undefined && product[key].toString().includes(searchCriteria.value[key].toString()));
+    });
     });
   
     if (searchResults.value.length === 0) {
       console.log('无结果');
     }
   };
+
   </script>
   
   <style scoped>

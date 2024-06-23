@@ -62,14 +62,33 @@
             <updateEmployee class="update_btn"/>
             <searchEmployee class="search_btn"/>
             <delEmployee class="del_btn"/>
+            <el-button type="success" @click="openImportDialog">导入员工</el-button>
+            <el-dialog
+              title="导入员工"
+              v-model="dialogVisible"
+              width="30%"
+              center
+              :close-on-click-modal="false"
+            >
+            <div style="display: flex; align-items: center;">
+            <el-button type="primary" @click="handleFileInputClick">选择文件</el-button>
+            <input type="file" ref="fileInput" style="display: none" accept=".csv" @change="handleFileUpload">
+            <span v-if="selectedFileName" style="margin-left: 10px;">已选择文件: {{ selectedFileName }}</span>
+          </div>
+
+          <div style="margin-top: 10px;">
+            <el-button type="primary" @click="importProducts">确认导入</el-button>
+            <el-button @click="dialogVisible = false" style="margin-left: 10px;">取消</el-button>
+          </div>
+    </el-dialog>
             <el-button type="success" @click="exportEmployee">导出员工</el-button>
         </div>
         <div class="card-container">
-            <el-card class="info_card" v-for="employee in list" :key="employee.id">
+            <el-card class="info_card" v-for="employee in list" :key="employee.id" style="width: 384px; height: 290px">
             <div class="info_title">员工信息</div>
             <div class="flex-container">
             <div class="svg-container">
-                <svg t="1718688291554" class="icon_info" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10110" width="150" height="150">
+              <svg t="1718688291554" class="icon_info" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10110" width="190" height="190">
                     <path d="M264.647884 230.201302c0 127.163947 103.580698 230.200662 231.352626 230.200663 127.771927 0 231.352626-103.036716 231.352626-230.200663a230.008668 230.008668 0 0 0-115.676313-199.353645 232.312595 232.312595 0 0 0-231.352626 0 230.008668 230.008668 0 0 0-115.644314 199.353645zM523.775625 504.624555l75.837582 130.747833c3.711882 7.359765 3.711882 14.719531 1.88794 22.079296l-79.581463 213.657189c-3.711882 11.039648-12.959587 16.575472-24.063233 16.575472a26.335161 26.335161 0 0 1-24.063233-16.575472l-79.581463-213.62519a30.655023 30.655023 0 0 1 1.85594-22.079297l75.869582-130.779831C207.305712 517.520144 0.016319 734.825217 0.016319 998.176823c0 14.719531 11.103646 25.791178 25.919174 25.791178h940.130034c14.815528 0 25.919174-11.039648 25.919173-25.791178 0-263.351606-207.289393-480.656679-468.209075-493.552268z" fill="#32C8DA" p-id="10111">
                     </path>
                 </svg>
@@ -77,9 +96,7 @@
                 <div class="text-container">
                 <div class="info-item"><b>员工编号:</b> {{ employee.id }}</div>
                 <div class="info-item"><b>员工姓名:</b> {{ employee.name }}</div>
-                <div class="info-item"><b>员工账号:</b> {{ employee.account }}</div>
-                <div class="info-item"><b>员工密码:</b>  ********        </div>
-                <div class="info-item"><b>员工级别:</b> {{ employee.level}}</div>
+                <div class="info-item"><b>员工级别:</b> {{ getEmployeeLevel(employee.level) }}</div>
                 <div class="info-item"><b>员工电话:</b> {{ employee.tel }}</div>
                 <div class="info-item"><b>员工邮箱:</b> {{ employee.email }}</div>
                 <div class="info-item"><b>员工工资:</b> {{ employee.salary }}</div>
@@ -93,7 +110,7 @@
   </template>
   
   <script setup lang="ts">
- import { onMounted, ref, watch, computed } from 'vue'
+  import { onMounted, ref, watch, computed } from 'vue'
   import { useRoute, useRouter} from 'vue-router';
   import axios from 'axios';
   import { ElMessage } from 'element-plus';
@@ -104,6 +121,15 @@
   import delEmployee from '@/components/delEmployee.vue';
   import updateEmployee from '@/components/updateEmployee.vue';
   import searchEmployee from '@/components/searchEmployee.vue';
+
+
+
+
+  const isCollapse = ref(false);
+  const selectedFileName = ref('');
+  const dialogVisible = ref(false);
+  const fileInput = ref<HTMLInputElement | null>(null);
+  let dataList: any[] = []; // 定义在外部作用域
 
   
   const route = useRoute()
@@ -125,12 +151,83 @@
   watch(route, (newRoute) => {
     currentRoute.value = newRoute.path;
   });
+  const openImportDialog = () => {
+  dialogVisible.value = true;
+};
+
+const handleFileInputClick = () => {
+  fileInput.value?.click();
+};
+
+const handleFileUpload = () => {
+  const file = fileInput.value?.files?.[0];
+  if (!file) {
+    ElMessage.error('请先选择要导入的 CSV 文件');
+    return;
+  }
+  selectedFileName.value = file.name; // 更新选择的文件名称显示
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    if (event.target) {
+      const csvData = event.target.result as string;
+      processData(csvData); 
+    }
+  };
+  reader.readAsText(file);
+};
+
+const processData = (csvData: string) => {
+  const rows = csvData.split('\n');
+  rows.shift(); // 去除表头
+
+  dataList = rows.map(row => {
+    const columns = row.split(',');
+    if (columns.length === 5) {
+      return {
+        name: columns[0].trim(),
+        password: columns[1].trim(), 
+        tel: columns[2].trim(), 
+        salary: parseFloat(columns[3].trim()),
+        note: columns[4].trim()
+      };
+    } else {
+      return null;
+    }
+  }).filter(item => item !== null);
+
+  console.log(dataList);
+};
+
+const importProducts = async () => {
+  console.log(456);
+  console.log(dataList);
+  try {
+    const response = await axios.post(`${proxy.$serverUrl_test}/employee/insert`, {list: dataList});
+    console.log(response);
+    console.log(dataList);
+    if (response.data.code === 200) {
+      ElMessage.success('员工信息导入成功');
+      console.log(response.data); 
+    } else {
+      ElMessage.error('员工信息导入失败'); 
+    }
+  } catch (error) {
+    ElMessage.error('员工信息导入时出错');
+    console.error(error);
+  }
+
+  dialogVisible.value = false; // 关闭对话框
+};
+
+
+
+
   const handleSelect = (index) => {
     router.push(index)
   };
   const fetchlist = async () => {
   try {
-    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/employee/select`);
+    const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/employee/getAll`);
     console.log("Response data:", response.data);
 
     const rawData = response.data.data.list;
@@ -160,6 +257,62 @@ const handlePageChange = (newPage: number) => {
 const handleSizeChange = (newSize: number) => {
   pageSize.value = newSize;
 };
+
+const getEmployeeLevel = (level: number): string => {
+  if (level === 0) {
+    return 'root';
+  } else if (level === 1) {
+    return 'admin';
+  } else {
+    return 'employee';
+  }
+};
+
+const exportEmployee = async () => {
+  try {
+    // 发送请求获取员工信息
+    const response = await axios.get(`${proxy.$serverUrl_test}/employee/getAll`);
+
+    if (response.data.code === 200) {
+      const employeeList = response.data.data.list;
+      let csvContent = '员工编号,员工姓名,员工级别,员工电话,员工邮箱,员工工资\n';
+      employeeList.forEach(employee => {
+        let levelDescription;
+        if (employee.level === 0) {
+          levelDescription = 'root';
+        } else if (employee.level === 1) {
+          levelDescription = 'admin';
+        } else if (employee.level > 1) {
+          levelDescription = 'employee';
+        } else {
+          levelDescription = ''; 
+        }
+
+        csvContent += `${employee.id},${employee.name},${levelDescription},${employee.tel},${employee.email},${employee.salary}\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'employees.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      ElMessage.success('员工信息已成功导出为 CSV 文件');
+    } else {
+      ElMessage.error('导出员工信息失败');
+    }
+  } catch (error) {
+    ElMessage.error('导出员工信息时出错');
+    console.error(error);
+  }
+};
+const switchToUserInfo = () => {
+    console.log("跳转到用户信息页面");
+    router.push({ name: 'userInfo' });
+  };
 
   onMounted(() => {
     fetchlist();
@@ -238,7 +391,7 @@ const handleSizeChange = (newSize: number) => {
 .main-content {
     flex: 1;
     padding: 20px;
-    margin-left: 14%; 
+    margin-left: 10%; 
     margin-top: 6%;
 }
 
@@ -265,7 +418,7 @@ const handleSizeChange = (newSize: number) => {
     font-family: kai1;
 }
 .text-container {
-    margin-left: 25px;
+    margin-left: 10px;
 }
 .card-container {
   display: flex;

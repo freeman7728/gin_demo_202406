@@ -10,24 +10,24 @@
           label-width="auto"
           class="demo-ruleForm"
         >
-        <el-form-item label="清单号" prop="listId">
-          <el-input v-model="ruleForm.listId" autocomplete="off" />
+        <el-form-item label="清单号" prop="id">
+          <el-input v-model="ruleForm.id" autocomplete="off" />
         </el-form-item>
         <el-button @click="fetchListInfo" style="margin-left: 70px; margin-bottom: 30px;">确定</el-button>
-          <el-form-item label="员工编号" prop="employeeId">
-            <el-input v-model="ruleForm.employeeId" autocomplete="off" />
+          <el-form-item label="员工编号" prop="employee_id">
+            <el-input v-model="ruleForm.employee_id" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="采购数量" prop="purchaseQuantity">
-            <el-input v-model="ruleForm.purchaseQuantity" type="number" autocomplete="off" />
+          <el-form-item label="采购数量" prop="quantity">
+            <el-input v-model="ruleForm.quantity" type="number" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="采购总价" prop="purchaseTotal">
-            <el-input v-model="ruleForm.purchaseTotal" type="number" autocomplete="off" />
+          <el-form-item label="采购总价" prop="total_price">
+            <el-input v-model="ruleForm.total_price" type="number" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="采购事件" prop="purchaseEvent">
-            <el-input v-model="ruleForm.purchaseEvent" autocomplete="off" />
+          <el-form-item label="采购时间" prop="time">
+            <el-input v-model="ruleForm.time" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="备注" prop="remark">
-            <el-input v-model="ruleForm.remark" type="textarea" autocomplete="off" />
+          <el-form-item label="备注" prop="note">
+            <el-input v-model="ruleForm.note" type="textarea" autocomplete="off" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm(ruleFormRef)">
@@ -50,27 +50,27 @@
   const ruleFormRef = ref<FormInstance>();
   
   const ruleForm = reactive({
-    listId: '',
-    employeeId: '',
-    purchaseQuantity: '',
-    purchaseTotal: '',
-    purchaseEvent: '',
-    remark: '',
+    id: '',
+    employee_id: '',
+    quantity: '',
+    total_price: '',
+    time: '',
+    note: '',
   });
   
   const rules = reactive<FormRules<typeof ruleForm>>({
-    listId: [{ required: true, message: '请输入清单号', trigger: 'blur' }],
+    id: [{ required: true, message: '请输入清单号', trigger: 'blur' }],
   });
 
   const fetchListInfo = async () => {
     try {
-      const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/list/${ruleForm.listId}`);
-      if (response.status === 200) {
-        ruleForm.employeeId = response.data.employeeId;
-        ruleForm.purchaseQuantity = response.data.purchaseQuantity;
-        ruleForm.purchaseTotal = response.data.purchaseTotal;
-        ruleForm.purchaseEvent = response.data.purchaseEvent;
-        ruleForm.remark = response.data.remark;
+      const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/order/${ruleForm.id}`);
+      if (response.data.code === 200) {
+        ruleForm.employee_id = response.data.data.employee_id;
+        ruleForm.quantity = response.data.data.quantity;
+        ruleForm.total_price = response.data.data.total_price;
+        ruleForm.time = response.data.data.time;
+        ruleForm.note = response.data.data.note;
       } else {
         ElMessage.error('获取清单信息失败');
       }
@@ -98,16 +98,26 @@
       if (valid) {
         console.log('提交清单信息:', ruleForm);
         try {
-          const response = await proxy.$axios.put(`${proxy.$serverUrl_test}/list/update`, ruleForm);
-          if (response.status === 200) {
+          const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/order/update`, {
+            ...ruleForm,
+          id: Number(ruleForm.id),
+          total_price: parseFloat(ruleForm.total_price)
+          });
+          console.log(ruleForm);
+          console.log(response);
+          if (response.data.code === 200) {
             ElMessage.success('清单信息已成功更新');
             resetForm(formEl);
             dialogVisible.value = false; // 关闭对话框
-          } else {
+          }
+          else if(response.data.code === 404) {
+            ElMessage.error('数据未发生更改或数据不存在');
+          }
+          else {
             ElMessage.error('更新清单信息失败');
           }
         } catch (error) {
-          ElMessage.error('更新清单信息时出错');
+          ElMessage.error('员工不存在请检查员工编号');
           console.error(error);
         }
       } else {

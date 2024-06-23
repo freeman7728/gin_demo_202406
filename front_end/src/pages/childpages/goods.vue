@@ -62,6 +62,26 @@
       <updateGoods class="update_btn"/>
       <searchGoods class="search_btn"/>
       <delGoods class="del_btn"/>
+      
+    <el-button type="success" @click="openImportDialog">导入商品</el-button>
+    <el-dialog
+      title="导入商品"
+      v-model="dialogVisible"
+      width="30%"
+      center
+      :close-on-click-modal="false"
+    >
+    <div style="display: flex; align-items: center;">
+    <el-button type="primary" @click="handleFileInputClick">选择文件</el-button>
+    <input type="file" ref="fileInput" style="display: none" accept=".csv" @change="handleFileUpload">
+    <span v-if="selectedFileName" style="margin-left: 10px;">已选择文件: {{ selectedFileName }}</span>
+  </div>
+
+  <div style="margin-top: 10px;">
+    <el-button type="primary" @click="importProducts">确认导入</el-button>
+    <el-button @click="dialogVisible = false" style="margin-left: 10px;">取消</el-button>
+  </div>
+    </el-dialog>
       <el-button type="success" @click="exportGoods">导出商品</el-button>
     </div>
     <el-table :data="paginatedList" style="width: 100%">
@@ -70,7 +90,7 @@
       <el-table-column prop="price" label="商品单价" width="150"></el-table-column>
       <el-table-column prop="producer_id" label="供应商编号" width="150"></el-table-column>
       <el-table-column prop="introduction" label="商品简介" width="300"></el-table-column>
-      <el-table-column prop="note" label="备注" width="300"></el-table-column>
+      <el-table-column prop="note" label="备注" width="350"></el-table-column>
     </el-table>
     <el-pagination
       v-model:current-page="currentPage"
@@ -102,30 +122,115 @@
   import searchGoods from '@/components/searchGoods.vue';
 
   const isCollapse = ref(false);
+  const selectedFileName = ref('');
+  const dialogVisible = ref(false);
+  const fileInput = ref<HTMLInputElement | null>(null);
+  let dataList: any[] = []; // 定义在外部作用域
+
+const openImportDialog = () => {
+  dialogVisible.value = true;
+};
+
+const handleFileInputClick = () => {
+  fileInput.value?.click();
+};
+
+const handleFileUpload = () => {
+  const file = fileInput.value?.files?.[0];
+  if (!file) {
+    ElMessage.error('请先选择要导入的 CSV 文件');
+    return;
+  }
+  selectedFileName.value = file.name; // 更新选择的文件名称显示
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    if (event.target) {
+      const csvData = event.target.result as string;
+      processData(csvData); 
+    }
+  };
+  reader.readAsText(file);
+};
+
+const processData = (csvData: string) => {
+  const rows = csvData.split('\n');
+  rows.shift(); // 去除表头
+
+  dataList = rows.map(row => {
+    const columns = row.split(',');
+    if (columns.length === 5) {
+      return {
+        name: columns[0].trim(),
+        price: parseFloat(columns[1].trim()), 
+        producer_id: parseInt(columns[2].trim()), 
+        introduction: columns[3].trim(),
+        note: columns[4].trim()
+      };
+    } else {
+      return null;
+    }
+  }).filter(item => item !== null);
+
+  console.log(dataList);
+};
+
+const importProducts = async () => {
+  console.log(456);
+  console.log(dataList);
+  try {
+    const response = await axios.post(`${proxy.$serverUrl_test}/product/insert`, {list: dataList});
+    console.log(response);
+    console.log(dataList);
+    if (response.data.code === 200) {
+      ElMessage.success('商品信息导入成功');
+      console.log(response.data); 
+    } else {
+      ElMessage.error('商品信息导入失败'); 
+    }
+  } catch (error) {
+    ElMessage.error('商品信息导入时出错');
+    console.error(error);
+  }
+
+  dialogVisible.value = false; // 关闭对话框
+};
+
+
 
 
   const exportGoods = async () => {
-    try {
-        const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/product/export`);
-        if (response.status === 200) {
-          const csvData = response.data;
-          const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', 'products.csv');
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          ElMessage.success('商品信息已成功导出为 CSV 文件');
-        } else {
-          ElMessage.error('导出商品信息失败');
-        }
-      } catch (error) {
-        ElMessage.error('导出商品信息时出错');
-        console.error(error);
-      }
-  };
+  try {
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/product/select`);
+    console.log(response);
+    if (response.data.code === 200) {
+      const productList = response.data.data.list;
+
+      let csvContent = '商品编号,商品名称,商品单价,供应商编号,商品简介,备注\n';
+      productList.forEach(product => {
+        csvContent += `${product.id},${product.name},${product.price},${product.producer_id},${product.introduction},${product.note}\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'products.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      ElMessage.success('商品信息已成功导出为 CSV 文件');
+    } else {
+      ElMessage.error('导出商品信息失败');
+    }
+  } catch (error) {
+    ElMessage.error('导出商品信息时出错');
+    console.error(error);
+  }
+};
+
+
+
 
   const route = useRoute()
   const router = useRouter()
@@ -176,10 +281,14 @@
     console.error("获取商品数据失败：", error);
   }
 };
+
 const handlePageChange = (newPage: number) => {
   currentPage.value = newPage;
 };
-
+const switchToUserInfo = () => {
+    console.log("跳转到用户信息页面");
+    router.push({ name: 'userInfo' });
+  };
 const handleSizeChange = (newSize: number) => {
   pageSize.value = newSize;
 };
