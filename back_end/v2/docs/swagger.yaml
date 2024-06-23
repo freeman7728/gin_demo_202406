@@ -57,7 +57,7 @@ definitions:
       email:
         type: string
       email_is_auth:
-        type: boolean
+        type: integer
       id:
         type: integer
       level:
@@ -84,7 +84,7 @@ definitions:
       email:
         type: string
       email_is_auth:
-        type: boolean
+        type: integer
       id:
         type: integer
       level:
@@ -196,7 +196,7 @@ definitions:
       email:
         type: string
       email_is_auth:
-        type: boolean
+        type: integer
       id:
         type: integer
       level:
@@ -404,7 +404,7 @@ paths:
       summary: 更新订单详情
       tags:
       - detail
-  /email/:
+  /email:
     post:
       consumes:
       - application/json

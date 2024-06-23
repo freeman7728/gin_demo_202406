@@ -203,7 +203,7 @@
                 }
             }
         },
-        "/email/": {
+        "/email": {
             "post": {
                 "description": "使用用户id，向对应用户的邮箱发送验证码",
                 "consumes": [
@@ -1078,7 +1078,7 @@
                     "type": "string"
                 },
                 "email_is_auth": {
-                    "type": "boolean"
+                    "type": "integer"
                 },
                 "id": {
                     "type": "integer"
@@ -1119,7 +1119,7 @@
                     "type": "string"
                 },
                 "email_is_auth": {
-                    "type": "boolean"
+                    "type": "integer"
                 },
                 "id": {
                     "type": "integer"
@@ -1292,7 +1292,7 @@
                     "type": "string"
                 },
                 "email_is_auth": {
-                    "type": "boolean"
+                    "type": "integer"
                 },
                 "id": {
                     "type": "integer"

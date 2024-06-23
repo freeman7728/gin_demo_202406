@@ -210,7 +210,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/email/": {
+        "/email": {
             "post": {
                 "description": "使用用户id，向对应用户的邮箱发送验证码",
                 "consumes": [
@@ -1085,7 +1085,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "email_is_auth": {
-                    "type": "boolean"
+                    "type": "integer"
                 },
                 "id": {
                     "type": "integer"
@@ -1126,7 +1126,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "email_is_auth": {
-                    "type": "boolean"
+                    "type": "integer"
                 },
                 "id": {
                     "type": "integer"
@@ -1299,7 +1299,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "email_is_auth": {
-                    "type": "boolean"
+                    "type": "integer"
                 },
                 "id": {
                     "type": "integer"
