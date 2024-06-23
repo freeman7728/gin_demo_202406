@@ -241,7 +241,7 @@ const importProducts = async () => {
         account: item.account,
         level: item.level,
         tel: item.tel,
-        email: item.tel,
+        email: item.email,
         salary: item.salary,
         note: item.note,
         email_is_auth: item.email_is_auth,

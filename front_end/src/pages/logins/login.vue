@@ -285,8 +285,8 @@ const router = useRouter();
 const ordinaryLogin = async () => {
    try{
     const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/employee/login`, {
-    account: adminForm.value.adminAccount,
-    password: adminForm.value.adminPassword,
+    account: ordinaryForm.value.ordinaryAccount,
+    password: ordinaryForm.value.ordinaryPassword,
   })
     console.log(response);
     if (response.data.code === 200) {
@@ -294,6 +294,7 @@ const ordinaryLogin = async () => {
         localStorage.setItem('employeeId', id);
         localStorage.setItem('employeeToken', token);
         router.replace('/index_ordinary');
+        ElMessage.success('登录成功');
     } else {
       ElMessage.error('账号或密码错误！');
     }
@@ -320,6 +321,7 @@ const adminLogin = async () => {
           return;
         }
         router.replace('/index_admin');
+        ElMessage.success('登录成功');
     } else {
       ElMessage.error('账号或密码错误！');
     }
