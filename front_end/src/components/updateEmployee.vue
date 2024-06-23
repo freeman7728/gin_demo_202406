@@ -17,20 +17,20 @@
           <el-form-item label="员工姓名" prop="name">
             <el-input v-model="ruleForm.name" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="员工密码" prop="password">
-            <el-input v-model="ruleForm.password" type="password" autocomplete="off" />
-          </el-form-item>
           <el-form-item label="员工级别" prop="level">
             <el-input v-model="ruleForm.level" autocomplete="off" />
           </el-form-item>
           <el-form-item label="员工电话" prop="tel">
             <el-input v-model="ruleForm.tel" autocomplete="off" />
           </el-form-item>
+          <el-form-item label="员工邮箱" prop="email">
+            <el-input v-model="ruleForm.email" autocomplete="off" />
+          </el-form-item>
           <el-form-item label="员工工资" prop="salary">
             <el-input v-model="ruleForm.salary" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="备注" prop="tel">
-            <el-input v-model="ruleForm.tel" type="textarea" autocomplete="off" />
+          <el-form-item label="备注" prop="note">
+            <el-input v-model="ruleForm.note" type="textarea" autocomplete="off" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm(ruleFormRef)">
@@ -60,6 +60,7 @@ const ruleForm = reactive({
   level: '',
   tel: '',
   salary: '',
+  email: '',
   note: '',
 });
 
@@ -70,13 +71,14 @@ const rules = reactive<FormRules<typeof ruleForm>>({
 const fetchEmployeeInfo = async () => {
     try {
       const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/employee/${ruleForm.id}`);
-      if (response.status === 200) {
-        ruleForm.name = response.data.name;
-        ruleForm.password = response.data.password;
-        ruleForm.level = response.data.level;
-        ruleForm.tel = response.data.tel;
-        ruleForm.salary = response.data.salary;
-        ruleForm.tel = response.data.tel;
+      console.log(response);
+      if (response.data.code === 200) {
+        ruleForm.name = response.data.data.name;
+        ruleForm.password = response.data.data.password;
+        ruleForm.level = response.data.data.level;
+        ruleForm.tel = response.data.data.tel;
+        ruleForm.salary = response.data.data.salary;
+        ruleForm.note = response.data.data.note;
       } else {
         ElMessage.error('获取员工信息失败');
       }
@@ -104,7 +106,12 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       if (valid) {
         console.log('提交员工信息:', ruleForm);
         try {
-          const response = await proxy.$axios.put(`${proxy.$serverUrl_test}/employee/update`, ruleForm);
+          const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/employee/updateById`, {
+            ...ruleForm,
+            id: Number(ruleForm.id),
+            level: Number(ruleForm.level)
+            });
+            console.log(response);
           if (response.status === 200) {
             ElMessage.success('员工信息已成功更新');
             resetForm(formEl);

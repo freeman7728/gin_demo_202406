@@ -73,7 +73,7 @@
   
   const fetchCustomerInfo = async () => {
     try {
-      const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/customer/${ruleForm.id}`);
+      const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/producer/${ruleForm.id}`);
       if (response.data.code === 200) {
         ruleForm.name = response.data.data.name;
         ruleForm.short_name = response.data.data.short_name;
@@ -113,7 +113,10 @@
       if (valid) {
         console.log('提交客户信息:', ruleForm);
         try {
-          const response = await proxy.$axios.put(`${proxy.$serverUrl_test}/producer/update`, ruleForm);
+          const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/producer/update`, {
+            ...ruleForm,
+          id: Number(ruleForm.id)
+          });
           if (response.status === 200) {
             ElMessage.success('客户信息已成功更新');
             resetForm(formEl);

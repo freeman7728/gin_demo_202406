@@ -10,27 +10,24 @@
           label-width="auto"
           class="demo-ruleForm"
         >
-        <el-form-item label="订单号" prop="orderId">
-          <el-input v-model="ruleForm.orderId" autocomplete="off" />
+        <el-form-item label="订单号" prop="id">
+          <el-input v-model="ruleForm.id" autocomplete="off" />
         </el-form-item>
         <el-button @click="fetchOrderInfo" style="margin-left: 70px; margin-bottom: 30px">确定</el-button>
-          <el-form-item label="清单号" prop="listId">
-            <el-input v-model="ruleForm.listId" autocomplete="off" />
+          <el-form-item label="清单号" prop="list_id">
+            <el-input v-model="ruleForm.list_id" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="商品号" prop="productId">
-            <el-input v-model="ruleForm.productId" autocomplete="off" />
+          <el-form-item label="商品号" prop="product_id">
+            <el-input v-model="ruleForm.product_id" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="采购数量" prop="purchaseQuantity">
-            <el-input v-model="ruleForm.purchaseQuantity" type="number" autocomplete="off" />
+          <el-form-item label="采购数量" prop="quantity">
+            <el-input v-model="ruleForm.quantity" type="number" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="商品单价" prop="productPrice">
-            <el-input v-model="ruleForm.productPrice" type="number" autocomplete="off" />
+          <el-form-item label="商品总价" prop="total_price">
+            <el-input v-model="ruleForm.total_price" type="number" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="商品总价" prop="totalPrice">
-            <el-input v-model="ruleForm.totalPrice" type="number" autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="备注" prop="remark">
-            <el-input v-model="ruleForm.remark" type="textarea" autocomplete="off" />
+          <el-form-item label="备注" prop="note">
+            <el-input v-model="ruleForm.note" type="textarea" autocomplete="off" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm(ruleFormRef)">
@@ -54,28 +51,27 @@
   const ruleFormRef = ref<FormInstance>();
   
   const ruleForm = reactive({
-    orderId: '',
-    listId: '',
-    productId: '',
-    purchaseQuantity: '',
-    productPrice: '',
-    totalPrice: '',
-    remark: '',
+    id: '',
+    list_id: '',
+    product_id: '',
+    quantity: '',
+    total_price: '',
+    note: '',
   });
   
   const rules = reactive<FormRules<typeof ruleForm>>({
-    orderId: [{ required: true, message: '请输入订单号', trigger: 'blur' }],
+    id: [{ required: true, message: '请输入订单号', trigger: 'blur' }],
   });
   const fetchOrderInfo = async () => {
     try {
-      const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/order/${ruleForm.orderId}`);
-      if (response.status === 200) {
-        ruleForm.listId = response.data.listId;
-        ruleForm.productId = response.data.productId;
-        ruleForm.purchaseQuantity = response.data.purchaseQuantity;
-        ruleForm.productPrice = response.data.productPrice;
-        ruleForm.totalPrice = response.data.totalPrice;
-        ruleForm.remark = response.data.remark;
+      const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/detail/${ruleForm.id}`);
+      if (response.data.code === 200) {
+        ruleForm.list_id = response.data.data.list_id;
+        ruleForm.product_id = response.data.data.product_id;
+        ruleForm.quantity = response.data.data.quantity;
+        ruleForm.productPrice = response.data.data.productPrice;
+        ruleForm.total_price = response.data.data.total_price;
+        ruleForm.note = response.data.data.note;
       } else {
         ElMessage.error('获取订单信息失败');
       }
@@ -103,8 +99,17 @@
       if (valid) {
         console.log('提交订单信息:', ruleForm);
         try {
-          const response = await proxy.$axios.put(`${proxy.$serverUrl_test}/order/update`, ruleForm);
-          if (response.status === 200) {
+          const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/detail/update`, {
+            ...ruleForm,
+            id: Number(ruleForm.id),
+            product_id: Number(ruleForm.product_id),
+            list_id: Number(ruleForm.list_id),
+            total_price: parseFloat(ruleForm.total_price),
+            quantity: Number(ruleForm.quantity)
+          });
+          console.log(response);
+          console.log(ruleForm);
+          if (response.data.code === 200) {
             ElMessage.success('订单信息已成功更新');
             resetForm(formEl);
             dialogVisible.value = false; // 关闭对话框

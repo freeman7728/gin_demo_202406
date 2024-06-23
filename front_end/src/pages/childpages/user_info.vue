@@ -67,21 +67,48 @@
                 </svg>
             </div>
         <div class="text-container">
-        <div class="info-item"><b>员工编号:</b> 123456</div>
-        <div class="info-item"><b>员工姓名:</b> 张三</div>
-        <div class="info-item"><b>账号:</b> ********</div>
-        <div class="info-item"><b>员工密码:</b> ********</div>
-        <div class="info-item"><b>员工级别:</b> 高级工程师</div>
-        <div class="info-item"><b>员工电话:</b> 13812345678</div>
-        <div class="info-item"><b>员工工资:</b> 10000元/月</div>
-        <div class="info-item"><b>员工邮箱:</b> 123@123.com</div>
-        <div class="info-item"><b>备注:</b> 无</div>
+        <div class="info-item"><b>员工编号:</b> {{ employee.id }}</div>
+        <div class="info-item"><b>员工姓名:</b> {{ employee.name }}</div>
+        <div class="info-item"><b>员工级别:</b> {{ employeeLevel }}</div>
+        <div class="info-item"><b>员工电话:</b> {{ employee.tel }}</div>
+        <div class="info-item"><b>员工工资:</b> {{ employee.salary }}</div>
+        <div class="info-item"><b>员工邮箱:</b> {{ employee.email }}</div>
+        <div class="info-item"><b>备注:</b> {{ employee.note }}</div>
           </div>
          </div>
         </el-card>
         <div class="button-container">
-            <el-button type="primary">修改账户信息</el-button>
-            <el-button type="warning">退出登录</el-button>
+          <el-button type="primary" @click="openDialog_1">修改账户信息</el-button>
+    <el-dialog v-model="dialogVisible_1" title="修改账户信息" width="600px">
+      <el-form :model="employee" label-width="100px" class="form-align">
+        <el-form-item label="员工姓名">
+          <el-input v-model="employee.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="员工电话">
+          <el-input v-model="employee.tel" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="员工邮箱">
+          <el-input v-model="employee.email" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="employee.note" type="textarea" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="请输入账号">
+          <el-input v-model="employee.account" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="请输入原密码">
+          <el-input v-model="employee.password" type="password" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="请输入新密码">
+          <el-input v-model="employee.new_password" type="password" autocomplete="off" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm">保存</el-button>
+          <el-button @click="closeDialog_1">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+            <el-button type="warning" @click="logout_1">退出登录</el-button>
             <el-button type="danger" @click="openDialog" >注销账户</el-button>
       <el-dialog  v-model="dialogVisible" title="注销账户"  :before-close="handleClose">
         <el-input v-model="account" placeholder="请输入账号" style="margin-bottom: 20px"></el-input>
@@ -97,7 +124,7 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, watch } from 'vue'
+  import { onMounted, ref, watch, computed, reactive } from 'vue'
   import { useRoute, useRouter} from 'vue-router';
   import { ElMessageBox, ElMessage } from 'element-plus';
 
@@ -108,13 +135,68 @@
 
   const isCollapse = ref(false);
 
+  const employee = reactive({
+    id: '',
+    name: '',
+    level: '',
+    tel: '',
+    salary: '',
+    email: '',
+    note: '',
+    account: '',
+    password: '',
+    new_password: ''
+});
+
+const employeeLevel = computed(() => {
+  if (employee.level === 0) {
+    return 'root';
+  } else if (employee.level === 1) {
+    return 'admin';
+  } else {
+    return 'employee';
+  }
+});
+  const dialogVisible_1 = ref(false);
   const dialogVisible = ref(false);
   const account = ref('');
   const password = ref('');
 
+  const submitForm = async () => {
+  try {
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/employee/update`, {
+      id: employee.id,
+      name: employee.name,
+      tel: employee.tel,
+      email: employee.email,
+      note: employee.note,
+      account: employee.account,
+      password: employee.password,
+      new_password: employee.new_password
+    });
+    console.log(employee.password);
+    console.log(response);
+    if (response.data.code === 200) {
+      ElMessage.success('账户信息已成功更新');
+      closeDialog_1();
+    } else {
+      ElMessage.error('更新账户信息失败');
+    }
+  } catch (error) {
+    ElMessage.error('更新账户信息时出错');
+    console.error(error);
+  }
+};
+
   const openDialog = () => {
     dialogVisible.value = true;
   }
+  const openDialog_1 = () => {
+    dialogVisible_1.value = true;
+  }
+  const closeDialog_1 = () => {
+  dialogVisible_1.value = false;
+};
   const handleClose = (done: () => void) => {
     ElMessageBox.confirm('确定关闭吗？').then(() => {
       done();
@@ -122,6 +204,15 @@
       // Handle cancellation
     });
   };
+  const logout_1 = () => {
+   localStorage.clear();
+
+  // 显示消息提示
+  ElMessage.success('已成功退出登录');
+  
+  // 重定向到登录页面
+  router.replace('/login');
+};
 
   const route = useRoute()
   const router = useRouter()
@@ -134,6 +225,27 @@
   const handleSelect = (index) => {
     router.push(index)
   }
+  const fetchProductInfo = async () => {
+    try {
+      const response = await proxy.$axios.get(`${proxy.$serverUrl_test}/employee/${localStorage.getItem('employeeId')}`);
+      console.log(response);
+      if (response.data.code === 200) {
+        const data = response.data.data;
+          employee.id = data.id;
+          employee.name = data.name;
+          employee.level = data.level;
+          employee.tel = data.tel;
+          employee.salary = data.salary;
+          employee.email = data.email;
+          employee.note = data.note;
+        } else {
+        ElMessage.error('获取员工信息失败');
+      }
+      } catch (error) {
+        ElMessage.error('获取员工信息时出错');
+        console.error(error);
+      }
+  };
 
   const switchToUserInfo = () => {
     console.log("hahhahaah");
@@ -144,10 +256,21 @@
     console.log("ashjdas");
     router.push({ name: 'employeeInfo'});
   }
-
+  onMounted(() => {
+    fetchProductInfo();
+    console.log(localStorage.getItem('employeeId'));
+    console.log(localStorage.getItem('employeeToken'));
+  });
   const switchToProvider = () => {
     router.push({ name: 'provider'});
   }
+  const getEmployeeId = () => {
+  return localStorage.getItem('employeeId');
+};
+
+const getEmployeeToken = () => {
+  return localStorage.getItem('employeeToken');
+};
   const logout = async () => {
     try {
       const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/employee/delete`, {
@@ -179,6 +302,9 @@
   .dashboard {
     display: flex;
     height: 100vh;
+}
+.form-align .el-form-item__label {
+  text-align: right;
 }
 
 .top-box {

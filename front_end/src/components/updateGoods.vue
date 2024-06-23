@@ -96,18 +96,14 @@
   
   const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
-    ruleForm.product_id = parseInt(ruleForm.product_id, 10);
-    console.log(typeof(ruleForm.product_id));
-    
-    const ruleFormToSave = list.value.map(ruleForm => ({
-    ...ruleForm,
-    product_id: parseFloat(ruleForm.product_id),
-  }));
     formEl.validate(async (valid) => {
       if (valid) {
         console.log('提交商品信息:', ruleForm);
         try {
-          const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/product/update`, ruleForm);
+          const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/product/update`, {
+            ...ruleForm,
+          id: Number(ruleForm.id) // 确保 id 是整数
+          });
           if (response.data.code === 200) {
             ElMessage.success('商品信息已成功更新');
             resetForm(formEl);

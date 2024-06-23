@@ -117,7 +117,7 @@
   const size = ref('medium');  
   const disabled = ref(false);
   const background = ref(true);
-  
+
   const paginatedList = computed(() => {
   const start = (currentPage.value - 1) * pageSize.value;
   const end = start + pageSize.value;
@@ -184,6 +184,36 @@ const handleSizeChange = (newSize: number) => {
     console.log("跳转到供应商页面");
     router.push({ name: 'provider' });
   };
+
+  const exportCustomer = async () => {
+  try {
+    const response = await axios.post(`${proxy.$serverUrl_test}/producer/select`);
+    console.log(response);
+    if (response.data.code === 200) {
+      const customerList = response.data.data;
+      let csvContent = '客户编号,客户名称,客户简称,地址,公司电话,邮件,联系人,联系人电话,备注\n';
+      customerList.forEach(customer => {
+        csvContent += `${customer.id},${customer.name},${customer.short_name},${customer.address},${customer.tel},${customer.email},${customer.contact_name},${customer.contact_tel},${customer.note}\n`;
+      });
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'customers.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      ElMessage.success('客户信息已成功导出为 CSV 文件');
+    } else {
+      ElMessage.error('导出客户信息失败');
+    }
+  } catch (error) {
+    ElMessage.error('导出客户信息时出错');
+    console.error(error);
+  }
+};
   
 
   </script>

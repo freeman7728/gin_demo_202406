@@ -62,7 +62,7 @@
       <updateOrder class="update_btn"/>
       <searchOrder class="search_btn"/>
       <delOrder class="del_btn"/>
-      <el-button type="success" @click="exportorder">导出订单</el-button>
+      <el-button type="success" @click="exportOrders">导出订单</el-button>
         </div>
     <div>
     <el-table :data="paginatedList" style="width: 100%">
@@ -164,6 +164,38 @@
   const handleSizeChange = (newSize: number) => {
     pageSize.value = newSize;
   };
+
+  const exportOrders = async () => {
+  try {
+    const response = await axios.post(`${proxy.$serverUrl_test}/detail/select`);
+    console.log(response);
+    if (response.data.code === 200) {
+      const orderList = response.data.data.list;
+      let csvContent = '订单明细号,采购清单号,商品编号,采购数量,采购总价,备注\n';
+      orderList.forEach(detail => {
+          csvContent += `${detail.id},${detail.list_id},${detail.product_id},${detail.quantity},${detail.total_price},${detail.note}\n`;
+        });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'orders.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      ElMessage.success('订单信息已成功导出为 CSV 文件');
+    } else {
+      ElMessage.error('导出订单信息失败');
+    }
+  } catch (error) {
+    ElMessage.error('导出订单信息时出错');
+    console.error(error);
+  }
+};
+
   
   onMounted(() => {
     fetchlist();

@@ -6,41 +6,35 @@
         <el-row class="header-row">
           <el-col :span="2"><strong>商品编号</strong></el-col>
           <el-col :span="3"><strong>商品名称</strong></el-col>
-          <el-col :span="3"><strong>商品单价</strong></el-col>
           <el-col :span="3"><strong>供应商编号</strong></el-col>
-          <el-col :span="5"><strong>商品简介</strong></el-col>
-          <el-col :span="5"><strong>备注</strong></el-col>
+          <el-col :span="6"><strong>商品简介</strong></el-col>
+          <el-col :span="6"><strong>备注</strong></el-col>
         </el-row>
   
         <el-row :gutter="5" class="search-row">
           <el-col :span="2">
-            <el-form-item :prop="'search.productId'">
-              <el-input v-model="searchCriteria.productId"></el-input>
+            <el-form-item :prop="'search.id'">
+              <el-input v-model="searchCriteria.id"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item :prop="'search.productName'">
-              <el-input v-model="searchCriteria.productName"></el-input>
+            <el-form-item :prop="'search.name'">
+              <el-input v-model="searchCriteria.name"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="3">
-            <el-form-item :prop="'search.unitPrice'">
-              <el-input v-model.number="searchCriteria.unitPrice"></el-input>
+            <el-form-item :prop="'search.producer_id'">
+              <el-input v-model="searchCriteria.producer_id"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="3">
-            <el-form-item :prop="'search.supplierId'">
-              <el-input v-model="searchCriteria.supplierId"></el-input>
+          <el-col :span="6">
+            <el-form-item :prop="'search.introduction'">
+              <el-input type="textarea" v-model="searchCriteria.introduction"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
-            <el-form-item :prop="'search.description'">
-              <el-input type="textarea" v-model="searchCriteria.description"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5">
-            <el-form-item :prop="'search.remark'">
-              <el-input type="textarea" v-model="searchCriteria.remark"></el-input>
+          <el-col :span="6">
+            <el-form-item :prop="'search.note'">
+              <el-input type="textarea" v-model="searchCriteria.note"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -48,12 +42,12 @@
   
       <template v-if="searchResults.length">
         <el-table :data="searchResults" style="width: 100%; margin-top: 20px;">
-          <el-table-column prop="productId" label="商品编号" width="120"></el-table-column>
-          <el-table-column prop="productName" label="商品名称" width="150"></el-table-column>
-          <el-table-column prop="unitPrice" label="商品单价" width="120"></el-table-column>
-          <el-table-column prop="supplierId" label="供应商编号" width="120"></el-table-column>
-          <el-table-column prop="description" label="商品简介" width="200"></el-table-column>
-          <el-table-column prop="remark" label="备注" width="500"></el-table-column>
+          <el-table-column prop="id" label="商品编号" width="120"></el-table-column>
+          <el-table-column prop="name" label="商品名称" width="150"></el-table-column>
+          <el-table-column prop="producer_id" label="供应商编号" width="120"></el-table-column>
+          <el-table-column prop="price" label="商品单价" width="120"></el-table-column>
+          <el-table-column prop="introduction" label="商品简介" width="200"></el-table-column>
+          <el-table-column prop="note" label="备注" width="500"></el-table-column>
         </el-table>
       </template>
       <template v-else>
@@ -70,17 +64,21 @@
   </template>
   
   <script setup lang="ts">
-  import { ref } from 'vue';
-  import { ElMessageBox } from 'element-plus';
+  import { onMounted, ref, watch, computed } from 'vue'
+  import { useRoute, useRouter} from 'vue-router';
+  import axios from 'axios';
+  import { ElMessage, ElMessageBox } from 'element-plus';
+  import { getCurrentInstance, } from 'vue';
+  const { proxy } = getCurrentInstance();
   
   const searchDialogVisible = ref(false);
   const searchCriteria = ref({
-    productId: '',
-    productName: '',
-    unitPrice: null,
-    supplierId: '',
-    description: '',
-    remark: '',
+    id: '',
+    name: '',
+    producer_id: '',
+    introduction: '',
+    note: '',
+    price: ''
   });
   
   const searchResults = ref([]);
@@ -88,6 +86,41 @@
   const searchRules = {
     // Define rules if needed for validation
   };
+
+
+  const list = ref([{
+    id: '',
+    name: '',
+    producer_id: '',
+    introduction: '',
+    note: '',
+    price: ''
+  }
+  ]);
+  const fetchlist = async () => {
+  try {
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/product/select`);
+    console.log("Response data:", response.data);
+
+    const rawData = response.data.data.list;
+    if (Array.isArray(rawData)) {
+      list.value = rawData.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: parseFloat(item.price),
+        producer_id: item.producer_id,
+        introduction: item.introduction,
+        note: item.note,
+      }));
+      console.log(123);
+      console.log(list.value);
+    } else {
+      console.error("Unexpected response format:", rawData);
+    }
+  } catch (error) {
+    console.error("获取商品数据失败：", error);
+  }
+};
   
   const handleSearchClose = (done: () => void) => {
     ElMessageBox.confirm('确定关闭吗？')
@@ -102,20 +135,21 @@
   const openSearchDialog = () => {
     searchDialogVisible.value = true;
   };
+  onMounted(() => {
+    fetchlist();
+  });
   
   const searchProducts = () => {
     // Simulate a search by filtering a mock product list
-    const mockProducts = [
-      { productId: '1', productName: '商品A', unitPrice: 100, supplierId: 'S1', description: '商品A简介', remark: '备注A' },
-      { productId: '2', productName: '商品B', unitPrice: 200, supplierId: 'S2', description: '商品B简介', remark: '备注B' },
-      // Add more mock products as needed
-    ];
-  
-    searchResults.value = mockProducts.filter(product => {
-      return Object.keys(searchCriteria.value).every(key => {
-        return searchCriteria.value[key] === '' || searchCriteria.value[key] === null || product[key].toString().includes(searchCriteria.value[key].toString());
-      });
+    console.log(list.value);
+    searchResults.value = list.value.filter(product => {
+    return Object.keys(searchCriteria.value).every(key => {
+      // 检查 product[key] 是否存在并且定义，然后再尝试转换为字符串
+      return searchCriteria.value[key] === '' ||
+             searchCriteria.value[key] === null ||
+             (product[key] !== undefined && product[key].toString().includes(searchCriteria.value[key].toString()));
     });
+  });
   };
   </script>
   

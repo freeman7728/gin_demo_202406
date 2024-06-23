@@ -4,31 +4,37 @@
     <el-dialog v-model="dialogVisible" title="添加员工信息" width="90%" :before-close="handleClose">
       <el-form ref="employeeForm" :rules="rules" >
         <el-row class="header-row">
-          <el-col :span="4"><strong>员工姓名</strong></el-col>
-          <el-col :span="4"><strong>员工密码</strong></el-col>
-          <el-col :span="4"><strong>员工电话</strong></el-col>
-          <el-col :span="4"><strong>员工工资</strong></el-col>
+          <el-col :span="3"><strong>员工姓名</strong></el-col>
+          <el-col :span="4"><strong>员工邮箱</strong></el-col>
+          <el-col :span="3"><strong>员工电话</strong></el-col>
+          <el-col :span="3"><strong>员工等级</strong></el-col>
+          <el-col :span="3"><strong>员工工资</strong></el-col>
           <el-col :span="4"><strong>备注</strong></el-col>
           <el-col :span="4"><strong>操作</strong></el-col>
         </el-row>
         <div v-for="(list, index) in list" :key="index" class="employee-row">
       <el-row :gutter="5">
-        <el-col :span="4">
+        <el-col :span="3">
           <el-form-item :prop="'list.' + index + '.name'">
             <el-input v-model="list.name"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="4">
-          <el-form-item :prop="'list.' + index + '.password'">
-            <el-input type="password" v-model="list.password"></el-input>
+          <el-form-item :prop="'list.' + index + '.email'">
+            <el-input type="email" v-model="list.email"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="3">
           <el-form-item :prop="'list.' + index + '.tel'">
             <el-input v-model="list.tel"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="3">
+          <el-form-item :prop="'list.' + index + '.level'">
+            <el-input v-model="list.level"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="3">
           <el-form-item :prop="'list.' + index + '.salary'">
             <el-input v-model="list.salary"></el-input>
           </el-form-item>
@@ -69,9 +75,10 @@ const dialogVisible = ref(false);
 const list = ref([
   {
     name: '',
-    password: '',
+    email: '',
     tel: '',
     salary: '',
+    level:'',
     note: '',
   },
 ]);
@@ -79,7 +86,7 @@ const list = ref([
 const rules = {
   id: [{ required: true, message: '请输入员工编号', trigger: 'blur' }],
   name: [{ required: true, message: '请输入员工姓名', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入员工密码', trigger: 'blur' }],
+  email: [{ required: true, message: '请输入员工密码', trigger: 'blur' }],
   level: [{ required: true, message: '请输入员工级别', trigger: 'blur' }],
   phone: [{ required: true, message: '请输入员工电话', trigger: 'blur' }],
   salary: [{ required: true, message: '请输入员工工资', trigger: 'blur' }],
@@ -99,7 +106,7 @@ const openDialog = () => {
 const addNewEmployee = () => {
   list.value.push({
     name: '',
-    password: '',
+    email: '',
     tel: '',
     salary: '',
     note: '',
@@ -110,6 +117,7 @@ const saveEmployees = async () => {
   const employeesToSave = list.value.map(employee => ({
     ...employee,
     salary: parseFloat(employee.salary),
+    level: parseInt(employee.level)
   }));
   try {
     const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/employee/insert`, {
@@ -135,9 +143,10 @@ const resetForm = () => {
   list.value = [
     {
       name: '',
-      password: '',
+      email: '',
       tel: '',
       salary: '',
+      level: '',
       note: '',
     },
   ];

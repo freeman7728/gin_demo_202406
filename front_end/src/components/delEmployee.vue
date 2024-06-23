@@ -60,13 +60,18 @@
       if (valid) {
         console.log('删除员工编号:', ruleForm.id);
         try {
-          const response = await proxy.$axios.delete(`${proxy.$serverUrl_test}/employee/delete`, { data: { id: ruleForm.id } });
-          if (response.status === 200) {
+          const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/employee/deleteByAdmin`, {
+            
+            operator: {id: parseInt(localStorage.getItem('employeeId')) },
+            target: {id: parseInt(ruleForm.id)}
+              });
+          console.log(response);
+          if (response.data.code === 200) {
             ElMessage.success('员工已成功删除');
             resetForm(formEl);
             dialogVisible.value = false; // 关闭对话框
           } else {
-            ElMessage.error('删除员工失败');
+            ElMessage.error(response.data.message);
           }
         } catch (error) {
           ElMessage.error('删除员工时出错');

@@ -284,30 +284,26 @@ const ordinaryForm = ref({
 const router = useRouter();
 
 
-// const ordinaryLogin = () => {
-//   axios.post(`${serverUrl.value}/ordinary/login`, {
-//     ordinaryId: ordinaryForm.value.ordinaryAccount,
-//     ordinaryPassword: ordinaryForm.value.ordinaryPassword,
-//   }, {
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//   })
-//     .then(res => {
-//       console.log(res.data);
-//       if (res.data.code === 200) {
-//         const result = res.data.data;
-//         sessionStorage.setItem('ordinaryId', result.ordinaryId);
-//         sessionStorage.setItem('ordinaryInfo', JSON.stringify(result));
-//         router.replace('/ordinaryindex');
-//       } else {
-//         ElMessage.error('账号或密码错误！');
-//       }
-//     })
-//     .catch(err => {
-//       console.error(err);
-//     });
-// };
+const ordinaryLogin = async () => {
+   try{
+    const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/employee/login`, {
+    account: adminForm.value.adminAccount,
+    password: adminForm.value.adminPassword,
+  })
+    console.log(response);
+    if (response.data.code === 200) {
+        const {id, token, level} = response.data.data;
+        localStorage.setItem('employeeId', id);
+        localStorage.setItem('employeeToken', token);
+        router.replace('/index_ordinary');
+    } else {
+      ElMessage.error('账号或密码错误！');
+    }
+   } catch (error) {
+    ElMessage.error('登录失败');
+    console.error(error);
+   }
+};
 
 
 const adminLogin = async () => {
@@ -318,6 +314,13 @@ const adminLogin = async () => {
   })
     console.log(response);
     if (response.data.code === 200) {
+        const {id, token, level} = response.data.data;
+        localStorage.setItem('employeeId', id);
+        localStorage.setItem('employeeToken', token);
+        if ( level > 1) {
+          ElMessage.error('权限不足');
+          return;
+        }
         router.replace('/index_admin');
     } else {
       ElMessage.error('账号或密码错误！');
@@ -326,22 +329,6 @@ const adminLogin = async () => {
     ElMessage.error('登录失败');
     console.error(error);
    }
-  
-    // .then(res => {
-    //   console.log(res.data);
-    //   if (res.data.code === 200) {
-    //     const result = res.data;
-    //     sessionStorage.setItem('adminId', result.adminId);
-    //     sessionStorage.setItem('adminInfo', JSON.stringify(result));
-    //     router.replace('/childpages/user_info');
-    //   } else {
-    //     ElMessage.error('账号或密码错误！');
-    //   }
-    // })
-    // .catch(err => {
-    //   console.error(err);
-    // });
-  
 };
 
 const switchToSignIn = () => {

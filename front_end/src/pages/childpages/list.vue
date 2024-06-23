@@ -78,6 +78,20 @@
       </template>
     </el-table-column>
   </el-table>
+
+
+  <el-dialog v-model="dialogVisible" title="订单详情" width="800px">
+      <el-table :data="orderDetails">
+        <el-table-column prop="id" label="订单号"></el-table-column>
+        <el-table-column prop="product_id" label="商品号"></el-table-column>
+        <el-table-column prop="quantity" label="数量"></el-table-column>
+        <el-table-column prop="total_price" label="总价"></el-table-column>
+        <el-table-column prop="note" label="备注"></el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false" style="margin-top: 10px; margin-left: 700px">关闭</el-button>
+      </span>
+    </el-dialog>
         <el-pagination
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
@@ -91,14 +105,17 @@
           @current-change="handlePageChange"
           style="text-align: center; margin-top: 20px; margin-bottom: 20px; margin-left: 300px"
         />
+        
         </div>
       </div>
     </div>
+    
   </template>
   
   <script setup lang="ts">
  import { onMounted, ref, watch, computed } from 'vue'
   import { useRoute, useRouter} from 'vue-router';
+  import { ElMessage } from 'element-plus';
   import addList from '@/components/addList.vue';
   import { getCurrentInstance, } from 'vue';
   const { proxy } = getCurrentInstance();
@@ -107,9 +124,11 @@
   import delList from '@/components/delList.vue';
   import axios from 'axios';
 
-const route = useRoute();
-const router = useRouter();
-const list = ref([]);
+  const route = useRoute();
+  const router = useRouter();
+  const list = ref([]);
+  const dialogVisible = ref(false);
+  const orderDetails = ref([]);
   const currentPage = ref(1);
   const pageSize = ref(10);
   const totalItems = ref(0);
@@ -129,6 +148,21 @@ const paginatedList = computed(() => {
   const end = start + pageSize.value;
   return list.value.slice(start, end);
 });
+const handleViewDetails = async (row: any) => {
+  try {
+    const response = await axios.get(`${proxy.$serverUrl_test}/detail/orderId/${row.id}`);
+    console.log(response);
+    if (response.data.code === 200) {
+      orderDetails.value = response.data.data.list;
+      dialogVisible.value = true;
+    } else {
+      ElMessage.warning(response.data.message);
+    }
+  } catch (error) {
+    ElMessage.error('获取订单详情时出错');
+    console.error(error);
+  }
+};
 
 const fetchlist = async () => {
   try {
@@ -156,6 +190,39 @@ const fetchlist = async () => {
 
 const handlePageChange = (newPage: number) => {
   currentPage.value = newPage;
+};
+const exportlist = async () => {
+  try {
+    const response = await axios.post(`${proxy.$serverUrl_test}/order/select`);
+
+    if (response.data.code === 200) {
+      const purchaseList = response.data.data.list;
+      let csvContent = '清单号,员工编号,采购数量,采购总价,采购时间,备注\n';
+      purchaseList.forEach(purchase => {
+        const purchaseTime = new Date(purchase.purchase_time).toLocaleString(); 
+
+        csvContent += `${purchase.id},${purchase.employee_id},${purchase.quantity},${purchase.total_price},${purchaseTime},${purchase.note}\n`;
+      });
+
+      // 创建Blob对象
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'purchase_list.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      ElMessage.success('清单信息已成功导出为 CSV 文件');
+    } else {
+      ElMessage.error('导出清单信息失败');
+    }
+  } catch (error) {
+    ElMessage.error('导出清单信息时出错');
+    console.error(error);
+  }
 };
 
 const handleSizeChange = (newSize: number) => {
