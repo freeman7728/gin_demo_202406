@@ -70,6 +70,7 @@
             ElMessage.success('员工已成功删除');
             resetForm(formEl);
             dialogVisible.value = false; // 关闭对话框
+            location.reload();
           } else {
             ElMessage.error(response.data.message);
           }

@@ -62,6 +62,26 @@
       <updateList class="update_btn"/>
       <searchList class="search_btn"/>
       <delList class="del_btn"/>
+
+      <el-button type="success" @click="openImportDialog">导入清单</el-button>
+        <el-dialog
+          title="导入清单"
+          v-model="dialogVisible_import"
+          width="30%"
+          center
+          :close-on-click-modal="false"
+        >
+        <div style="display: flex; align-items: center;">
+        <el-button type="primary" @click="handleFileInputClick">选择文件</el-button>
+        <input type="file" ref="fileInput" style="display: none" accept=".csv" @change="handleFileUpload">
+        <span v-if="selectedFileName" style="margin-left: 10px;">已选择文件: {{ selectedFileName }}</span>
+      </div>
+
+      <div style="margin-top: 10px;">
+        <el-button type="primary" @click="importProducts">确认导入</el-button>
+        <el-button @click="dialogVisible_import = false" style="margin-left: 10px;">取消</el-button>
+      </div>
+    </el-dialog>
       <el-button type="success" @click="exportlist">导出清单</el-button>
         </div>
         <div>
@@ -83,7 +103,7 @@
   <el-dialog v-model="dialogVisible" title="订单详情" width="800px">
       <el-table :data="orderDetails">
         <el-table-column prop="id" label="订单号"></el-table-column>
-        <el-table-column prop="product_id" label="商品号"></el-table-column>
+        <el-table-column prop="product_id" label="清单号"></el-table-column>
         <el-table-column prop="quantity" label="数量"></el-table-column>
         <el-table-column prop="total_price" label="总价"></el-table-column>
         <el-table-column prop="note" label="备注"></el-table-column>
@@ -135,6 +155,14 @@
   const size = ref('medium');  
   const disabled = ref(false);
   const background = ref(true);
+  const isCollapse = ref(false);
+  const selectedFileName = ref('');
+  const dialogVisible_import = ref(false);
+  const fileInput = ref<HTMLInputElement | null>(null);
+  let dataList: any[] = []; 
+  const tableData = ref([]); // 存储表格数据
+
+  
 
 watch(route, (newRoute) => {
   currentRoute.value = newRoute.path;
@@ -224,6 +252,80 @@ const exportlist = async () => {
     console.error(error);
   }
 };
+const openImportDialog = () => {
+  dialogVisible_import.value = true;
+};
+
+const handleFileInputClick = () => {
+  fileInput.value?.click();
+};
+
+const handleFileUpload = () => {
+  const file = fileInput.value?.files?.[0];
+  if (!file) {
+    ElMessage.error('请先选择要导入的 CSV 文件');
+    return;
+  }
+  selectedFileName.value = file.name; // 更新选择的文件名称显示
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    if (event.target) {
+      const csvData = event.target.result as string;
+      processData(csvData); 
+    }
+  };
+  reader.readAsText(file);
+};
+
+const processData = (csvData: string) => {
+  const rows = csvData.split('\n');
+  rows.shift(); // 去除表头
+
+  dataList = rows.map(row => {
+    const columns = row.split(',');
+    if (columns.length === 5) {
+      return {
+        employee_id: parseInt(columns[0].trim()),
+        quantity: parseInt(columns[1].trim()), 
+        time: columns[2].trim(), 
+        total_price: parseFloat(columns[3].trim()),
+        note: columns[4].trim()
+      };
+    } else {
+      return null;
+    }
+  }).filter(item => item !== null);
+
+  console.log(dataList);
+};
+
+const importProducts = async () => {
+  console.log(456);
+  console.log(dataList);
+  try {
+    const response = await axios.post(`${proxy.$serverUrl_test}/order/insert`, {list: dataList});
+    console.log(response);
+    console.log(dataList);
+    if (response.data.code === 200) {
+      ElMessage.success('清单信息导入成功');
+      console.log(response.data); 
+      location.reload();
+    } else {
+      ElMessage.error('清单信息导入失败'); 
+    }
+  } catch (error) {
+    ElMessage.error('清单信息导入时出错');
+    console.error(error);
+  }
+
+  dialogVisible_import.value = false; // 关闭对话框
+};
+
+
+
+
+
+
 
 const handleSizeChange = (newSize: number) => {
   pageSize.value = newSize;

@@ -127,6 +127,7 @@
       ElMessage.success('订单信息已成功添加至数据库');
       resetForm();
       dialogVisible.value = false;
+      location.reload();
     } else {
       console.log(response.status);
       ElMessage.error('添加订单信息失败');

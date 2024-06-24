@@ -66,6 +66,7 @@
             ElMessage.success('订单已成功删除');
             resetForm(formEl);
             dialogVisible.value = false; // 关闭对话框
+            location.reload();
           } else {
             ElMessage.error('删除订单失败');
           }

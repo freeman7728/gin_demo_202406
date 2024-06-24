@@ -184,13 +184,14 @@ const processData = (csvData: string) => {
 
   dataList = rows.map(row => {
     const columns = row.split(',');
-    if (columns.length === 5) {
+    if (columns.length === 6) {
       return {
         name: columns[0].trim(),
-        password: columns[1].trim(), 
+        email: columns[1].trim(), 
         tel: columns[2].trim(), 
-        salary: parseFloat(columns[3].trim()),
-        note: columns[4].trim()
+        level: parseFloat(columns[3].trim()),
+        salary: parseFloat(columns[4].trim()),
+        note: columns[5].trim()
       };
     } else {
       return null;
@@ -210,6 +211,7 @@ const importProducts = async () => {
     if (response.data.code === 200) {
       ElMessage.success('员工信息导入成功');
       console.log(response.data); 
+      location.reload();
     } else {
       ElMessage.error('员工信息导入失败'); 
     }
@@ -240,7 +242,7 @@ const importProducts = async () => {
         account: item.account,
         level: item.level,
         tel: item.tel,
-        email: item.tel,
+        email: item.email,
         salary: item.salary,
         note: item.note,
         email_is_auth: item.email_is_auth,

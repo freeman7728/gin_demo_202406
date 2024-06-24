@@ -163,7 +163,6 @@ const formData = reactive({
 const openDialogEmail = async () => {
 try {
   const id = localStorage.getItem('employeeId');
-   // 获取员工ID
   if (!id) {
     throw new Error('员工ID未找到');
   }
@@ -186,7 +185,7 @@ try {
 
 const confirmEmail = async () => {
 try {
-  const id = localStorage.getItem('employeeId'); // 获取员工ID
+  const id = localStorage.getItem('employeeId'); 
   const response = await proxy.$axios.post(`${proxy.$serverUrl_test}/email/auth`, {
     id: parseInt(id),
     code: formData.code
@@ -282,16 +281,13 @@ const handleClose = (done: () => void) => {
   ElMessageBox.confirm('确定关闭吗？').then(() => {
     done();
   }).catch(() => {
-    // Handle cancellation
   });
 };
 const logout_1 = () => {
  localStorage.clear();
 
-// 显示消息提示
 ElMessage.success('已成功退出登录');
 
-// 重定向到登录页面
 router.replace('/login');
 };
 
