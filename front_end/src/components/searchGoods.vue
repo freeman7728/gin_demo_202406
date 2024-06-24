@@ -57,6 +57,7 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button type="primary" plain @click="searchProducts">确定</el-button>
+          <el-button @click="exportToCSV">导出 CSV</el-button>
           <el-button @click="searchDialogVisible = false">取消</el-button>
         </div>
       </template>
@@ -151,6 +152,33 @@
     });
   });
   };
+  const exportToCSV = () => {
+  try {
+    let csvContent = '商品编号,商品名称,商品单价,供应商编号,商品简介,备注\n';
+    searchResults.value.forEach(product => {
+      csvContent += `${product.id},${product.name},${product.price},${product.producer_id},${product.introduction},${product.note}\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'products.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    ElMessage.success('商品信息已成功导出为 CSV 文件');
+  } catch (error) {
+    ElMessage.error('导出商品信息失败');
+    console.error(error);
+  }
+};
+
+
+
+
+
   </script>
   
   <style scoped>

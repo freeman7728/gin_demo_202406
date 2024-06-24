@@ -83,6 +83,7 @@
       <template #footer>
         <div class="dialog-footer">
         <el-button type="primary" plain @click="searchCustomers">确定</el-button>
+        <el-button @click="exportToCSV">导出 CSV</el-button>
           <el-button @click="searchDialogVisible = false">取消</el-button>
         </div>
       </template>
@@ -182,6 +183,34 @@
       console.log('无结果');
     }
   };
+  const exportToCSV = () => {
+  try {
+    let csvContent = '客户编号,客户名称,客户简称,地址,公司电话,邮件,联系人,联系人电话,备注\n';
+    searchResults.value.forEach(customer => {
+      csvContent += `${customer.id},${customer.name},${customer.short_name},${customer.address},${customer.tel},${customer.email},${customer.contact_name},${customer.contact_tel},${customer.note}\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'customers.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    ElMessage.success('客户信息已成功导出为 CSV 文件');
+  } catch (error) {
+    ElMessage.error('导出客户信息失败');
+    console.error(error);
+  }
+};
+
+
+
+
+
   </script>
   
   <style scoped>
