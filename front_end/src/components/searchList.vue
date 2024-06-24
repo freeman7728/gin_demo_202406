@@ -52,6 +52,7 @@
       <template #footer>
         <div class="dialog-footer">
             <el-button type="primary" plain @click="searchInventories">确定</el-button>
+            <el-button @click="exportToCSV">导出 CSV</el-button>
             <el-button @click="searchDialogVisible = false">取消</el-button>
         </div>
       </template>
@@ -153,9 +154,32 @@
       console.log('无结果');
     }
   };
-  onMounted(() => {
-    fetchlist();
-  });
+  const exportToCSV = () => {
+  try {
+    let csvContent = '清单号,员工编号,采购数量,采购总价,采购时间,备注\n';
+    searchResults.value.forEach(purchase => {
+      const purchaseTime = new Date(purchase.time).toLocaleString(); 
+
+      csvContent += `${purchase.id},${purchase.employee_id},${purchase.quantity},${purchase.total_price},${purchaseTime},${purchase.note}\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'purchase_list.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    ElMessage.success('清单信息已成功导出为 CSV 文件');
+  } catch (error) {
+    ElMessage.error('导出清单信息失败');
+    console.error(error);
+  }
+};
+
 
   </script>
   

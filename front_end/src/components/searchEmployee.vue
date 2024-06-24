@@ -73,6 +73,7 @@
       <template #footer>
         <div class="dialog-footer">
         <el-button type="primary" plain @click="searchEmployees">确定</el-button>
+        <el-button @click="exportToCSV">导出 CSV</el-button>
           <el-button @click="searchDialogVisible = false">取消</el-button>
         </div>
       </template>
@@ -146,6 +147,40 @@
     console.error("获取员工数据失败：", error);
   }
 };  
+
+
+
+const exportToCSV = () => {
+  try {
+    let csvContent = '员工编号,员工姓名,员工级别,员工电话,员工邮箱,员工工资,备注\n';
+    searchResults.value.forEach((employee) => {
+      let levelDescription;
+      if (employee.level === 0) {
+        levelDescription = 'root';
+      } else if (employee.level === 1) {
+        levelDescription = 'admin';
+      } else {
+        levelDescription = 'ordinary';
+      }
+
+      csvContent += `${employee.id},${employee.name},${levelDescription},${employee.tel},${employee.email},${employee.salary},${employee.note}\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'employees.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    ElMessage.success('员工信息已成功导出为 CSV 文件');
+  } catch (error) {
+    ElMessage.error('导出员工信息失败');
+    console.error(error);
+  }
+};
 onMounted(() => {
     fetchlist();
   });
