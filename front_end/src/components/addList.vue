@@ -80,7 +80,7 @@
   const rules = {
     id: [{ required: true, message: '请输入清单号', trigger: 'blur' }],
     employee_id: [{ required: true, message: '请输入员工编号', trigger: 'blur' }],
-    productId: [{ required: true, message: '请输入采购商品编号', trigger: 'blur' }],
+    product_id: [{ required: true, message: '请输入采购商品编号', trigger: 'blur' }],
     time: [{ required: true, message: '请输入采购时间', trigger: 'blur' }],
   };
   
@@ -129,6 +129,7 @@
       ElMessage.success('清单信息已成功添加至数据库');
       resetForm();
       dialogVisible.value = false;
+      location.reload();
     } else {
       console.log(response.status);
       ElMessage.error('添加清单信息失败');
@@ -142,10 +143,9 @@
   const resetForm = () => {
     list.value = [
       {
-        id: '',
         employee_id: '',
         quantity: '',
-        productId: '',
+        total_price:'',
         time: '',
         note: '',
       },

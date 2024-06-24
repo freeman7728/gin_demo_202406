@@ -66,6 +66,7 @@
             ElMessage.success('商品已成功删除');
             resetForm(formEl);
             dialogVisible.value = false; // 关闭对话框
+            location.reload();
           } else if (response.data.code === 400) {
             ElMessage.error('清单不可删除，请检查依赖于该清单的订单');
           }

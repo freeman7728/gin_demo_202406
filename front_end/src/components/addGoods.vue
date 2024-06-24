@@ -128,6 +128,7 @@
       ElMessage.success('商品信息已成功添加至数据库');
       resetForm();
       dialogVisible.value = false;
+      location.reload();
     } else {
       console.log(response.status);
       ElMessage.error('添加商品信息失败');

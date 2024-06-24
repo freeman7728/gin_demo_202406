@@ -206,6 +206,7 @@ try {
   if (response.data.code === 200) {
     ElMessage.success('员工信息导入成功');
     console.log(response.data); 
+    location.reload();
   } else {
     ElMessage.error('员工信息导入失败'); 
   }

@@ -110,6 +110,7 @@ const addNewEmployee = () => {
     tel: '',
     salary: '',
     note: '',
+    level:''
   });
 };
 
@@ -124,12 +125,15 @@ const saveEmployees = async () => {
       list: employeesToSave,
     });
     console.log(response); 
-    console.log('保存员工列表成功:', response.data);
+    if(response.data.code === 200) {
+      console.log('保存员工列表成功:', response.data);
     ElMessageBox.alert('员工信息保存成功', '成功', {
       confirmButtonText: '确定',
     });
     resetForm();
     dialogVisible.value = false;
+    location.reload();
+    }
   } catch (error) {
     console.error('保存员工列表失败:', error);
     ElMessageBox.alert('员工信息保存失败，请重试', '错误', {

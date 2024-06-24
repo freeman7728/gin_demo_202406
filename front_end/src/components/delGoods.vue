@@ -66,8 +66,9 @@
           ElMessage.success('商品已成功删除');
           resetForm(formEl);
           dialogVisible.value = false; 
+          location.reload();
         } else {
-          ElMessage.error('删除商品失败');
+          ElMessage.error(response.data.message);
         }
       } catch (error) {
         ElMessage.error('删除商品时出错');
