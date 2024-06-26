@@ -9,8 +9,6 @@ services:
       MYSQL_DATABASE: database_lesson
     volumes:
       - "./consts/mysql/init:/docker-entrypoint-initdb.d"
-    ports:
-      - "3306:3306"
     networks:
       - database_design_network
   redis-6379: # 服务名称
@@ -37,8 +35,6 @@ services:
       MYSQL_PASSWORD: root
     depends_on:
       - mysql_database_lesson
-    ports:
-      - "4000:4000"
     restart: always
     networks:
       - database_design_network
